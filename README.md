@@ -24,6 +24,12 @@ Powered by a 5-agent pipeline: Retriever, Planner, Stylist, Visualizer, Critic.
 
 ## Sample Output
 
+**Transformer with Sparse Attention:**
+
+![Transformer Architecture](https://github.com/PlutoLei/paperbanana-skill/raw/master/examples/transformer_architecture.png)
+
+**CNN Image Classification:**
+
 ![CNN Architecture](https://github.com/PlutoLei/paperbanana-skill/raw/master/examples/cnn_architecture.png)
 
 ## Installation
