@@ -24,7 +24,7 @@ Powered by a 5-agent pipeline: Retriever, Planner, Stylist, Visualizer, Critic.
 
 ## Sample Output
 
-![CNN Architecture](https://github.com/PlutoLei/paperbanana-skill/raw/main/examples/cnn_architecture.png)
+![CNN Architecture](https://github.com/PlutoLei/paperbanana-skill/raw/master/examples/cnn_architecture.png)
 
 ## Installation
 
