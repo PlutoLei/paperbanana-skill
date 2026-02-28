@@ -1,16 +1,32 @@
 # PaperBanana Skill for Claude Code
 
+<p align="center">
+  <img alt="Version" src="https://img.shields.io/badge/version-2.1.0-orange?style=flat-square" />
+  <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-Skill-2B6CB0?style=flat-square" />
+  <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-black?style=flat-square" />
+</p>
+
 A [Claude Code](https://claude.ai/claude-code) skill that integrates [PaperBanana](https://github.com/llmsresearch/paperbanana) — an agentic framework for generating publication-quality academic diagrams and statistical plots.
 
 ## What It Does
 
-Invoke `/paperbanana` in Claude Code to generate:
+Invoke `/paperbanana` in Claude Code to:
 
-- **Methodology diagrams** — architecture figures, pipeline overviews, system designs
-- **Statistical plots** — bar charts, line plots, scatter plots from CSV/JSON data
-- **Diagram evaluation** — compare generated diagrams against human references
+- **Generate methodology diagrams** — architecture figures, pipeline overviews, system designs
+- **Create statistical plots** — bar charts, line plots, scatter plots from CSV/JSON data
+- **Benchmark** — run PaperBananaBench evaluation suite
+- **Polish** — style-guide refinement of existing images
+- **Evaluate** — compare generated diagrams against human references
 
-Powered by a 5-agent pipeline: Retriever, Planner, Stylist, Visualizer, Critic.
+Powered by a 5-agent pipeline: Retriever → Planner → Stylist → Visualizer → Critic.
+
+## What's New in v2.1
+
+- **Auto VLM selection** — `--vlm-model auto` (default) automatically picks Flash (fast) or Pro (quality) based on input complexity
+- **6 pipeline modes** — `vanilla`, `planner`, `planner_stylist`, `planner_critic`, `full`, `polish`
+- **`bench` command** — run PaperBananaBench evaluations directly from Claude Code
+- **`polish` command** — style-guide polishing of existing images
+- **Robust Critic JSON parsing** — 4-layer fallback: json.loads → json-repair → regex → safe defaults
 
 ## Examples
 
@@ -20,6 +36,10 @@ Powered by a 5-agent pipeline: Retriever, Planner, Stylist, Visualizer, Critic.
 /paperbanana generate method.txt Overview of the proposed framework
 
 /paperbanana plot results.csv Bar chart comparing accuracy across models
+
+/paperbanana bench data/PaperBananaBench/ --task diagram --max-samples 5
+
+/paperbanana polish output.png --task diagram
 ```
 
 ## Sample Output
@@ -44,7 +64,7 @@ pip install -e ".[google]"
 
 ### 2. Set up API key
 
-Get a free Google Gemini API key at https://makersuite.google.com/app/apikey
+Get a Google Gemini API key at https://aistudio.google.com/apikey
 
 Create a `.env` file in the paperbanana directory:
 
@@ -62,8 +82,6 @@ claude install-skill PlutoLei/paperbanana-skill
 
 **Option B: Manual install**
 
-Copy `SKILL.md` to your Claude Code skills directory:
-
 ```bash
 mkdir -p ~/.claude/skills/paperbanana
 cp SKILL.md ~/.claude/skills/paperbanana/
@@ -71,25 +89,36 @@ cp SKILL.md ~/.claude/skills/paperbanana/
 
 ### 4. Use it
 
-Start a Claude Code session and type:
-
 ```
 /paperbanana <your description or command>
 ```
 
-## Modes
+## Commands
 
-| Mode | Command | Description |
-|------|---------|-------------|
-| Generate | `/paperbanana <text>` | Generate methodology diagram from description |
-| Generate (file) | `/paperbanana generate file.txt caption` | Generate from text file |
-| Plot | `/paperbanana plot data.csv intent` | Generate statistical plot |
-| Evaluate | `/paperbanana evaluate gen.png ref.png` | Compare diagrams |
+| Command | Example | Description |
+|---------|---------|-------------|
+| `generate` | `/paperbanana <text>` | Generate methodology diagram from description |
+| `generate` (file) | `/paperbanana generate file.txt caption` | Generate from text file |
+| `plot` | `/paperbanana plot data.csv intent` | Generate statistical plot |
+| `bench` | `/paperbanana bench dataset/ --task diagram` | Run PaperBananaBench evaluation |
+| `polish` | `/paperbanana polish image.png` | Style-guide polishing |
+| `evaluate` | `/paperbanana evaluate gen.png ref.png` | Compare diagrams |
+
+## Pipeline Modes
+
+| Mode | Pipeline | Critic |
+|------|----------|--------|
+| `vanilla` | Direct generation | No |
+| `planner` | Retriever → Planner → Visualizer | No |
+| `planner_stylist` | + Stylist | No |
+| `planner_critic` | + Critic loop | Yes |
+| `full` | Full pipeline (default) | Yes |
+| `polish` | Style-guide polishing | No |
 
 ## Requirements
 
 - [PaperBanana](https://github.com/llmsresearch/paperbanana) installed
-- Google Gemini API key (free tier)
+- Google Gemini API key
 - Python 3.10+
 
 ## License
