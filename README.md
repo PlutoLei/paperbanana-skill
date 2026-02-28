@@ -6,6 +6,10 @@
   <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-black?style=flat-square" />
 </p>
 
+<p align="center">
+  <strong>English</strong> | <a href="README_CN.md">中文</a>
+</p>
+
 A [Claude Code](https://claude.ai/claude-code) skill that integrates [PaperBanana](https://github.com/llmsresearch/paperbanana) — an agentic framework for generating publication-quality academic diagrams and statistical plots.
 
 ## What It Does
