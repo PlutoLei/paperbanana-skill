@@ -49,6 +49,9 @@ When user provides inline text (no file): write to temp file, use as `--input`.
 | `--seed` | — | Random seed for reproducible generation |
 | `--verbose` / `-v` | off | Show detailed agent progress and timing |
 | `--auto-download-data` | off | Auto-download expanded reference set (~257MB) on first run |
+| `--config` | — | Path to config YAML file |
+
+> **Exemplar advanced flags:** `--exemplar-retrieval` enables retrieval; see `generate --help` for additional config flags (`--exemplar-endpoint`, `--exemplar-mode`, `--exemplar-top-k`, `--exemplar-timeout`, `--exemplar-retries`).
 
 ### `plot` — Statistical Plots
 
@@ -84,6 +87,7 @@ python -m paperbanana.cli slide --input '<prompt.md>' --resolution 4k
 | `--vlm-model` | auto | VLM model name |
 | `--iterations` / `-n` | `3` | Max critic rounds |
 | `--resolution` / `-r` | `4k` | Output resolution: `1k`, `2k`, `4k` |
+| `--config` | — | Path to config YAML file |
 
 ### `slide-batch` — Batch Slide Generation
 
@@ -122,6 +126,10 @@ python -m paperbanana.cli data download   # Download expanded reference set (~25
 python -m paperbanana.cli data info       # Show cached dataset info
 python -m paperbanana.cli data clear      # Remove cached dataset
 ```
+
+### `ablate-retrieval` — Retrieval Ablation (Advanced)
+
+Research utility for running baseline vs retrieval ablation (k sweep). See `ablate-retrieval --help` for details.
 
 ### `setup` — Interactive Setup Wizard
 
