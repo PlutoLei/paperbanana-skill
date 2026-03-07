@@ -21,6 +21,8 @@
 
 ## 效果展示
 
+### 学术插图生成
+
 <table>
 <tr>
 <td align="center"><strong>Transformer 架构图</strong><br/><img src="examples/transformer_architecture.png" width="400"/></td>
@@ -51,6 +53,8 @@ claude plugin install paperbanana-slide-deck@paperbanana-skills --scope project 
 
 一句话输入，出版级插图输出。底层由五智能体流水线驱动——自动规划、配色、生成、自我评审，全程无需人工干预。
 
+> **注意：** 本仓库包含 Claude Code **技能定义**（SKILL.md 文件）。底层 Python 包位于 [llmsresearch/paperbanana](https://github.com/llmsresearch/paperbanana)——需同时安装技能和 Python 包。
+
 ## 为什么选择 PaperBanana？
 
 | 痛点 | 传统做法 | PaperBanana |
@@ -76,18 +80,19 @@ claude plugin install paperbanana-slide-deck@paperbanana-skills --scope project 
 
 ## 流水线架构
 
-```mermaid
-graph LR
-    A[文本输入] --> B[检索器]
-    B --> C[规划器]
-    C --> D[风格师]
-    D --> E[可视化器]
-    E --> F[评审器]
-    F -->|修改| C
-    F -->|通过| G[输出图像]
-```
+<p align="center">
+  <img src="examples/pipeline_architecture.png" width="800" alt="PaperBanana 多智能体流水线"/>
+</p>
 
 流水线以迭代方式运行：评审器对每次生成结果进行评估，合格即输出，不合格则附带修改意见回传给规划器重新生成。
+
+### PPT 编排器（paperbanana-slide-deck）
+
+<p align="center">
+  <img src="examples/slide_deck_workflow.png" width="800" alt="Slide Deck RDIV 工作流"/>
+</p>
+
+PPT 编排器通过 RDIV 四阶段流程完成端到端演示文稿制作：内容分析、23 种视觉风格选择、大纲与提示词生成、4K 批量图片生成、PPTX/PDF 合并输出。
 
 ## 命令速查
 
@@ -152,7 +157,7 @@ graph LR
 | 服务商 | VLM | 图像生成 | 配置方式 |
 |--------|-----|---------|---------|
 | Google Gemini | Flash / Pro | Imagen 3 | `.env` 中设置 `GOOGLE_API_KEY` |
-| Anthropic Claude | Claude 4 | — | `.env` 中设置 `ANTHROPIC_API_KEY` |
+| Anthropic Claude | Claude 4 | 不适用（仅 VLM） | `.env` 中设置 `ANTHROPIC_API_KEY` |
 | OpenAI | GPT-4o | DALL-E 3 | `.env` 中设置 `OPENAI_API_KEY` |
 | AWS Bedrock | Claude / Nova | Nova Canvas | 配置 AWS 凭证 |
 | OpenRouter | 多种模型 | 多种模型 | `.env` 中设置 `OPENROUTER_API_KEY` |

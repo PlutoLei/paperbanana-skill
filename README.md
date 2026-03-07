@@ -21,6 +21,8 @@
 
 ## Gallery
 
+### Generated Academic Figures
+
 <table>
 <tr>
 <td align="center"><strong>Transformer Architecture</strong><br/><img src="examples/transformer_architecture.png" width="400"/></td>
@@ -51,6 +53,8 @@ claude plugin install paperbanana-slide-deck@paperbanana-skills --scope project 
 
 One sentence in, publication-quality figure out. Powered by a 5-agent pipeline that plans, styles, generates, and self-critiques your academic illustrations.
 
+> **Note:** This repository contains Claude Code **skill definitions** (SKILL.md files). The underlying Python package lives at [llmsresearch/paperbanana](https://github.com/llmsresearch/paperbanana) — install both the skill and the package to get started.
+
 ## Why PaperBanana?
 
 | Pain Point | Traditional Approach | With PaperBanana |
@@ -76,18 +80,19 @@ One sentence in, publication-quality figure out. Powered by a 5-agent pipeline t
 
 ## Pipeline
 
-```mermaid
-graph LR
-    A[Text Input] --> B[Retriever]
-    B --> C[Planner]
-    C --> D[Stylist]
-    D --> E[Visualizer]
-    E --> F[Critic]
-    F -->|Revise| C
-    F -->|Accept| G[Output Image]
-```
+<p align="center">
+  <img src="examples/pipeline_architecture.png" width="800" alt="PaperBanana Multi-Agent Pipeline"/>
+</p>
 
 The pipeline runs iteratively: the Critic evaluates each output and either accepts it or sends revision instructions back to the Planner.
+
+### Slide Deck Orchestrator (paperbanana-slide-deck)
+
+<p align="center">
+  <img src="examples/slide_deck_workflow.png" width="800" alt="Slide Deck RDIV Workflow"/>
+</p>
+
+The slide deck skill orchestrates end-to-end presentation creation: analyze content, select from 23 visual styles, generate outlines and prompts, batch-generate 4K slide images, and merge into PPTX/PDF.
 
 ## Commands & Examples
 
@@ -152,7 +157,7 @@ The pipeline runs iteratively: the Critic evaluates each output and either accep
 | Provider | VLM | Image Generation | Setup |
 |----------|-----|-----------------|-------|
 | Google Gemini | Flash / Pro | Imagen 3 | `GOOGLE_API_KEY` in `.env` |
-| Anthropic Claude | Claude 4 | — | `ANTHROPIC_API_KEY` in `.env` |
+| Anthropic Claude | Claude 4 | N/A (VLM only) | `ANTHROPIC_API_KEY` in `.env` |
 | OpenAI | GPT-4o | DALL-E 3 | `OPENAI_API_KEY` in `.env` |
 | AWS Bedrock | Claude / Nova | Nova Canvas | AWS credentials |
 | OpenRouter | Various | Various | `OPENROUTER_API_KEY` in `.env` |
