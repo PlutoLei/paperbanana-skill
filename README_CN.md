@@ -1,8 +1,8 @@
-# PaperBanana — Claude Code 学术插图技能
+# PaperBanana — Claude Code 学术插图技能集
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-3.0.0-orange?style=flat-square" />
-  <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-Skill-2B6CB0?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-3.1.0-orange?style=flat-square" />
+  <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-Skills-2B6CB0?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
   <img alt="Providers" src="https://img.shields.io/badge/Providers-5-green?style=flat-square" />
   <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-black?style=flat-square" />
@@ -11,6 +11,13 @@
 <p align="center">
   <a href="README.md">English</a> | <strong>中文</strong>
 </p>
+
+## 本仓库包含的技能
+
+| 技能 | 作用域 | 描述 | 版本 |
+|------|--------|------|------|
+| **paperbanana** | 用户级 | 学术插图、统计图表、演示幻灯片生成 | v3.1.0 |
+| **paperbanana-slide-deck** | 项目级 | 完整 PPT 编排器（RDIV 工作流） | v1.0.0 |
 
 ## 效果展示
 
@@ -33,8 +40,10 @@
 git clone https://github.com/llmsresearch/paperbanana.git
 cd paperbanana && pip install -e ".[google]"
 
-# 2. 安装本技能
-claude install-skill PlutoLei/paperbanana-skill
+# 2. 添加技能市场并安装
+claude plugin marketplace add PlutoLei/paperbanana-skill
+claude plugin install paperbanana@paperbanana-skills
+claude plugin install paperbanana-slide-deck@paperbanana-skills --scope project  # 可选
 
 # 3. 生成你的第一张图
 # /paperbanana 一个 4 层 CNN 加 batch normalization 的图像分类网络
@@ -51,7 +60,7 @@ claude install-skill PlutoLei/paperbanana-skill
 | 保持风格一致 | 逐图手动调整 | Critic 智能体统一执行风格规范 |
 | 制作演示幻灯片 | 从零设计每一页 | Markdown 提示词 → 精美幻灯片 |
 
-## v3.0 新特性
+## v3.1 新特性
 
 - **5 大 VLM/图像生成服务商** — Gemini、Claude、OpenAI、Bedrock、OpenRouter 任选
 - **输入优化** — `--optimize` 自动扩充上下文、锐化标题，提升生成质量
@@ -62,6 +71,8 @@ claude install-skill PlutoLei/paperbanana-skill
 - **引导式配置** — `setup` 命令交互式完成 API 密钥设置
 - **数据集管理** — `data` 命令一键下载/查看/清理参考数据集
 - **范例检索增强** — `--exemplar-retrieval` 在规划前引入相似案例
+- **PPT 编排器** — `paperbanana-slide-deck` 技能，端到端 RDIV 工作流（内容→风格→大纲→批量生成→PPTX）
+- **插件市场** — 支持现代 `claude plugin` 安装方式
 
 ## 流水线架构
 
@@ -150,18 +161,26 @@ graph LR
 
 ## 安装
 
-### 方式 A：一键安装
+### 方式 A：插件市场安装（推荐）
 
 ```bash
-claude install-skill PlutoLei/paperbanana-skill
+claude plugin marketplace add PlutoLei/paperbanana-skill
+claude plugin install paperbanana@paperbanana-skills
+claude plugin install paperbanana-slide-deck@paperbanana-skills --scope project  # 可选
 ```
 
 ### 方式 B：手动安装
 
 ```bash
+# paperbanana 技能（用户级）
 mkdir -p ~/.claude/skills/paperbanana
 curl -o ~/.claude/skills/paperbanana/SKILL.md \
-  https://raw.githubusercontent.com/PlutoLei/paperbanana-skill/main/SKILL.md
+  https://raw.githubusercontent.com/PlutoLei/paperbanana-skill/master/plugins/paperbanana/skills/paperbanana/SKILL.md
+
+# paperbanana-slide-deck 技能（项目级，可选）
+mkdir -p .claude/skills/paperbanana-slide-deck
+curl -o .claude/skills/paperbanana-slide-deck/SKILL.md \
+  https://raw.githubusercontent.com/PlutoLei/paperbanana-skill/master/plugins/paperbanana-slide-deck/skills/paperbanana-slide-deck/SKILL.md
 ```
 
 ### PaperBanana 环境配置

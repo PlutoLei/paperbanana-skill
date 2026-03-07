@@ -1,8 +1,8 @@
-# PaperBanana Skill for Claude Code
+# PaperBanana Skills for Claude Code
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-3.0.0-orange?style=flat-square" />
-  <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-Skill-2B6CB0?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-3.1.0-orange?style=flat-square" />
+  <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-Skills-2B6CB0?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
   <img alt="Providers" src="https://img.shields.io/badge/Providers-5-green?style=flat-square" />
   <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-black?style=flat-square" />
@@ -11,6 +11,13 @@
 <p align="center">
   <strong>English</strong> | <a href="README_CN.md">中文</a>
 </p>
+
+## Skills in this Marketplace
+
+| Skill | Scope | Description | Version |
+|-------|-------|-------------|---------|
+| **paperbanana** | user | Academic diagrams, plots, and slides from text | v3.1.0 |
+| **paperbanana-slide-deck** | project | Full slide deck orchestration (RDIV workflow) | v1.0.0 |
 
 ## Gallery
 
@@ -33,8 +40,10 @@
 git clone https://github.com/llmsresearch/paperbanana.git
 cd paperbanana && pip install -e ".[google]"
 
-# 2. Install this skill
-claude install-skill PlutoLei/paperbanana-skill
+# 2. Add the marketplace & install skills
+claude plugin marketplace add PlutoLei/paperbanana-skill
+claude plugin install paperbanana@paperbanana-skills
+claude plugin install paperbanana-slide-deck@paperbanana-skills --scope project  # optional
 
 # 3. Generate your first figure
 # /paperbanana A 4-layer CNN with batch normalization for image classification
@@ -51,7 +60,7 @@ One sentence in, publication-quality figure out. Powered by a 5-agent pipeline t
 | Style consistency | Manual effort per figure | Style guide enforced by Critic agent |
 | Presentation slides | Design from scratch every time | Markdown prompt → polished slide |
 
-## What's New in v3.0
+## What's New in v3.1
 
 - **5 VLM/Image providers** — Gemini, Claude, OpenAI, Bedrock, OpenRouter
 - **Input optimization** — `--optimize` enriches context and sharpens captions before generation
@@ -62,6 +71,8 @@ One sentence in, publication-quality figure out. Powered by a 5-agent pipeline t
 - **Setup wizard** — `setup` command for guided API configuration
 - **Dataset manager** — `data` command to download/manage reference sets
 - **Exemplar retrieval** — `--exemplar-retrieval` for retrieval-augmented generation
+- **Slide deck orchestrator** — `paperbanana-slide-deck` skill for end-to-end RDIV workflow (content → style → outline → batch gen → PPTX)
+- **Plugin marketplace** — Modern `claude plugin` install support
 
 ## Pipeline
 
@@ -150,18 +161,26 @@ Select providers per command with `--vlm-provider` and `--image-provider` flags.
 
 ## Installation
 
-### Option A: One-command install
+### Option A: Plugin marketplace (recommended)
 
 ```bash
-claude install-skill PlutoLei/paperbanana-skill
+claude plugin marketplace add PlutoLei/paperbanana-skill
+claude plugin install paperbanana@paperbanana-skills
+claude plugin install paperbanana-slide-deck@paperbanana-skills --scope project  # optional
 ```
 
 ### Option B: Manual install
 
 ```bash
+# paperbanana skill (user-level)
 mkdir -p ~/.claude/skills/paperbanana
 curl -o ~/.claude/skills/paperbanana/SKILL.md \
-  https://raw.githubusercontent.com/PlutoLei/paperbanana-skill/main/SKILL.md
+  https://raw.githubusercontent.com/PlutoLei/paperbanana-skill/master/plugins/paperbanana/skills/paperbanana/SKILL.md
+
+# paperbanana-slide-deck skill (project-level, optional)
+mkdir -p .claude/skills/paperbanana-slide-deck
+curl -o .claude/skills/paperbanana-slide-deck/SKILL.md \
+  https://raw.githubusercontent.com/PlutoLei/paperbanana-skill/master/plugins/paperbanana-slide-deck/skills/paperbanana-slide-deck/SKILL.md
 ```
 
 ### PaperBanana setup
