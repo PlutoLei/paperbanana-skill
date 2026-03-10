@@ -27,7 +27,7 @@
 <table>
 <tr>
 <td align="center"><strong>Transformer Architecture</strong><br/><img src="examples/transformer_architecture.png" width="400"/></td>
-<td align="center"><strong>CNN Classification</strong><br/><img src="examples/cnn_architecture.png" width="400"/></td>
+<td align="center"><strong>Mamba SSM Architecture</strong><br/><img src="examples/mamba_architecture.png" width="400"/></td>
 </tr>
 <tr>
 <td align="center" colspan="2"><strong>RAG Pipeline</strong><br/><img src="examples/rag_pipeline.png" width="800"/></td>

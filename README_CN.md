@@ -27,7 +27,7 @@
 <table>
 <tr>
 <td align="center"><strong>Transformer 架构图</strong><br/><img src="examples/transformer_architecture.png" width="400"/></td>
-<td align="center"><strong>CNN 分类网络</strong><br/><img src="examples/cnn_architecture.png" width="400"/></td>
+<td align="center"><strong>Mamba 状态空间模型</strong><br/><img src="examples/mamba_architecture.png" width="400"/></td>
 </tr>
 <tr>
 <td align="center" colspan="2"><strong>RAG 流水线</strong><br/><img src="examples/rag_pipeline.png" width="800"/></td>
