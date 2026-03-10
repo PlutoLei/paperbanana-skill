@@ -1,11 +1,12 @@
 # PaperBanana — Claude Code 学术插图技能集
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-3.1.0-orange?style=flat-square" />
+  <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
+  <img alt="Version" src="https://img.shields.io/badge/version-3.2.0-orange?style=flat-square" />
   <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-Skills-2B6CB0?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
   <img alt="Providers" src="https://img.shields.io/badge/Providers-5-green?style=flat-square" />
-  <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-black?style=flat-square" />
+  <a href="https://github.com/PlutoLei/paperbanana-skill/blob/master/LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-black?style=flat-square" /></a>
 </p>
 
 <p align="center">
@@ -220,6 +221,10 @@ GOOGLE_API_KEY=你的密钥
 | "Image generation failed" | 确认所选服务商支持图像生成（Claude VLM 仅支持视觉理解，不支持图像生成） |
 | "Critic JSON parse error" | 升级到最新版 PaperBanana，4 层 fallback 已修复此问题 |
 | Windows 中文乱码 | 升级 PaperBanana（`git pull`），已修复 Unicode 兼容性 |
+
+## 参与贡献
+
+欢迎贡献！提交 Issue 或 Pull Request 前，请先阅读[贡献指南](CONTRIBUTING.md)。
 
 ## 许可证
 

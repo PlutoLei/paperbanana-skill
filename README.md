@@ -1,11 +1,12 @@
 # PaperBanana Skills for Claude Code
 
 <p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-3.1.0-orange?style=flat-square" />
+  <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
+  <img alt="Version" src="https://img.shields.io/badge/version-3.2.0-orange?style=flat-square" />
   <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-Skills-2B6CB0?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
   <img alt="Providers" src="https://img.shields.io/badge/Providers-5-green?style=flat-square" />
-  <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-black?style=flat-square" />
+  <a href="https://github.com/PlutoLei/paperbanana-skill/blob/master/LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-black?style=flat-square" /></a>
 </p>
 
 <p align="center">
@@ -220,6 +221,10 @@ GOOGLE_API_KEY=your-key-here
 | "Image generation failed" | Verify your provider supports image generation (Claude VLM does not) |
 | "Critic JSON parse error" | Upgrade to latest PaperBanana — 4-layer fallback fixes this |
 | Windows Unicode errors | Upgrade PaperBanana (`git pull` in project directory) |
+
+## Contributing
+
+Contributions are welcome! Please read the [Contributing Guide](CONTRIBUTING.md) before submitting issues or pull requests.
 
 ## License
 

@@ -1,0 +1,81 @@
+name: Validate Skills
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required SKILL.md files exist
+        run: |
+          echo "Checking skill definitions..."
+          files=(
+            "SKILL.md"
+            "plugins/paperbanana/skills/paperbanana/SKILL.md"
+            "plugins/paperbanana-slide-deck/skills/paperbanana-slide-deck/SKILL.md"
+          )
+          for f in "${files[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "FAIL: Missing $f"
+              exit 1
+            fi
+            echo "OK: $f"
+          done
+
+      - name: Check plugin manifests
+        run: |
+          echo "Checking plugin manifests..."
+          files=(
+            ".claude-plugin/marketplace.json"
+            "plugins/paperbanana/.claude-plugin/plugin.json"
+            "plugins/paperbanana-slide-deck/.claude-plugin/plugin.json"
+          )
+          for f in "${files[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "FAIL: Missing $f"
+              exit 1
+            fi
+            python3 -c "import json; json.load(open('$f'))" 2>/dev/null
+            if [ $? -ne 0 ]; then
+              echo "FAIL: Invalid JSON in $f"
+              exit 1
+            fi
+            echo "OK: $f (valid JSON)"
+          done
+
+      - name: Check example images size
+        run: |
+          echo "Checking example images..."
+          total=0
+          for f in examples/*.png; do
+            size=$(stat -c%s "$f" 2>/dev/null || stat -f%z "$f" 2>/dev/null)
+            mb=$(echo "scale=2; $size / 1048576" | bc)
+            echo "  $f: ${mb}MB"
+            total=$((total + size))
+          done
+          total_mb=$(echo "scale=2; $total / 1048576" | bc)
+          echo "Total: ${total_mb}MB"
+          if [ "$total" -gt 10485760 ]; then
+            echo "WARNING: Total image size exceeds 10MB"
+          fi
+
+      - name: Validate markdown structure
+        run: |
+          echo "Checking README files..."
+          for f in README.md README_CN.md; do
+            if [ ! -f "$f" ]; then
+              echo "FAIL: Missing $f"
+              exit 1
+            fi
+            if ! head -1 "$f" | grep -q "^#"; then
+              echo "FAIL: $f missing H1 heading"
+              exit 1
+            fi
+            echo "OK: $f"
+          done

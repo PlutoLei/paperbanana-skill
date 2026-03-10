@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.2.0] - 2026-03-11
+
+### Added
+- **Community health files** — CODE_OF_CONDUCT.md, CONTRIBUTING.md, issue/PR templates
+- **CI workflow** — GitHub Actions validation for SKILL.md, plugin manifests, and image sizes
+- **Dynamic badges** — GitHub Stars counter and clickable License badge
+
+### Changed
+- **Optimized example images** — Total size reduced from 34.6 MB to 3.72 MB (89% reduction)
+- Updated version badges to v3.2.0 in both README.md and README_CN.md
+- Added Contributing section to both READMEs
+
 ## [3.1.0] - 2026-03-07
 
 ### Added
