@@ -21,7 +21,7 @@ All commands run from project root: `cd <paperbanana_dir> && python -m paperbana
 ### `generate` — Methodology Diagrams
 
 ```bash
-python -m paperbanana.cli generate --input '<file>' --caption '<caption>' --optimize --verbose
+python -m paperbanana.cli generate --input '<file>' --caption '<caption>' --config configs/fast.yaml --optimize --auto --verbose
 ```
 
 When user provides inline text (no file): write to temp file, use as `--input`.
@@ -94,7 +94,7 @@ python -m paperbanana.cli slide --input '<prompt.md>' --resolution 4k
 ### `slide-batch` — Batch Slide Generation
 
 ```bash
-python -m paperbanana.cli slide-batch --prompts-dir '<dir>' --resolution 4k
+python -m paperbanana.cli slide-batch --prompts-dir '<dir>' --resolution 4k --config configs/fast.yaml --auto
 ```
 
 | Parameter | Default | Description |

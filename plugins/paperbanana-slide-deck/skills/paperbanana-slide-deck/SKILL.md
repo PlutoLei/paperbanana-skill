@@ -218,7 +218,8 @@ python -m paperbanana.cli slide-batch \
   --output-dir "slide-deck/{topic-slug}" \
   --style {style_name} \
   --resolution 4k \
-  --iterations 3
+  --config configs/fast.yaml \
+  --iterations 2 --auto
 ```
 
 **Step I2: Merge to PPTX**
@@ -266,7 +267,7 @@ If user wants to modify specific slides:
 1. User identifies slide numbers
 2. User provides feedback for each
 3. Update the prompt file: `prompts/NN-slide-{slug}.md`
-4. Regenerate: `python -m paperbanana.cli slide --input prompts/NN-slide-{slug}.md --style {style_name} --resolution 4k`
+4. Regenerate: `python -m paperbanana.cli slide --input prompts/NN-slide-{slug}.md --style {style_name} --resolution 4k --config configs/fast.yaml --auto`
 5. Re-merge PPTX/PDF
 
 ## Output Structure
