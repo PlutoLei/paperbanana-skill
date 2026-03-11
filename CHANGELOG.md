@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.2.1] - 2026-03-11
+
+### Changed
+- **Performance optimization** — Default CLI commands now use `--config configs/fast.yaml --auto` for faster generation
+  - Planner+Stylist merged (skip one VLM call, ~15s saved)
+  - Critic score threshold early exit (score >= 8.0 skips remaining iterations)
+  - Slide generation: ~50% faster (high first-pass quality, 1 iteration typical)
+  - Diagram generation: ~30% faster (2 iterations vs 3 with score-based early exit)
+
 ## [3.2.0] - 2026-03-11
 
 ### Added
