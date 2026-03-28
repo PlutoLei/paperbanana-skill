@@ -28,7 +28,7 @@ When user provides inline text (no file): write to temp file, use as `--input`.
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `--input` / `-i` | — | Path to methodology text file |
+| `--input` / `-i` | — | Path to methodology text file or PDF (`.pdf` requires `pip install 'paperbanana'`) |
 | `--caption` / `-c` | — | Figure caption / communicative intent |
 | `--output` / `-o` | auto | Output image path |
 | `--vlm-provider` | `gemini` | VLM provider: `gemini`, `anthropic`, `openai`, `bedrock`, `openrouter` |
@@ -49,7 +49,13 @@ When user provides inline text (no file): write to temp file, use as `--input`.
 | `--seed` | — | Random seed for reproducible generation |
 | `--verbose` / `-v` | off | Show detailed agent progress and timing |
 | `--auto-download-data` | off | Auto-download expanded reference set (~257MB) on first run |
+| `--venue` | — | Academic venue style: `neurips`, `icml`, `acl`, `ieee`, `custom` |
+| `--pages` | — | Page range for PDF input (e.g., `3-5`) |
 | `--config` | — | Path to config YAML file |
+
+> **Venue styles:** `--venue neurips` applies NeurIPS-specific style guides. Each venue has distinct color palettes, layout conventions, and typography expectations.
+
+> **PDF input:** `--input paper.pdf --pages 3-5` extracts text from the specified pages as source context.
 
 > **Exemplar advanced flags:** `--exemplar-retrieval` enables retrieval; see `generate --help` for additional config flags (`--exemplar-endpoint`, `--exemplar-mode`, `--exemplar-top-k`, `--exemplar-timeout`, `--exemplar-retries`).
 
@@ -198,8 +204,64 @@ Use `--vlm-provider` and `--image-provider` flags to select providers per comman
 | `evaluate <gen.png> <ref.png>` | Comparative evaluation |
 | Just a description (no subcommand) | Default to `generate` |
 
+## Error Handling
+
+Two types of API failure can occur during generation. Handle them differently:
+
+### Type 1: Image Generation API Failure (Visualizer)
+
+The image provider (Gemini Imagen, DALL-E, Nova Canvas) fails to return an image.
+
+| Error | Cause | Action |
+|-------|-------|--------|
+| `429` / `ResourceExhausted` | Rate limit | Wait 30s, retry up to 3 times |
+| `500` / `503` / `ServerError` | Provider outage | Switch to fallback provider (see chain below) |
+| `400` / `InvalidArgument` | Bad prompt (too long, policy violation) | Shorten/rephrase prompt, retry once |
+| `401` / `403` | Invalid API key | Stop and ask user to run `setup` |
+| Timeout (>60s no response) | Network or provider hang | Retry once, then switch provider |
+
+**Fallback chain:** `google_imagen` → `openai` → `bedrock` → `openrouter`. Use the next provider in chain that has a valid API key in `.env`. If all fail, stop and report the error.
+
+### Type 2: VLM Critic API Failure
+
+The VLM provider (Gemini Flash, Claude, GPT-4o) fails during quality evaluation.
+
+| Error | Cause | Action |
+|-------|-------|--------|
+| `429` / Rate limit | Too many requests | Wait 15s, retry up to 3 times |
+| JSON parse failure | VLM returned malformed response | **Do NOT treat as "approved"**. Retry once with stricter prompt. If still fails, mark output as `UNREVIEWED` |
+| `500` / `503` | Provider outage | Switch VLM provider (see chain below) |
+| Timeout (>30s) | Network hang | Retry once, then skip Critic and mark as `UNREVIEWED` |
+
+**VLM fallback chain:** `gemini` → `anthropic` → `openai` → `openrouter`.
+
+**Critical rule:** A Critic failure must NEVER silently approve an image. If Critic cannot evaluate, the output status must be `UNREVIEWED`, not `APPROVED`. Report this clearly to the user.
+
+### Recovery with `--continue`
+
+Use `--continue` to resume after any failure:
+
+| Scenario | Command |
+|----------|---------|
+| Pipeline crashed mid-generation | `--continue` (resumes latest run) |
+| Want to iterate on a specific run | `--continue-run <run_id>` |
+| Want to provide feedback for next iteration | `--continue --feedback "make the arrows thicker"` |
+
+The run directory preserves all intermediate state (plans, images, critic feedback). `--continue` picks up from the last successful step.
+
+### Batch Mode (`slide-batch`) Resilience
+
+When generating multiple slides, a single slide failure should NOT kill the batch:
+1. Log the failure for the specific slide
+2. Continue generating remaining slides
+3. At the end, report which slides succeeded and which failed
+4. User can re-run with `--continue` to retry only failed slides
+
+---
+
 ## After Generation
 
 1. Parse output to find image path
 2. Use Read tool to display the generated image
 3. Report Run ID, iteration count, and Critic feedback
+4. If any outputs are marked `UNREVIEWED`, warn the user explicitly

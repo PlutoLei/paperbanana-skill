@@ -1,5 +1,28 @@
 # Changelog
 
+## [4.0.0] - 2026-03-28
+
+### Added
+- **6-item binary quality checklist** — Automated evaluation for completeness, layout, annotation, color restraint, legibility, and hallucination detection. VLM-based absolute assessment without reference images.
+- **Autoresearch self-optimization loop** — Karpathy-style prompt mutation with keep/revert, versioned snapshots, and JSONL changelog. Targets weakest checklist dimension automatically.
+- **Multi-venue academic styles** — `--venue neurips|icml|acl|ieee|custom` with built-in style guides per venue.
+- **PDF input support** — `--input paper.pdf --pages 3-5` extracts methodology text directly from papers.
+- **Error handling documentation** — SKILL.md now specifies API failure classification, provider fallback chains, UNREVIEWED status for Critic failures, and batch resilience.
+- **Progress streaming** — Pipeline progress callbacks for CLI and MCP (merged from upstream).
+- **Prompt A/B comparison harness** — Side-by-side evaluation of prompt variants (merged from upstream).
+- **New gallery images** — Bio signaling pathway, NLP RAG pipeline, data lakehouse, U-Net+Mamba segmentation.
+
+### Fixed
+- **Critic silent approval bug** — Malformed VLM responses no longer silently pass quality gate; output marked UNREVIEWED instead.
+- **Plot code security** — AST-based import blocklist prevents os, subprocess, socket in VLM-generated code.
+- **Provider retry filtering** — Auth errors (4xx) no longer trigger futile retries; only transient errors (429, 5xx) retry.
+- **Color restraint** — Planner, Stylist, and Critic prompts enforce ≤3 primary color rule (baseline 33% → 100%).
+
+### Changed
+- **Upstream sync** — Merged 41 commits from llmsresearch/paperbanana (progress callbacks, PDF input, venue styles, Studio UI, benchmark harness).
+- Version badge updated to v4.0.0 with new Eval badge.
+- README redesigned with ABC hybrid layout (academic + feature matrix + visual gallery).
+
 ## [3.2.1] - 2026-03-11
 
 ### Changed

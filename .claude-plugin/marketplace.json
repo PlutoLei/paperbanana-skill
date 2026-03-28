@@ -6,13 +6,13 @@
   },
   "metadata": {
     "description": "Claude Code skills for PaperBanana academic illustration generation and slide deck creation",
-    "version": "3.1.0",
+    "version": "4.0.0",
     "homepage": "https://github.com/PlutoLei/paperbanana-skill"
   },
   "plugins": [
     {
       "name": "paperbanana",
-      "version": "3.1.0",
+      "version": "4.0.0",
       "description": "Generate publication-quality academic diagrams, statistical plots, and presentation slides using PaperBanana multi-agent framework",
       "author": { "name": "PlutoLei" },
       "source": "./plugins/paperbanana"
