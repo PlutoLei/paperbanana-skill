@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
-  <img alt="Version" src="https://img.shields.io/badge/version-4.0.0-blue?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-4.1.0-blue?style=flat-square" />
   <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-Skills-2B6CB0?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
   <img alt="Providers" src="https://img.shields.io/badge/Providers-5-green?style=flat-square" />
@@ -57,7 +57,7 @@
 | Skill | Scope | Description | Version |
 |-------|-------|-------------|---------|
 | **paperbanana** | user | Academic diagrams, plots, slides, and quality evaluation | v4.0.0 |
-| **paperbanana-slide-deck** | project | Full slide deck orchestration (RDIV workflow) | v1.0.0 |
+| **paperbanana-slide-deck** | project | Full slide deck orchestration (RDIV workflow) + 150+ style presets | v1.1.0 |
 
 ## Feature Matrix
 
@@ -65,7 +65,7 @@
 |------------|--------|---------|
 | Methodology diagrams | ✅ | Text → publication-quality figure in 30s |
 | Statistical plots | ✅ | CSV/JSON data → auto-styled academic plot |
-| Presentation slides | ✅ | Markdown → 4K slide with 23 style presets |
+| Presentation slides | ✅ | Markdown → 4K slide with 150+ style presets |
 | Multi-venue styles | ✅ **New** | `--venue neurips\|icml\|acl\|ieee\|custom` |
 | PDF input | ✅ **New** | `--input paper.pdf --pages 3-5` |
 | 6-item quality eval | ✅ **New** | Binary checklist: completeness, layout, annotation, color, legibility, hallucination |

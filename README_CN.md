@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
-  <img alt="Version" src="https://img.shields.io/badge/version-4.0.0-blue?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-4.1.0-blue?style=flat-square" />
   <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-Skills-2B6CB0?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
   <img alt="Providers" src="https://img.shields.io/badge/Providers-5-green?style=flat-square" />
@@ -57,7 +57,7 @@
 | 技能 | 作用域 | 描述 | 版本 |
 |------|--------|------|------|
 | **paperbanana** | 用户级 | 学术插图、统计图表、幻灯片生成与质量评估 | v4.0.0 |
-| **paperbanana-slide-deck** | 项目级 | 完整 PPT 编排器（RDIV 工作流） | v1.0.0 |
+| **paperbanana-slide-deck** | 项目级 | 完整 PPT 编排器（RDIV 工作流）+ 150+ 风格预设 | v1.1.0 |
 
 ## 功能矩阵
 
@@ -65,7 +65,7 @@
 |------|------|------|
 | 方法论插图 | ✅ | 文本 → 论文级插图，30 秒 |
 | 统计图表 | ✅ | CSV/JSON → 自动美化学术图表 |
-| 演示幻灯片 | ✅ | Markdown → 4K 幻灯片，23 种风格 |
+| 演示幻灯片 | ✅ | Markdown → 4K 幻灯片，150+ 种风格 |
 | 多会议风格 | ✅ **新** | `--venue neurips\|icml\|acl\|ieee\|custom` |
 | PDF 输入 | ✅ **新** | `--input paper.pdf --pages 3-5` |
 | 6 项质量评估 | ✅ **新** | 完整性、布局、标注、配色、可读性、幻觉 |

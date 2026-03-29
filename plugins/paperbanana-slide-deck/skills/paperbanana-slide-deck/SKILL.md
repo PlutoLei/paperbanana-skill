@@ -20,7 +20,8 @@ End-to-end slide deck creation orchestrated via Nexus RDIV workflow.
 | Component | Role | Location |
 |-----------|------|----------|
 | PaperBanana CLI | Image generation | `python -m paperbanana.cli slide-batch` |
-| Baoyu slide-deck assets | Style files + merge scripts | `~/.claude/plugins/cache/baoyu-skills/content-skills/*/skills/baoyu-slide-deck/` |
+| Style libraries | 150+ style presets (4 sources) | See R1 for discovery paths |
+| Baoyu slide-deck assets | Merge scripts | `~/.claude/plugins/cache/baoyu-skills/content-skills/*/skills/baoyu-slide-deck/` |
 | Bun | Run merge scripts | `bun` or `npx -y bun` |
 
 ## Nexus Integration
@@ -37,15 +38,25 @@ Workflow: RDIV
 
 ### Phase R: Research — Content Analysis & Style Selection
 
-**Step R1: Discover baoyu assets**
+**Step R1: Discover style libraries** — Scan all four sources and merge into a unified list.
 
 ```bash
-# Find latest baoyu-slide-deck cache
-BAOYU_DIR=$(ls -td ~/.claude/plugins/cache/baoyu-skills/content-skills/*/skills/baoyu-slide-deck 2>/dev/null | head -1)
+# Source 0 (PRIMARY): PaperBanana built-in library (123 structured styles)
+SKILL_DIR="$(find ~/.claude/plugins/cache -path '*/paperbanana-slide-deck/references/styles' -type d 2>/dev/null | head -1)"
+
+# Source 1: baoyu-slide-deck styles (16 slide-optimized)
+BAOYU_SLIDE=$(ls -td ~/.claude/plugins/cache/baoyu-skills/content-skills/*/skills/baoyu-slide-deck/references/styles 2>/dev/null | head -1)
+
+# Source 2: baoyu-infographic styles (20 visual-rich)
+BAOYU_INFOG=$(ls -td ~/.claude/plugins/cache/baoyu-skills/content-skills/*/skills/baoyu-infographic/references/styles 2>/dev/null | head -1)
+
+# Source 3: theme-factory themes (10 color/typography presets)
+THEME_FACTORY=$(ls -td ~/.claude/plugins/cache/anthropic-agent-skills/document-skills/*/skills/theme-factory/themes 2>/dev/null | head -1)
 ```
 
-If found: Glob `${BAOYU_DIR}/references/styles/*.md` to get full style list.
-If not found: Use PaperBanana's 23 built-in presets (fallback).
+Merge: Glob all found directories for `*.md`, deduplicate by filename (priority: baoyu-slide-deck > built-in > baoyu-infographic > theme-factory). Present the full unified list to user during R3.
+
+If none found: Use PaperBanana's 23 code-level presets (fallback).
 
 **Step R2: Analyze content**
 
@@ -64,7 +75,7 @@ Read user's input content. Analyze for:
 
 **Step R3: Style recommendation**
 
-Based on content signals, recommend 2-3 styles from the 23 presets:
+Based on content signals, recommend 2-3 styles from the 150+ presets. Core mappings:
 
 | Content Signals | Recommended Style |
 |----------------|-------------------|
@@ -291,7 +302,7 @@ slide-deck/{topic-slug}/
 
 | Component Missing | Fallback |
 |-------------------|----------|
-| Baoyu styles | Use `slide_styles.py` 23 built-in presets |
+| All style libraries | Use `slide_styles.py` 23 code-level presets |
 | Baoyu merge scripts | Output PNG only, skip PPTX/PDF |
 | Bun/npx | Skip PPTX/PDF merge, inform user |
 

@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.1.0] - 2026-03-29
+
+### Added
+- **123 structured style presets** — Curated from Fooocus SDXL (277 styles), enriched with color palettes, typography, visual elements, and style rules. Located in `plugins/paperbanana-slide-deck/references/styles/`.
+- **Multi-source style discovery** — Slide deck skill now scans 4 sources: built-in library (123), baoyu-slide-deck (16), baoyu-infographic (20), and theme-factory (10). Total 150+ styles with automatic deduplication.
+- **10 style categories** — Art Movement, Classic & Design, Craft & Technique, Commercial, Photography, Futuristic, Papercraft, Atmospheric, Core Digital, Versatile.
+
+### Changed
+- **paperbanana-slide-deck** upgraded to v1.1.0 — R1 step now discovers styles from 4 sources instead of 1.
+- Feature Matrix updated: 23 presets → 150+ presets.
+
 ## [4.0.0] - 2026-03-28
 
 ### Added
