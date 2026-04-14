@@ -1,5 +1,25 @@
 # Changelog
 
+## [4.2.0] - 2026-04-14
+
+### Changed
+- **paperbanana SKILL.md** — Added Command Selection Decision Tree (subcommand routing table with ambiguous-input fallback and out-of-scope clause).
+- **paperbanana SKILL.md** — Added User Confirmation Checkpoints section (explicit guards for `--auto`, `--auto-download-data`, `setup`).
+- **paperbanana SKILL.md** — After Generation now proactively suggests `--continue --feedback` on UNREVIEWED or user dissatisfaction.
+- **paperbanana-slide-deck SKILL.md** — Auto-degrade trigger now fires on any slide (not just first), with four explicit conditions including user-reported rate-limit persistence.
+- **paperbanana-slide-deck SKILL.md** — Distinguish Critic-429 vs Image-gen-429 with separate response strategies.
+- **paperbanana-slide-deck SKILL.md** — I2 Smart Cleanup now documents sequencing (I1 → I2 → I3) to prevent deletion of in-progress batch PNGs.
+
+### Fixed
+- **paperbanana-slide-deck Path B code** — Added `try/except` with exponential backoff (`sleep(30 * 2**retry)` capped at 5 min, `MAX_RETRIES=5`) and partial-batch skip (resume from first missing PNG instead of regenerating all).
+- **paperbanana-slide-deck Fallback table** — Expanded from 1 to 3 rows covering Critic-429, Image-gen-429, and partial-batch scenarios.
+
+### Notes
+- Improvements derived from `darwin-skill` evaluation loop (8-dimension rubric + sub-agent verification).
+- Composite scores: paperbanana 71.4 → 83.7 (+12.3); paperbanana-slide-deck 82.0 → 86.5 (+4.5).
+- **Upstream awareness**: `llmsresearch/paperbanana` merged 8 PRs on 2026-04-07 not yet incorporated into this skill doc. Three touch points are marked with upstream Notes in SKILL.md: `--auto-download-data` dataset size (upstream #112 curated), Path B partial-batch vs upstream `batch_checkpoint.json` (#129), and new subcommands `plot-batch`/`sweep` + `claude_code` provider (#123/#118/#115). A future skill release will document these.
+- Manifest version alignment: `marketplace.json` metadata.version was still at `4.0.0` despite the 4.1.0 CHANGELOG entry — bumped directly to `4.2.0` to reconcile.
+
 ## [4.1.0] - 2026-03-29
 
 ### Added

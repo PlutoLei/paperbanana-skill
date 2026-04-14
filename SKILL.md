@@ -1,6 +1,6 @@
 ---
 name: paperbanana
-description: Generate publication-quality academic diagrams, statistical plots, and presentation slides from text descriptions using PaperBanana multi-agent framework.
+description: Use when user needs academic diagrams, methodology figures, statistical plots, or presentation slides from text descriptions or data files. Also use for evaluating generated figures against references.
 argument-hint: [generate|plot|slide|slide-batch|evaluate|data|setup] [description or file path]
 allowed-tools: Read, Write, Bash, Glob, Grep, AskUserQuestion
 ---
@@ -18,10 +18,30 @@ Multi-agent pipeline (Retriever → Planner → Stylist → Visualizer → Criti
 
 All commands run from project root: `cd <paperbanana_dir> && python -m paperbanana.cli <cmd>`
 
+### Command Selection Decision Tree
+
+Route user requests to the right subcommand **before** looking up parameters:
+
+| User intent | Signal words | Subcommand |
+|-------------|--------------|------------|
+| 方法论/架构/流程图 from text or PDF | "method figure", "架构图", "流程图", "methodology", "pipeline diagram", "论文配图" | `generate` |
+| Statistical plot from data file | "plot", "curve", "bar chart", "scatter", "heatmap", has CSV/JSON | `plot` |
+| Single presentation slide | "slide", "一张幻灯片", "封面图", single prompt file | `slide` |
+| Batch slide generation | "all slides", "批量生成", "N 张幻灯片", `prompts/` directory | `slide-batch` |
+| Compare generated vs human reference | "evaluate", "对比", "与参考图对比" | `evaluate` |
+| Manage reference dataset | "download dataset", "清缓存" | `data` |
+| First-time provider config | "setup", "配置 API key" | `setup` |
+
+**Ambiguous input**: If user provides just a description with no subcommand signal, default to `generate` (see Argument Parsing table for details).
+
+**Out-of-scope**: Pure code generation (matplotlib/seaborn script) is NOT paperbanana's job — those go to `matplotlib` / `scientific-visualization` skills. Paperbanana is for AI-driven image generation + critique loops.
+
+> **Note (upstream sync pending):** Upstream `paperbanana` CLI adds subcommands (`plot-batch` #123, `sweep` #118) and a `claude_code` VLM provider (#115) not yet reflected in this table. See the [llmsresearch/paperbanana CHANGELOG](https://github.com/llmsresearch/paperbanana) for the authoritative CLI surface.
+
 ### `generate` — Methodology Diagrams
 
 ```bash
-python -m paperbanana.cli generate --input '<file>' --caption '<caption>' --config configs/fast.yaml --optimize --auto --verbose
+python -m paperbanana.cli generate --input '<file>' --caption '<caption>' --optimize --verbose
 ```
 
 When user provides inline text (no file): write to temp file, use as `--input`.
@@ -53,7 +73,7 @@ When user provides inline text (no file): write to temp file, use as `--input`.
 | `--pages` | — | Page range for PDF input (e.g., `3-5`) |
 | `--config` | — | Path to config YAML file |
 
-> **Venue styles:** `--venue neurips` applies NeurIPS-specific style guides. Each venue has distinct color palettes, layout conventions, and typography expectations.
+> **Venue styles:** `--venue neurips` applies NeurIPS-specific methodology and plot style guides from `data/guidelines/`. Each venue has distinct color palettes, layout conventions, and typography expectations.
 
 > **PDF input:** `--input paper.pdf --pages 3-5` extracts text from the specified pages as source context.
 
@@ -100,7 +120,7 @@ python -m paperbanana.cli slide --input '<prompt.md>' --resolution 4k
 ### `slide-batch` — Batch Slide Generation
 
 ```bash
-python -m paperbanana.cli slide-batch --prompts-dir '<dir>' --resolution 4k --config configs/fast.yaml --auto
+python -m paperbanana.cli slide-batch --prompts-dir '<dir>' --resolution 4k
 ```
 
 | Parameter | Default | Description |
@@ -259,9 +279,25 @@ When generating multiple slides, a single slide failure should NOT kill the batc
 
 ---
 
+## User Confirmation Checkpoints
+
+Paperbanana is CLI-first, but three user-facing actions are expensive or irreversible. Pause for explicit confirmation before proceeding:
+
+| Trigger | Checkpoint Action |
+|---------|-------------------|
+| `--auto` with `--max-iterations > 5` | Before kickoff, show: cap, est. API cost (≈ iterations × $0.04), est. wall time (≈ iterations × 30s). Ask: "Proceed with up to N iterations?" |
+| `--auto-download-data` on first run | Before download, announce: "reference dataset will be downloaded to cache (~257MB full_bench, or lightweight curated set in upstream ≥ #112)". Ask: "Continue?" |
+| `setup` wizard | Before writing to `.env`, show the exact keys and preview of values (redact secrets after 4 chars). Ask: "Save to .env?" |
+
+For normal `generate` / `plot` / `slide` (no `--auto`, within iteration cap 3), no checkpoint is needed — these are short, cheap, and the Critic loop is self-bounded.
+
+---
+
 ## After Generation
 
 1. Parse output to find image path
 2. Use Read tool to display the generated image
 3. Report Run ID, iteration count, and Critic feedback
 4. If any outputs are marked `UNREVIEWED`, warn the user explicitly
+5. **If user expresses dissatisfaction OR status is UNREVIEWED**, proactively suggest:
+   `python -m paperbanana.cli <cmd> --continue --feedback "<specific fix>"` — preserves run state, avoids full regeneration
