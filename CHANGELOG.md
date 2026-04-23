@@ -1,5 +1,28 @@
 # Changelog
 
+## [4.3.0] - 2026-04-23
+
+### Added
+- **GPT Image 2 native support** — `gpt-image-2` (released 2026-04-21) is now a first-class model in the OpenAI image provider. Detection is prefix-based (`model.startswith("gpt-image-2")`).
+- **Expanded output sizes** — gpt-image-2 unlocks `2048x1152` (true 16:9), `1536x1536` (large square), `1792x1024`, and `1152x2048` alongside the legacy sizes that gpt-image-1.5 / gpt-image-1 / DALL-E 3 already use.
+- **Quality tier parameter** — `quality=low|medium|high` is sent automatically for gpt-image-2 (omitted for legacy models since those reject it).
+- **Full aspect-ratio coverage for gpt-image-2** — `supported_ratios` now reports 8 ratios (all of paperbanana's Imagen set) when the active model is gpt-image-2. Legacy models still advertise only `1:1`, `3:2`, `2:3`.
+- **Smart provider routing table** in both SKILL.md files — decides `openai` vs `gemini` per scenario, with hard rules to avoid two documented Gemini bugs (duplicate-character Chinese titles on slides; hallucinated content on multi-reference composition). Explicit user intent (`用 GPT` / `用 Gemini` / `两路并行`) always overrides the auto-rules.
+- **Before/after comparison gallery** in README — three prompt pairs showing Gemini's Chinese-text bug, GPT's semantic fidelity on diffusion diagrams, and Gemini's strength on traditional calligraphy. Backs up the routing table with evidence from a controlled 16-prompt test.
+
+### Changed
+- **paperbanana SKILL.md** — Replaced the static "Provider Selection" table with a full "Provider Selection & Routing" section: provider capability matrix + decision table + explicit-override rule + standalone `image-router` CLI pointer for ad-hoc quick-image needs.
+- **paperbanana-slide-deck SKILL.md** — New Phase P (Provider Picking) runs before Phase R/D/I and records the choice in `provider.txt`. Phase I1 now branches on `provider.txt` to pass the correct `--image-provider` / `--image-model` flags to `slide-batch`; both providers benefit from the Path A Critic loop.
+- **Critic loop coverage** — OpenAI branch previously bypassed the critic (going through the raw adapter). Both branches now go through the full RDIV pipeline so quality gating applies regardless of provider.
+
+### Fixed
+- **Legacy models unaffected** — gpt-image-1 / gpt-image-1.5 / DALL-E 3 retain their original 1024/1536 sizing and receive no `quality=` parameter. 17 new TDD tests verify the legacy path stays intact.
+
+### Notes
+- Routing calibrated from `image-model-comparison/results/2026-04-22_gemini-only/summary.html` (LLM-as-judge + user-corrected aesthetic judgments over 16 prompts × 2 providers).
+- Local paperbanana fork commit: `c82928a` on branch `feat/gpt-image-2-support` (`tests/test_providers/test_openai_imagen.py` — 17 new tests, all green).
+- Standalone `image-router` CLI lives at `image-model-comparison/src/cli.py` for ad-hoc image generation without the Critic overhead.
+
 ## [4.2.0] - 2026-04-14
 
 ### Changed

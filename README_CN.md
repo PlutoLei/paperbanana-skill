@@ -2,10 +2,11 @@
 
 <p align="center">
   <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
-  <img alt="Version" src="https://img.shields.io/badge/version-4.2.0-blue?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-4.3.0-blue?style=flat-square" />
   <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-Skills-2B6CB0?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
   <img alt="Providers" src="https://img.shields.io/badge/Providers-5-green?style=flat-square" />
+  <img alt="GPT Image 2" src="https://img.shields.io/badge/GPT%20Image%202-%E5%8E%9F%E7%94%9F%E6%94%AF%E6%8C%81-blueviolet?style=flat-square" />
   <img alt="Eval" src="https://img.shields.io/badge/Eval-6%E9%A1%B9%E8%B4%A8%E9%87%8F%E6%A3%80%E6%9F%A5-orange?style=flat-square" />
   <a href="https://github.com/PlutoLei/paperbanana-skill/blob/master/LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-black?style=flat-square" /></a>
 </p>
@@ -63,6 +64,8 @@
 
 | 功能 | 状态 | 说明 |
 |------|------|------|
+| **GPT Image 2 原生支持** | ✅ **v4.3 新** | `gpt-image-2`（2026-04-21 发布），真 16:9 到 2048×1152，quality 档位（low/medium/high），走完整 RDIV + Critic |
+| **智能 Provider 路由** | ✅ **v4.3 新** | 按场景自动选 `openai` / `gemini`；用户说 `用 GPT`/`用 Gemini`/`两路并行` 永远优先 |
 | 方法论插图 | ✅ | 文本 → 论文级插图，30 秒 |
 | 统计图表 | ✅ | CSV/JSON → 自动美化学术图表 |
 | 演示幻灯片 | ✅ | Markdown → 4K 幻灯片，150+ 种风格 |
@@ -74,6 +77,82 @@
 | 5 大 VLM 提供商 | ✅ | Gemini、Claude、OpenAI、Bedrock、OpenRouter |
 | 自动精炼 | ✅ | `--auto` 循环直到 Critic 满意 |
 | 运行恢复 | ✅ | `--continue` + `--feedback` 迭代式精炼 |
+
+---
+
+## v4.3 新增功能 — GPT Image 2 原生集成
+
+OpenAI 在 **2026-04-21** 发布了 `gpt-image-2`。PaperBanana v4.3 把它作为一等 provider 接入，**完整 Retriever → Planner → Stylist → Visualizer → Critic 流水线** 都会作用于 gpt-image-2 出的图。你不用离开 paperbanana 就能拿到带质量门控的 2048×1152 图。
+
+### Adapter 升级
+
+| 维度 | v4.2 之前 | v4.3 之后 |
+|------|----------|----------|
+| OpenAI 默认模型 | `gpt-image-1.5` | `gpt-image-1.5`，**新增** `gpt-image-2` 原生通路 |
+| 输出尺寸 | 1024×1024 / 1536×1024 / 1024×1536 | **新增** 2048×1152（真 16:9）/ 1536×1536 / 1792×1024 / 1152×2048 |
+| `quality=low\|medium\|high` | ❌ 会报错 | ✅ gpt-image-2 自动带上 |
+| 支持宽高比 | 3 种（`1:1`, `3:2`, `2:3`） | **8 种**（paperbanana 全集，不再强制降档） |
+| Critic 循环 | 只对 Gemini 生效 | ✅ 对 gpt-image-2 也生效 — 能抓中文字 bug、漏节点 |
+
+两个 flag 就能切：
+
+```bash
+python -m paperbanana.cli generate \
+  --image-provider openai --image-model gpt-image-2 \
+  --aspect-ratio 16:9 \
+  --input prompt.txt --caption "..."
+```
+
+### 场景自动路由
+
+skill 根据你的请求信号自动挑 provider：
+
+| 场景 | 自动路由到 | 理由 |
+|------|----------|------|
+| 用户说 `用 GPT` / `用 Gemini` / `两路并行` | 对应 provider（或两家都跑）| 显式意图永远优先 |
+| `--purpose submission` / "投稿用" | `gpt-image-2` high | 严谨优先 |
+| 中文标题的**幻灯片** | `gpt-image-2` | 避 Gemini 的中文字重复 bug（见下） |
+| 多参考图编辑（≥ 2 张）| `gpt-image-2` | 避 Gemini 的多图合成幻觉 |
+| prompt 含 山水 / 书法 / 古风 / 水墨 | `gemini` | Gemini 在传统东亚审美上占优 |
+| `generate` 含 architecture / multi-stage / ablation 关键词 | `gpt-image-2` high | GPT 在密集多模块 figure 上占优 |
+| 其他 | `gemini` medium（默认）| 日常更快、更便宜、更好看 |
+
+路由规则来自一次 16 条 prompt 的实测对比（详细记录：配套仓库的 `docs/superpowers/specs/2026-04-23-image-router-design.md`）。
+
+### Before / After — 路由规则的实测依据
+
+下面 3 对图出自**同一 prompt 分别交给两家模型**。路由表不是拍脑袋——每个模型有自己的强项和具体 bug。
+
+#### 1. 中文幻灯片标题 — GPT 胜（Gemini 有字符重复 bug）
+
+<table>
+<tr>
+<td align="center" width="50%"><strong>Gemini</strong><br/><img src="examples/routing-comparison/D2_gemini.png" width="440"/><br/><em>标题写成 "飞轮模飞轮模型" — 前 3 字 "飞轮模" 被重复一遍，直接废图。</em></td>
+<td align="center" width="50%"><strong>gpt-image-2</strong><br/><img src="examples/routing-comparison/D2_openai.png" width="440"/><br/><em>标题干净正确："飞轮模型 — 核心概念"。路由规则把含中文的幻灯片送到这边。</em></td>
+</tr>
+</table>
+
+#### 2. 语义真实性（Diffusion 过程）— GPT 胜
+
+<table>
+<tr>
+<td align="center" width="50%"><strong>Gemini</strong><br/><img src="examples/routing-comparison/A2_gemini.png" width="440"/><br/><em>从 x_0 到 x_4 的 cat 图完全一样，只有 x_T 是噪声 — 视觉和语义脱节。</em></td>
+<td align="center" width="50%"><strong>gpt-image-2</strong><br/><img src="examples/routing-comparison/A2_openai.png" width="440"/><br/><em>cat 真的按步骤加噪 — 视觉忠实于扩散过程。</em></td>
+</tr>
+</table>
+
+#### 3. 传统书法 — Gemini 胜（笔力更足）
+
+<table>
+<tr>
+<td align="center" width="50%"><strong>Gemini</strong><br/><img src="examples/routing-comparison/G2_gemini.png" width="440"/><br/><em>Bold expressive 笔画 + 明显飞白 + 宣纸纤维感 — prompt 要的"bold"拿到了。</em></td>
+<td align="center" width="50%"><strong>gpt-image-2</strong><br/><img src="examples/routing-comparison/G2_openai.png" width="440"/><br/><em>字形都对，但笔锋偏克制。路由规则把 书法 / 山水 / 古风 送到 Gemini。</em></td>
+</tr>
+</table>
+
+### 日常使用
+
+你不用记这些——直接要图即可，paperbanana 会自己挑。想强制就用 `--image-provider openai|gemini|both`。Critic 循环对选中的 provider 都生效，质量门控不变。
 
 ---
 

@@ -2,10 +2,11 @@
 
 <p align="center">
   <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
-  <img alt="Version" src="https://img.shields.io/badge/version-4.2.0-blue?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-4.3.0-blue?style=flat-square" />
   <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-Skills-2B6CB0?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
   <img alt="Providers" src="https://img.shields.io/badge/Providers-5-green?style=flat-square" />
+  <img alt="GPT Image 2" src="https://img.shields.io/badge/GPT%20Image%202-native-blueviolet?style=flat-square" />
   <img alt="Eval" src="https://img.shields.io/badge/Eval-6--item%20Checklist-orange?style=flat-square" />
   <a href="https://github.com/PlutoLei/paperbanana-skill/blob/master/LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-black?style=flat-square" /></a>
 </p>
@@ -63,6 +64,8 @@
 
 | Capability | Status | Details |
 |------------|--------|---------|
+| **GPT Image 2 native support** | ✅ **v4.3 New** | `gpt-image-2` (2026-04-21) with true 16:9 up to 2048×1152, quality tier (low/medium/high), full RDIV pipeline + Critic |
+| **Smart provider routing** | ✅ **v4.3 New** | Auto-pick `openai` vs `gemini` by scenario; explicit `用 GPT`/`用 Gemini`/`两路并行` override always respected |
 | Methodology diagrams | ✅ | Text → publication-quality figure in 30s |
 | Statistical plots | ✅ | CSV/JSON data → auto-styled academic plot |
 | Presentation slides | ✅ | Markdown → 4K slide with 150+ style presets |
@@ -75,6 +78,82 @@
 | Auto-refine | ✅ | `--auto` loops until Critic is satisfied |
 | Run continuation | ✅ | `--continue` with `--feedback` for iterative refinement |
 | Dynamic aspect ratio | ✅ | 8 Imagen ratios, Planner auto-recommends |
+
+---
+
+## What's New in v4.3 — GPT Image 2 First-Class Support
+
+OpenAI released `gpt-image-2` on **2026-04-21**. PaperBanana v4.3 integrates it natively so the full **Retriever → Planner → Stylist → Visualizer → Critic** pipeline runs on gpt-image-2 outputs. You get quality-gated images at up to 2048×1152 without leaving paperbanana.
+
+### Adapter upgrade
+
+| Feature | Before (v4.2) | After (v4.3) |
+|---------|---------------|--------------|
+| Default OpenAI model | `gpt-image-1.5` | `gpt-image-1.5` — but `gpt-image-2` is now fully wired in too |
+| Output sizes | 1024×1024 / 1536×1024 / 1024×1536 (3 sizes) | **Adds** 2048×1152 (true 16:9), 1536×1536, 1792×1024, 1152×2048 |
+| `quality=low\|medium\|high` | ❌ rejected | ✅ auto-sent for gpt-image-2 |
+| Supported ratios | 3 (`1:1`, `3:2`, `2:3`) | **8** (all paperbanana ratios; no more downgrade) |
+| Critic loop | Only on Gemini | ✅ Runs on gpt-image-2 too — catches Chinese typo bugs, missing nodes |
+
+Switching is a two-flag change:
+
+```bash
+python -m paperbanana.cli generate \
+  --image-provider openai --image-model gpt-image-2 \
+  --aspect-ratio 16:9 \
+  --input prompt.txt --caption "..."
+```
+
+### Auto routing by scenario
+
+The skill picks the right provider based on your request's signal:
+
+| Scenario | Auto-routes to | Why |
+|----------|----------------|-----|
+| User says `用 GPT` / `用 Gemini` / `两路并行` | That provider (or both) | Explicit intent always wins |
+| `--purpose submission` / "投稿用" | `gpt-image-2` high | Rigor priority |
+| Slide deck with **Chinese titles** | `gpt-image-2` | Avoid Gemini's duplicate-character bug (see below) |
+| Edit with ≥ 2 reference images | `gpt-image-2` | Avoid Gemini's multi-image hallucination |
+| Prompt mentions 山水 / 书法 / 古风 / 水墨 | `gemini` | Gemini dominates traditional East-Asian aesthetics |
+| `generate` with architecture / multi-stage / ablation keywords | `gpt-image-2` high | GPT wins on dense multi-module figures |
+| Everything else | `gemini` medium (default) | Faster, cheaper, prettier for general work |
+
+Routing is calibrated from a 16-prompt controlled comparison (details: `docs/superpowers/specs/2026-04-23-image-router-design.md` in the companion repo).
+
+### Before / After — routing in action
+
+These pairs come from the same prompt sent to both providers. The routing table exists because each model has specific strengths and specific bugs.
+
+#### 1. Chinese slide titles — GPT wins (Gemini has a duplicate-character bug)
+
+<table>
+<tr>
+<td align="center" width="50%"><strong>Gemini</strong><br/><img src="examples/routing-comparison/D2_gemini.png" width="440"/><br/><em>Title reads "飞轮模飞轮模型" — the prefix "飞轮模" is duplicated. Not viable for slide decks.</em></td>
+<td align="center" width="50%"><strong>gpt-image-2</strong><br/><img src="examples/routing-comparison/D2_openai.png" width="440"/><br/><em>Title renders cleanly: "飞轮模型 — 核心概念". Routing sends Chinese slides here.</em></td>
+</tr>
+</table>
+
+#### 2. Semantic correctness (diffusion process) — GPT wins
+
+<table>
+<tr>
+<td align="center" width="50%"><strong>Gemini</strong><br/><img src="examples/routing-comparison/A2_gemini.png" width="440"/><br/><em>Cat images at x_0 through x_4 look identical; only x_T is noise. Semantics and visuals don't match.</em></td>
+<td align="center" width="50%"><strong>gpt-image-2</strong><br/><img src="examples/routing-comparison/A2_openai.png" width="440"/><br/><em>Cat actually degrades step-by-step — visually faithful to the diffusion process.</em></td>
+</tr>
+</table>
+
+#### 3. Traditional Chinese calligraphy — Gemini wins (bolder brushwork)
+
+<table>
+<tr>
+<td align="center" width="50%"><strong>Gemini</strong><br/><img src="examples/routing-comparison/G2_gemini.png" width="440"/><br/><em>Bold expressive strokes with visible 飞白 and xuan-paper fiber — the prompt asked for "bold" and got it.</em></td>
+<td align="center" width="50%"><strong>gpt-image-2</strong><br/><img src="examples/routing-comparison/G2_openai.png" width="440"/><br/><em>Technically correct characters but the stroke feels restrained. The routing sends 书法/山水/古风 prompts to Gemini.</em></td>
+</tr>
+</table>
+
+### Verdict
+
+You don't need to know any of this — just ask for a figure and paperbanana picks. Or override with `--image-provider openai|gemini|both`. The Critic loop runs on whatever the pipeline picks, so quality stays gated regardless.
 
 ---
 
