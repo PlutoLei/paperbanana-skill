@@ -37,12 +37,33 @@
 <td align="center"><strong>Medical Imaging — TextMamba3D</strong><br/><img src="examples/textmamba3d_architecture.png" width="400"/><br/><sub><em>gpt-image-2 · paper-grade info density</em></sub></td>
 <td align="center"><strong>Game Theory — Influence Diagram</strong><br/><img src="examples/game_theory_influence_diagram.png" width="400"/><br/><sub><em>Gemini · soft pastel academic aesthetic</em></sub></td>
 </tr>
+<tr>
+<td align="center"><strong>Ablation Study — BraTS 2023</strong><br/><img src="examples/ablation_brats_figure.png" width="400"/><br/><sub><em>gpt-image-2 · 2×2 MRI panels + Dice bar chart</em></sub></td>
+<td align="center"><strong>Scientific Slide — scRNA-seq Workflow</strong><br/><img src="examples/slide_scrna_workflow.png" width="400"/><br/><sub><em>paperbanana-slide-deck · single-cell analysis pipeline</em></sub></td>
+</tr>
 </table>
 
 <p align="center"><em>All figures generated from plain text descriptions — zero manual drawing.</em></p>
 
+### Slide Deck Showcase — "The Flywheel Learning Method"
+
+A real 10-slide lecture deck built with `paperbanana-slide-deck`. Below: 4 selected slides showing **set-wide style consistency** (same warm off-white palette, sketch-notes hand-drawn typography, and gear motif across the whole deck).
+
+<table>
+<tr>
+<td align="center"><strong>Slide 1 — Cover</strong><br/><img src="examples/slide_flywheel_01_cover.png" width="380"/></td>
+<td align="center"><strong>Slide 4 — Flywheel Model</strong><br/><img src="examples/slide_flywheel_04_model.png" width="380"/></td>
+</tr>
+<tr>
+<td align="center"><strong>Slide 7 — AI Tools Do's and Don'ts</strong><br/><img src="examples/slide_flywheel_07_ai_tools.png" width="380"/></td>
+<td align="center"><strong>Slide 10 — Let the Flywheel Spin</strong><br/><img src="examples/slide_flywheel_10_summary.png" width="380"/></td>
+</tr>
+</table>
+
+<p align="center"><em>One command: <code>paperbanana-slide-deck</code> picks a style preset, plans the outline, drafts per-slide prompts, then generates all slides with consistent design tokens.</em></p>
+
 <details>
-<summary><strong>More Examples</strong> (architecture diagrams, slides, traditional aesthetics)</summary>
+<summary><strong>More Examples</strong> (architecture diagrams, bilingual decks, traditional aesthetics, document layouts)</summary>
 <br/>
 <table>
 <tr>
@@ -51,6 +72,10 @@
 </tr>
 <tr>
 <td align="center" colspan="2"><strong>RAG Pipeline</strong><br/><img src="examples/rag_pipeline.png" width="760"/></td>
+</tr>
+<tr>
+<td align="center"><strong>Bilingual Lecture Cover — "Claude Code 机制全景"</strong><br/><img src="examples/slide_claude_code_cover.png" width="380"/><br/><sub><em>sketch-notes style · Anthropic brand tuning</em></sub></td>
+<td align="center"><strong>Chinese-Style Resume Template</strong><br/><img src="examples/chinese_resume_template.png" width="380"/><br/><sub><em>Gemini · gold-clouds-on-ivory banner + vertical Song-script name</em></sub></td>
 </tr>
 <tr>
 <td align="center"><strong>Classical Chinese Landscape — Study Notebook Cover</strong><br/><img src="examples/classical_chinese_landscape.png" width="380"/><br/><sub><em>Gemini · Song-dynasty 山水 style</em></sub></td>

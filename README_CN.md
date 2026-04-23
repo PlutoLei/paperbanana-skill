@@ -37,12 +37,33 @@
 <td align="center"><strong>医学影像 — TextMamba3D 架构</strong><br/><img src="examples/textmamba3d_architecture.png" width="400"/><br/><sub><em>gpt-image-2 · 论文级信息密度</em></sub></td>
 <td align="center"><strong>博弈论 — Influence Diagram</strong><br/><img src="examples/game_theory_influence_diagram.png" width="400"/><br/><sub><em>Gemini · 软色调学术美学</em></sub></td>
 </tr>
+<tr>
+<td align="center"><strong>消融实验 — BraTS 2023</strong><br/><img src="examples/ablation_brats_figure.png" width="400"/><br/><sub><em>gpt-image-2 · 2×2 MRI 面板 + Dice 柱状图</em></sub></td>
+<td align="center"><strong>科研幻灯片 — scRNA-seq 工作流</strong><br/><img src="examples/slide_scrna_workflow.png" width="400"/><br/><sub><em>paperbanana-slide-deck · 单细胞分析流水线</em></sub></td>
+</tr>
 </table>
 
 <p align="center"><em>所有图均由纯文本描述生成，零人工绘制。</em></p>
 
+### 成套 PPT 演示 — "飞轮学习法"
+
+由 `paperbanana-slide-deck` 生成的真实 10 张讲座幻灯片。下面 4 张展示**整套风格一致性**（同样的暖米白配色、手绘 sketch-notes 字体、齿轮主题贯穿整个 deck）。
+
+<table>
+<tr>
+<td align="center"><strong>Slide 1 — 封面</strong><br/><img src="examples/slide_flywheel_01_cover.png" width="380"/></td>
+<td align="center"><strong>Slide 4 — 飞轮模型</strong><br/><img src="examples/slide_flywheel_04_model.png" width="380"/></td>
+</tr>
+<tr>
+<td align="center"><strong>Slide 7 — AI 工具正误对比</strong><br/><img src="examples/slide_flywheel_07_ai_tools.png" width="380"/></td>
+<td align="center"><strong>Slide 10 — 让飞轮转起来</strong><br/><img src="examples/slide_flywheel_10_summary.png" width="380"/></td>
+</tr>
+</table>
+
+<p align="center"><em>一条命令：<code>paperbanana-slide-deck</code> 自动选风格预设、规划大纲、起草 per-slide prompt，然后生成全套风格一致的幻灯片。</em></p>
+
 <details>
-<summary><strong>更多示例</strong>（架构图、幻灯片、传统艺术）</summary>
+<summary><strong>更多示例</strong>（架构图、双语 PPT、传统艺术、文档排版）</summary>
 <br/>
 <table>
 <tr>
@@ -51,6 +72,10 @@
 </tr>
 <tr>
 <td align="center" colspan="2"><strong>RAG 管线</strong><br/><img src="examples/rag_pipeline.png" width="760"/></td>
+</tr>
+<tr>
+<td align="center"><strong>双语讲座封面 — "Claude Code 机制全景"</strong><br/><img src="examples/slide_claude_code_cover.png" width="380"/><br/><sub><em>sketch-notes 风格 · Anthropic brand tuning</em></sub></td>
+<td align="center"><strong>中式简历模板</strong><br/><img src="examples/chinese_resume_template.png" width="380"/><br/><sub><em>Gemini · 金云纹象牙白横幅 + 竖排宋体 name</em></sub></td>
 </tr>
 <tr>
 <td align="center"><strong>宋代山水 · 学习笔记封面</strong><br/><img src="examples/classical_chinese_landscape.png" width="380"/><br/><sub><em>Gemini · 皴擦笔法 + 远山雾气</em></sub></td>
