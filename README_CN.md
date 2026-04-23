@@ -63,7 +63,7 @@
 <p align="center"><em>一条命令：<code>paperbanana-slide-deck</code> 自动选风格预设、规划大纲、起草 per-slide prompt，然后生成全套风格一致的幻灯片。</em></p>
 
 <details>
-<summary><strong>更多示例</strong>（架构图、双语 PPT、传统艺术、文档排版）</summary>
+<summary><strong>更多示例</strong>（架构图、传统艺术）</summary>
 <br/>
 <table>
 <tr>
@@ -74,12 +74,7 @@
 <td align="center" colspan="2"><strong>RAG 管线</strong><br/><img src="examples/rag_pipeline.png" width="760"/></td>
 </tr>
 <tr>
-<td align="center"><strong>双语讲座封面 — "Claude Code 机制全景"</strong><br/><img src="examples/slide_claude_code_cover.png" width="380"/><br/><sub><em>sketch-notes 风格 · Anthropic brand tuning</em></sub></td>
-<td align="center"><strong>中式简历模板</strong><br/><img src="examples/chinese_resume_template.png" width="380"/><br/><sub><em>Gemini · 金云纹象牙白横幅 + 竖排宋体 name</em></sub></td>
-</tr>
-<tr>
-<td align="center"><strong>宋代山水 · 学习笔记封面</strong><br/><img src="examples/classical_chinese_landscape.png" width="380"/><br/><sub><em>Gemini · 皴擦笔法 + 远山雾气</em></sub></td>
-<td align="center"><strong>书法 — 自律</strong><br/><img src="examples/chinese_calligraphy.png" width="380"/><br/><sub><em>Gemini · 粗笔飞白 + 宣纸质感</em></sub></td>
+<td align="center" colspan="2"><strong>书法 — 自律</strong><br/><img src="examples/chinese_calligraphy.png" width="560"/><br/><sub><em>Gemini · 粗笔飞白 + 宣纸质感</em></sub></td>
 </tr>
 </table>
 </details>

@@ -63,7 +63,7 @@ A real 10-slide lecture deck built with `paperbanana-slide-deck`. Below: 4 selec
 <p align="center"><em>One command: <code>paperbanana-slide-deck</code> picks a style preset, plans the outline, drafts per-slide prompts, then generates all slides with consistent design tokens.</em></p>
 
 <details>
-<summary><strong>More Examples</strong> (architecture diagrams, bilingual decks, traditional aesthetics, document layouts)</summary>
+<summary><strong>More Examples</strong> (architecture diagrams, traditional aesthetics)</summary>
 <br/>
 <table>
 <tr>
@@ -74,12 +74,7 @@ A real 10-slide lecture deck built with `paperbanana-slide-deck`. Below: 4 selec
 <td align="center" colspan="2"><strong>RAG Pipeline</strong><br/><img src="examples/rag_pipeline.png" width="760"/></td>
 </tr>
 <tr>
-<td align="center"><strong>Bilingual Lecture Cover — "Claude Code 机制全景"</strong><br/><img src="examples/slide_claude_code_cover.png" width="380"/><br/><sub><em>sketch-notes style · Anthropic brand tuning</em></sub></td>
-<td align="center"><strong>Chinese-Style Resume Template</strong><br/><img src="examples/chinese_resume_template.png" width="380"/><br/><sub><em>Gemini · gold-clouds-on-ivory banner + vertical Song-script name</em></sub></td>
-</tr>
-<tr>
-<td align="center"><strong>Classical Chinese Landscape — Study Notebook Cover</strong><br/><img src="examples/classical_chinese_landscape.png" width="380"/><br/><sub><em>Gemini · Song-dynasty 山水 style</em></sub></td>
-<td align="center"><strong>Chinese Calligraphy — 自律 (Self-Discipline)</strong><br/><img src="examples/chinese_calligraphy.png" width="380"/><br/><sub><em>Gemini · bold expressive brushwork + 飞白</em></sub></td>
+<td align="center" colspan="2"><strong>Chinese Calligraphy — 自律 (Self-Discipline)</strong><br/><img src="examples/chinese_calligraphy.png" width="560"/><br/><sub><em>Gemini · bold expressive brushwork + 飞白 on xuan paper</em></sub></td>
 </tr>
 </table>
 </details>
