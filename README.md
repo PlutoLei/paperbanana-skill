@@ -33,12 +33,16 @@
 <td align="center"><strong>Data Engineering — Lakehouse</strong><br/><img src="examples/data_lakehouse.png" width="400"/></td>
 <td align="center"><strong>Medical AI — U-Net + Mamba</strong><br/><img src="examples/unet_mamba_segmentation.png" width="400"/></td>
 </tr>
+<tr>
+<td align="center"><strong>Medical Imaging — TextMamba3D</strong><br/><img src="examples/textmamba3d_architecture.png" width="400"/><br/><sub><em>gpt-image-2 · paper-grade info density</em></sub></td>
+<td align="center"><strong>Game Theory — Influence Diagram</strong><br/><img src="examples/game_theory_influence_diagram.png" width="400"/><br/><sub><em>Gemini · soft pastel academic aesthetic</em></sub></td>
+</tr>
 </table>
 
 <p align="center"><em>All figures generated from plain text descriptions — zero manual drawing.</em></p>
 
 <details>
-<summary><strong>More Examples</strong> (architecture diagrams, slides)</summary>
+<summary><strong>More Examples</strong> (architecture diagrams, slides, traditional aesthetics)</summary>
 <br/>
 <table>
 <tr>
@@ -47,6 +51,10 @@
 </tr>
 <tr>
 <td align="center" colspan="2"><strong>RAG Pipeline</strong><br/><img src="examples/rag_pipeline.png" width="760"/></td>
+</tr>
+<tr>
+<td align="center"><strong>Classical Chinese Landscape — Study Notebook Cover</strong><br/><img src="examples/classical_chinese_landscape.png" width="380"/><br/><sub><em>Gemini · Song-dynasty 山水 style</em></sub></td>
+<td align="center"><strong>Chinese Calligraphy — 自律 (Self-Discipline)</strong><br/><img src="examples/chinese_calligraphy.png" width="380"/><br/><sub><em>Gemini · bold expressive brushwork + 飞白</em></sub></td>
 </tr>
 </table>
 </details>

@@ -33,12 +33,16 @@
 <td align="center"><strong>数据工程 — 湖仓架构</strong><br/><img src="examples/data_lakehouse.png" width="400"/></td>
 <td align="center"><strong>医学 AI — U-Net + Mamba</strong><br/><img src="examples/unet_mamba_segmentation.png" width="400"/></td>
 </tr>
+<tr>
+<td align="center"><strong>医学影像 — TextMamba3D 架构</strong><br/><img src="examples/textmamba3d_architecture.png" width="400"/><br/><sub><em>gpt-image-2 · 论文级信息密度</em></sub></td>
+<td align="center"><strong>博弈论 — Influence Diagram</strong><br/><img src="examples/game_theory_influence_diagram.png" width="400"/><br/><sub><em>Gemini · 软色调学术美学</em></sub></td>
+</tr>
 </table>
 
 <p align="center"><em>所有图均由纯文本描述生成，零人工绘制。</em></p>
 
 <details>
-<summary><strong>更多示例</strong>（架构图、幻灯片）</summary>
+<summary><strong>更多示例</strong>（架构图、幻灯片、传统艺术）</summary>
 <br/>
 <table>
 <tr>
@@ -47,6 +51,10 @@
 </tr>
 <tr>
 <td align="center" colspan="2"><strong>RAG 管线</strong><br/><img src="examples/rag_pipeline.png" width="760"/></td>
+</tr>
+<tr>
+<td align="center"><strong>宋代山水 · 学习笔记封面</strong><br/><img src="examples/classical_chinese_landscape.png" width="380"/><br/><sub><em>Gemini · 皴擦笔法 + 远山雾气</em></sub></td>
+<td align="center"><strong>书法 — 自律</strong><br/><img src="examples/chinese_calligraphy.png" width="380"/><br/><sub><em>Gemini · 粗笔飞白 + 宣纸质感</em></sub></td>
 </tr>
 </table>
 </details>
