@@ -1,6 +1,6 @@
 {
   "name": "paperbanana-slide-deck",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "End-to-end slide deck creation via RDIV workflow. Requires paperbanana plugin for image generation.",
   "author": { "name": "PlutoLei", "url": "https://github.com/PlutoLei" }
 }
