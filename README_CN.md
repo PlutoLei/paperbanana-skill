@@ -6,7 +6,7 @@
   <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-%E6%A0%87%E5%87%86-2B6CB0?style=flat-square" />
   <img alt="Multi-Runtime" src="https://img.shields.io/badge/%E8%BF%90%E8%A1%8C%E6%97%B6-%E5%A4%9A%E7%AB%AF-success?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
-  <img alt="Providers" src="https://img.shields.io/badge/Providers-5-green?style=flat-square" />
+  <img alt="Providers" src="https://img.shields.io/badge/Providers-8-green?style=flat-square" />
   <img alt="GPT Image 2" src="https://img.shields.io/badge/GPT%20Image%202-%E5%8E%9F%E7%94%9F%E6%94%AF%E6%8C%81-blueviolet?style=flat-square" />
   <img alt="Eval" src="https://img.shields.io/badge/Eval-6%E9%A1%B9%E8%B4%A8%E9%87%8F%E6%A3%80%E6%9F%A5-orange?style=flat-square" />
   <a href="https://github.com/PlutoLei/paperbanana-skill/blob/master/LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-black?style=flat-square" /></a>
@@ -63,6 +63,8 @@
 
 <p align="center"><em>一条命令：<code>paperbanana-slide-deck</code> 自动选风格预设、规划大纲、起草 per-slide prompt，然后生成全套风格一致的幻灯片。</em></p>
 
+<p align="center"><sub>同一套 pipeline 现已支持 <strong>8 个 provider</strong> 路由——这套 deck 可渲染在 <code>gpt-image-2</code>（中文标题干净）、<code>gemini</code>（快且便宜），或任意 <strong>100+ LiteLLM 后端</strong> / 本地 <code>ollama</code> 模型上，工作流不变。</sub></p>
+
 <details>
 <summary><strong>更多示例</strong>（架构图、传统艺术）</summary>
 <br/>
@@ -103,7 +105,7 @@
 | 6 项质量评估 | ✅ **新** | 完整性、布局、标注、配色、可读性、幻觉 |
 | 自研优化循环 | ✅ **新** | Autoresearch 自动 prompt 变异 + 保留/回滚 |
 | 错误处理 | ✅ **新** | Critic UNREVIEWED 状态 + provider fallback + 重试过滤 |
-| 5 大 VLM 提供商 | ✅ | Gemini、Claude、OpenAI、Bedrock、OpenRouter |
+| 8 大 VLM 提供商 | ✅ | Gemini、Claude、OpenAI、Bedrock、OpenRouter + **LiteLLM**（100+ 后端）、**Ollama**（本地模型）、**claude_code**（经 `claude` CLI） |
 | 自动精炼 | ✅ | `--auto` 循环直到 Critic 满意 |
 | 运行恢复 | ✅ | `--continue` + `--feedback` 迭代式精炼 |
 
@@ -249,6 +251,9 @@ npx skills add PlutoLei/paperbanana-skill
 | OpenAI | GPT-4o | DALL-E 3 | `OPENAI_API_KEY` |
 | AWS Bedrock | Claude / Nova | Nova Canvas | AWS 凭证 |
 | OpenRouter | 多种模型 | 多种模型 | `OPENROUTER_API_KEY` |
+| LiteLLM | 100+ 后端 | 经后端 | `LITELLM_MODEL` / `LITELLM_API_KEY` |
+| Ollama | 本地模型 | — | `OLLAMA_BASE_URL` / `OLLAMA_MODEL` |
+| Claude Code | 经 `claude` CLI | — | 已登录 Claude Code（无需 key） |
 
 ---
 

@@ -6,7 +6,7 @@
   <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-Standard-2B6CB0?style=flat-square" />
   <img alt="Multi-Runtime" src="https://img.shields.io/badge/Runtime-Multi-success?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
-  <img alt="Providers" src="https://img.shields.io/badge/Providers-5-green?style=flat-square" />
+  <img alt="Providers" src="https://img.shields.io/badge/Providers-8-green?style=flat-square" />
   <img alt="GPT Image 2" src="https://img.shields.io/badge/GPT%20Image%202-native-blueviolet?style=flat-square" />
   <img alt="Eval" src="https://img.shields.io/badge/Eval-6--item%20Checklist-orange?style=flat-square" />
   <a href="https://github.com/PlutoLei/paperbanana-skill/blob/master/LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/License-MIT-black?style=flat-square" /></a>
@@ -63,6 +63,8 @@ A real 10-slide lecture deck built with `paperbanana-slide-deck`. Below: 4 selec
 
 <p align="center"><em>One command: <code>paperbanana-slide-deck</code> picks a style preset, plans the outline, drafts per-slide prompts, then generates all slides with consistent design tokens.</em></p>
 
+<p align="center"><sub>The same pipeline now routes across <strong>8 providers</strong> — render this deck on <code>gpt-image-2</code> (clean Chinese titles), <code>gemini</code> (fast &amp; cheap), or any of <strong>100+ LiteLLM backends</strong> / local <code>ollama</code> models, with no workflow change.</sub></p>
+
 <details>
 <summary><strong>More Examples</strong> (architecture diagrams, traditional aesthetics)</summary>
 <br/>
@@ -103,7 +105,7 @@ A real 10-slide lecture deck built with `paperbanana-slide-deck`. Below: 4 selec
 | 6-item quality eval | ✅ **New** | Binary checklist: completeness, layout, annotation, color, legibility, hallucination |
 | Autoresearch loop | ✅ **New** | Automated prompt self-optimization with keep/revert |
 | Error handling | ✅ **New** | Critic UNREVIEWED status, provider fallback chains, retry filtering |
-| 5 VLM providers | ✅ | Gemini, Claude, OpenAI, Bedrock, OpenRouter |
+| 8 VLM providers | ✅ | Gemini, Claude, OpenAI, Bedrock, OpenRouter + **LiteLLM** (100+ backends), **Ollama** (local models), **claude_code** (via `claude` CLI) |
 | Auto-refine | ✅ | `--auto` loops until Critic is satisfied |
 | Run continuation | ✅ | `--continue` with `--feedback` for iterative refinement |
 | Dynamic aspect ratio | ✅ | 8 Imagen ratios, Planner auto-recommends |
@@ -296,6 +298,7 @@ End-to-end presentation creation: analyze content → select from 23 visual styl
 | `evaluate` | Compare gen vs reference | `/paperbanana evaluate gen.png ref.png` |
 | `data` | Manage datasets | `/paperbanana data download` |
 | `setup` | Setup wizard | `/paperbanana setup` |
+| `doctor` | Health check (optional deps / API keys / reference data) | `/paperbanana doctor` |
 
 <details>
 <summary><strong>Command Examples</strong></summary>
@@ -333,6 +336,9 @@ End-to-end presentation creation: analyze content → select from 23 visual styl
 | OpenAI | GPT-4o | DALL-E 3 | `OPENAI_API_KEY` |
 | AWS Bedrock | Claude / Nova | Nova Canvas | AWS credentials |
 | OpenRouter | Various | Various | `OPENROUTER_API_KEY` |
+| LiteLLM | 100+ backends | via backend | `LITELLM_MODEL` / `LITELLM_API_KEY` |
+| Ollama | Local models | — | `OLLAMA_BASE_URL` / `OLLAMA_MODEL` |
+| Claude Code | via `claude` CLI | — | Claude Code signed in (no key) |
 
 **Retry policy:** Transient errors (429, 5xx) retry with exponential backoff. Auth errors (401, 403) fail immediately — no wasted retries.
 
