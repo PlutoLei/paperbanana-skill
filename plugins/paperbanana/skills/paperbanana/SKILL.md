@@ -279,17 +279,33 @@ When generating multiple slides, a single slide failure should NOT kill the batc
 
 ---
 
-## User Confirmation Checkpoints
+## 🔴 User Confirmation Checkpoints
 
-Paperbanana is CLI-first, but three user-facing actions are expensive or irreversible. Pause for explicit confirmation before proceeding:
+Paperbanana is CLI-first, but three user-facing actions are expensive or irreversible. **🛑 STOP and ask for explicit confirmation** before running any row below — do not proceed on assumed consent.
 
-| Trigger | Checkpoint Action |
-|---------|-------------------|
-| `--auto` with `--max-iterations > 5` | Before kickoff, show: cap, est. API cost (≈ iterations × $0.04), est. wall time (≈ iterations × 30s). Ask: "Proceed with up to N iterations?" |
-| `--auto-download-data` on first run | Before download, announce: "reference dataset will be downloaded to cache (~257MB full_bench, or lightweight curated set in upstream ≥ #112)". Ask: "Continue?" |
-| `setup` wizard | Before writing to `.env`, show the exact keys and preview of values (redact secrets after 4 chars). Ask: "Save to .env?" |
+| 🔴 Trigger | 🛑 STOP — Confirm before proceeding |
+|------------|--------------------------------------|
+| `--auto` with `--max-iterations > 5` | **🛑 STOP.** Show: cap, est. API cost (≈ iterations × $0.04), est. wall time (≈ iterations × 30s). Ask: "Proceed with up to N iterations?" Do not kick off until user says yes. |
+| `--auto-download-data` on first run | **🛑 STOP.** Announce: "reference dataset will be downloaded to cache (~257MB full_bench, or lightweight curated set in upstream ≥ #112)". Ask: "Continue?" Do not download until confirmed. |
+| `setup` wizard | **🛑 STOP.** Before writing to `.env`, show the exact keys and preview of values (redact secrets after 4 chars). Ask: "Save to .env?" Do not write until confirmed. |
 
-For normal `generate` / `plot` / `slide` (no `--auto`, within iteration cap 3), no checkpoint is needed — these are short, cheap, and the Critic loop is self-bounded.
+**✅ No checkpoint needed:** normal `generate` / `plot` / `slide` (no `--auto`, within iteration cap 3) — these are short, cheap, and the Critic loop is self-bounded. Run them directly.
+
+---
+
+## ⛔ Anti-Patterns — Red-Line Blacklist
+
+Hard "do NOT" rules. Each maps to a failure mode already encoded above — this section consolidates them into one scannable list.
+
+| ⛔ Anti-pattern | Why it's wrong | Do this instead |
+|-----------------|----------------|-----------------|
+| Treating a Critic API failure as "approved" | Ships an unreviewed image as if it passed QA | Mark `UNREVIEWED`, never `APPROVED`; report to user |
+| Proceeding past a 🔴 checkpoint without confirmation | Burns API budget / overwrites `.env` on assumed consent | 🛑 STOP at every checkpoint row; wait for explicit yes |
+| Writing matplotlib/seaborn scripts | That's `scientific-visualization`'s job, not paperbanana | Route code-gen away; paperbanana = AI image gen + critique loop |
+| Killing the whole `slide-batch` on one slide failure | Loses N−1 good slides over 1 bad one | Log the failure, continue, report survivors, retry via `--continue` |
+| Full regeneration after a mid-run crash | Throws away plans/images/critic state, wastes API spend | Resume with `--continue` / `--continue-run <id>` |
+| Routing every "make a figure" to `generate` | `plot` (data files) and `slide` (presentation) have dedicated paths | Run the Command Selection Decision Tree first |
+| Inventing CLI flags not in the parameter tables | Upstream CLI surface drifts (see #115/#118/#123 note) | Verify with `<cmd> --help`; don't fabricate flags |
 
 ---
 
