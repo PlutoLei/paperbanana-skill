@@ -1,9 +1,10 @@
-# PaperBanana Skills for Claude Code
+# PaperBanana Skills
 
 <p align="center">
   <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
   <img alt="Version" src="https://img.shields.io/badge/version-4.3.0-blue?style=flat-square" />
-  <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-Skills-2B6CB0?style=flat-square" />
+  <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-Standard-2B6CB0?style=flat-square" />
+  <img alt="Multi-Runtime" src="https://img.shields.io/badge/Runtime-Multi-success?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
   <img alt="Providers" src="https://img.shields.io/badge/Providers-5-green?style=flat-square" />
   <img alt="GPT Image 2" src="https://img.shields.io/badge/GPT%20Image%202-native-blueviolet?style=flat-square" />
@@ -339,7 +340,16 @@ End-to-end presentation creation: analyze content → select from 23 visual styl
 
 ## Installation
 
-### Option A: Plugin marketplace (recommended)
+These are Agent Skills following the [skills.sh standard](https://skills.sh) — they run on any skills-compatible runtime (Claude Code, Codex, Cursor, OpenCode, OpenClaw, Gemini CLI, …). Pick the layer that matches your setup.
+
+### Layer 1: One-line install (any runtime, auto-detect)
+
+```bash
+npx skills add PlutoLei/paperbanana-skill        # auto-detects your agent
+npx skills add PlutoLei/paperbanana-skill -a codex   # or target a runtime explicitly: codex / cursor / opencode / …
+```
+
+### Layer 2: Claude Code plugin marketplace (Claude Code only)
 
 ```bash
 claude plugin marketplace add PlutoLei/paperbanana-skill
@@ -347,19 +357,32 @@ claude plugin install paperbanana@paperbanana-skills
 claude plugin install paperbanana-slide-deck@paperbanana-skills --scope project  # optional
 ```
 
-### Option B: Manual install
+### Layer 3: Manual install (copy SKILL.md into your runtime's skills directory)
+
+Each runtime resolves skills from its own directory — drop `SKILL.md` into the right one:
+
+| Runtime | Skills directory |
+|---------|------------------|
+| Claude Code | `~/.claude/skills/<name>/` (user) or `.claude/skills/<name>/` (project) |
+| Codex | `~/.codex/skills/<name>/` |
+| Cursor | `~/.cursor/skills/<name>/` |
+| OpenCode / others | that runtime's skills directory |
 
 ```bash
-# paperbanana skill (user-level)
-mkdir -p ~/.claude/skills/paperbanana
-curl -o ~/.claude/skills/paperbanana/SKILL.md \
+# Example — paperbanana skill, adjust the target dir per the table above
+DEST="$HOME/.claude/skills/paperbanana"   # ← change for your runtime
+mkdir -p "$DEST"
+curl -o "$DEST/SKILL.md" \
   https://raw.githubusercontent.com/PlutoLei/paperbanana-skill/master/plugins/paperbanana/skills/paperbanana/SKILL.md
 
-# paperbanana-slide-deck skill (project-level, optional)
-mkdir -p .claude/skills/paperbanana-slide-deck
-curl -o .claude/skills/paperbanana-slide-deck/SKILL.md \
+# paperbanana-slide-deck skill (optional)
+DECK_DEST="$HOME/.claude/skills/paperbanana-slide-deck"   # ← change for your runtime
+mkdir -p "$DECK_DEST"
+curl -o "$DECK_DEST/SKILL.md" \
   https://raw.githubusercontent.com/PlutoLei/paperbanana-skill/master/plugins/paperbanana-slide-deck/skills/paperbanana-slide-deck/SKILL.md
 ```
+
+**Fallback (no skills loader):** any agent can use these without an installer — just `cat` the `SKILL.md` into context as reference material before your request.
 
 ### PaperBanana package setup
 

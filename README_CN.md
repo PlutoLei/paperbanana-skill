@@ -1,9 +1,10 @@
-# PaperBanana — Claude Code 学术插图技能集
+# PaperBanana — 学术插图技能集
 
 <p align="center">
   <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
   <img alt="Version" src="https://img.shields.io/badge/version-4.3.0-blue?style=flat-square" />
-  <img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-Skills-2B6CB0?style=flat-square" />
+  <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-%E6%A0%87%E5%87%86-2B6CB0?style=flat-square" />
+  <img alt="Multi-Runtime" src="https://img.shields.io/badge/%E8%BF%90%E8%A1%8C%E6%97%B6-%E5%A4%9A%E7%AB%AF-success?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
   <img alt="Providers" src="https://img.shields.io/badge/Providers-5-green?style=flat-square" />
   <img alt="GPT Image 2" src="https://img.shields.io/badge/GPT%20Image%202-%E5%8E%9F%E7%94%9F%E6%94%AF%E6%8C%81-blueviolet?style=flat-square" />
@@ -224,15 +225,18 @@ skill 根据你的请求信号自动挑 provider：
 git clone https://github.com/llmsresearch/paperbanana.git
 cd paperbanana && pip install -e ".[google]"
 
-# 2. 添加技能市场并安装
-claude plugin marketplace add PlutoLei/paperbanana-skill
-claude plugin install paperbanana@paperbanana-skills
+# 2. 安装技能（任意 runtime，自动检测 agent）
+npx skills add PlutoLei/paperbanana-skill
+#   或指定 runtime：npx skills add PlutoLei/paperbanana-skill -a codex
+#   也可走 Claude Code 插件市场：
+#   claude plugin marketplace add PlutoLei/paperbanana-skill
+#   claude plugin install paperbanana@paperbanana-skills
 
 # 3. 生成第一张图
 # /paperbanana 一个带有批量归一化的 4 层 CNN 图像分类架构
 ```
 
-> **提示：** 本仓库是 Claude Code 的**技能定义文件**（SKILL.md）。Python 核心包在 [llmsresearch/paperbanana](https://github.com/llmsresearch/paperbanana)，两者都需安装。
+> **提示：** 本仓库是遵循 [skills.sh 标准](https://skills.sh)的**技能定义文件**（SKILL.md），可在任意 skills-compatible runtime（Claude Code、Codex、Cursor、OpenCode 等）使用。Python 核心包在 [llmsresearch/paperbanana](https://github.com/llmsresearch/paperbanana)，两者都需安装。
 
 ---
 
