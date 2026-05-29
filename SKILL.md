@@ -36,7 +36,7 @@ Route user requests to the right subcommand **before** looking up parameters:
 
 **Out-of-scope**: Pure code generation (matplotlib/seaborn script) is NOT paperbanana's job — those go to `matplotlib` / `scientific-visualization` skills. Paperbanana is for AI-driven image generation + critique loops.
 
-> **Note (upstream sync pending):** Upstream `paperbanana` CLI adds subcommands (`plot-batch` #123, `sweep` #118) and a `claude_code` VLM provider (#115) not yet reflected in this table. See the [llmsresearch/paperbanana CHANGELOG](https://github.com/llmsresearch/paperbanana) for the authoritative CLI surface.
+> **Note (upstream sync pending):** Upstream `paperbanana` CLI also adds subcommands (`plot-batch` #123, `sweep` #118) not yet reflected in this table. See the [llmsresearch/paperbanana CHANGELOG](https://github.com/llmsresearch/paperbanana) for the authoritative CLI surface.
 
 ### `generate` — Methodology Diagrams
 
@@ -51,7 +51,7 @@ When user provides inline text (no file): write to temp file, use as `--input`.
 | `--input` / `-i` | — | Path to methodology text file or PDF (`.pdf` requires `pip install 'paperbanana'`) |
 | `--caption` / `-c` | — | Figure caption / communicative intent |
 | `--output` / `-o` | auto | Output image path |
-| `--vlm-provider` | `gemini` | VLM provider: `gemini`, `anthropic`, `openai`, `bedrock`, `openrouter` |
+| `--vlm-provider` | `gemini` | VLM provider: `gemini`, `anthropic`, `openai`, `bedrock`, `openrouter`, `ollama`, `claude_code`, `litellm` |
 | `--vlm-model` | auto | VLM model name |
 | `--image-provider` | auto | Image gen provider: `google_imagen`, `openai`, `bedrock`, `openrouter` |
 | `--image-model` | auto | Image gen model name |
@@ -209,6 +209,9 @@ Guides through API key configuration and provider selection. No flags needed.
 | OpenAI | GPT-4o | DALL-E 3 | `OPENAI_API_KEY` |
 | AWS Bedrock | Claude / Nova | Nova Canvas | AWS credentials |
 | OpenRouter | Various | Various | `OPENROUTER_API_KEY` |
+| LiteLLM | 100+ backends | via backend | `LITELLM_MODEL` / `LITELLM_API_KEY` |
+| Ollama | Local models | — | `OLLAMA_BASE_URL` / `OLLAMA_MODEL` |
+| Claude Code | via `claude` CLI | — | Claude Code signed in (no key) |
 
 Use `--vlm-provider` and `--image-provider` flags to select providers per command.
 
