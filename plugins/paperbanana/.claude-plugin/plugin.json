@@ -1,6 +1,6 @@
 {
   "name": "paperbanana",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "Generate publication-quality academic diagrams, statistical plots, and presentation slides using PaperBanana multi-agent framework",
   "author": { "name": "PlutoLei", "url": "https://github.com/PlutoLei" }
 }

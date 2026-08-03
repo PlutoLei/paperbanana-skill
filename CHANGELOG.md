@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.4.0] - 2026-08-03
+
+### Added
+- **Wave-parallel batch generation** — new `slide-batch --concurrent N` section in SKILL.md: per-slide pipeline isolation, 5s start-up stagger (same-second image-API bursts fail or hang server-side long before per-minute quotas), in-batch delayed retry for transient 503s, end-of-batch serial retry pass. Measured: 6 slides at `--concurrent 3` in 309s vs 768s serial estimate (0.40x, ~2.5x speedup) with zero dropped slides.
+- **Auto-routing decision table** — provider selection rules in SKILL.md: explicit user override > venue-rigor > CJK-slide / multi-reference hard rules (documented Gemini bugs) > East-Asian aesthetics > Gemini default.
+- **Provider naming warning** — `--image-provider` requires the `X_imagen` suffix (`google_imagen`, not `gemini`); documented the trap with its exact error signature.
+
+### Changed
+- **Delivery-quality notes** — the final image per slide is now the highest-critic-score iteration rather than simply the last one, and `critic_score_threshold=9.0` skips provably-done rounds early (calibrated on 69 historical runs, zero false early-stops).
+
+### Notes
+- The `--concurrent` flag, argmax delivery, and threshold early-stop require a paperbanana build ≥ 2026-08-03 (maintainer's fork). On older builds, `slide-batch` remains serial; SKILL.md documents the fallback and warns against uncoordinated multi-process spawning.
+
 ## [4.3.0] - 2026-04-23
 
 ### Added

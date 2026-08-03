@@ -131,6 +131,19 @@ python -m paperbanana.cli slide-batch --prompts-dir '<dir>' --resolution 4k
 | `--style` / `-s` | — | Style preset applied to all slides |
 | `--iterations` / `-n` | `3` | Max critic rounds per slide |
 | `--resolution` / `-r` | `4k` | Output resolution |
+| `--concurrent` / `-c` | `2` (settings.batch_concurrent) | Slides generated concurrently; 3 is the sweet spot, never exceed 4. Requires a paperbanana build ≥ 2026-08-03 (maintainer's fork) |
+
+### Wave-Parallel Batch Generation (speed default for ≥2 slides)
+
+With a concurrency-enabled paperbanana build, batch generation runs slides in parallel with identical per-slide quality — every slide keeps its full Critic loop, its own pipeline instance, and its own run directory:
+
+```bash
+python -m paperbanana.cli slide-batch --prompts-dir '<dir>' --output-dir '<out>' --resolution 4k --concurrent 3
+```
+
+Measured (2026-08-03): 6 slides at `--concurrent 3` in 309s vs 768s serial estimate (0.40x, ~2.5x speedup). Built-in resilience: 5s start-up stagger (same-second bursts to the image API fail or hang server-side long before per-minute quotas are near), in-batch delayed retry for transient 503s (recovery overlaps with other slides), and an end-of-batch serial retry pass for stragglers. Delivery quality is protected twice over: the final image per slide is the **highest-critic-score** iteration (not simply the last), and `critic_score_threshold=9.0` skips provably-done rounds early — calibrated on 69 historical runs with zero false early-stops.
+
+If the installed paperbanana lacks `--concurrent`, fall back to serial `slide-batch` — do NOT spawn more than 3 parallel `slide` processes yourself, as there is no cross-process rate-limit coordination.
 
 ### Style Presets (23 available)
 
@@ -214,6 +227,25 @@ Guides through API key configuration and provider selection. No flags needed.
 | Claude Code | via `claude` CLI | — | Claude Code signed in (no key) |
 
 Use `--vlm-provider` and `--image-provider` flags to select providers per command.
+
+> **⚠️ Provider naming asymmetry (common trap)**: VLM providers use short names (`gemini` / `openai` / `anthropic` / `bedrock` / `openrouter`), but **image providers require the `_imagen` suffix**: `google_imagen` (not `gemini`), `openai_imagen` (not `openai`), `bedrock_imagen`, `openrouter_imagen`. The error `ValueError: Unknown image provider: openai. Available: google_imagen, openrouter_imagen, openai_imagen, bedrock_imagen` means you hit this. Every `--image-provider` example in this document uses the `X_imagen` form.
+
+### Auto-routing decision table
+
+When the user doesn't specify an image model, pick `--image-provider` by the first matching rule (top priority wins). Calibrated from a controlled 16-prompt two-provider comparison (2026-04) plus slide-deck production use:
+
+| # | Condition | Flag to pass | Why |
+|---|-----------|--------------|-----|
+| 1 | User explicitly names a provider ("use GPT" / "use Gemini" / "nano banana") | That provider | Explicit override beats all auto-rules |
+| 1 | User asks for a side-by-side ("both providers", "对比一下") | Run once with each, show both | Dual comparison |
+| 2 | Submission-ready venue figures ("投稿用", journal/conference figure) | `--image-provider openai_imagen --image-model gpt-image-2` | Rigor and text fidelity priority |
+| 3 | `slide` / `slide-batch` AND the prompt contains CJK text | `--image-provider openai_imagen --image-model gpt-image-2` | Avoids a documented Gemini duplicate-character bug on CJK slide titles |
+| 3 | ≥2 reference images for editing/composition | `--image-provider openai_imagen --image-model gpt-image-2` | Avoids Gemini multi-image hallucination (invented text fields) |
+| 4 | Traditional East-Asian aesthetics (水墨 / 书法 / 古风 / ukiyo-e etc.) | `--image-provider google_imagen` | Gemini dominates this space (3-0 sweep in comparison test) |
+| 4 | `generate` with dense multi-module figures (architecture / ablation / encoder-decoder) | `--image-provider openai_imagen --image-model gpt-image-2` | GPT wins on structural preservation |
+| 5 | Everything else | `--image-provider google_imagen` (default) | Better aesthetics on ordinary tasks, ~2x faster, cheaper |
+
+**Never second-guess an explicit user choice.** If the user says which provider to use, use it — even when the auto-rules would pick differently.
 
 ## Argument Parsing
 
