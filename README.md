@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
-  <img alt="Version" src="https://img.shields.io/badge/version-4.3.0-blue?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-4.4.0-blue?style=flat-square" />
   <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-Standard-2B6CB0?style=flat-square" />
   <img alt="Multi-Runtime" src="https://img.shields.io/badge/Runtime-Multi-success?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
@@ -109,6 +109,21 @@ A real 10-slide lecture deck built with `paperbanana-slide-deck`. Below: 4 selec
 | Auto-refine | ✅ | `--auto` loops until Critic is satisfied |
 | Run continuation | ✅ | `--continue` with `--feedback` for iterative refinement |
 | Dynamic aspect ratio | ✅ | 8 Imagen ratios, Planner auto-recommends |
+
+---
+
+## What's New in v4.4 — Wave-Parallel Slide Batches
+
+`slide-batch` now generates slides **concurrently**: each slide gets its own pipeline instance (isolated run directory, isolated Critic loop), with a 5s start-up stagger, in-batch delayed retry for transient 503s, and an end-of-batch serial retry pass for stragglers.
+
+**Measured:** 6 slides at `--concurrent 3` in **309s** vs a 768s serial estimate — **0.40x wall-clock (~2.5x speedup)**, zero dropped slides, identical per-slide quality gating.
+
+Also in 4.4:
+
+- **Smarter delivery** — the final image per slide is the **highest-critic-score** iteration rather than simply the last one; `critic_score_threshold=9.0` skips provably-done rounds early (calibrated on 69 historical runs with zero false early-stops).
+- **Auto-routing decision table** and the `X_imagen` provider-naming warning are now part of SKILL.md.
+
+> The runtime features (`--concurrent`, argmax delivery, threshold early-stop, slide generation itself) live in the maintained fork **[PlutoLei/paperbanana](https://github.com/PlutoLei/paperbanana)** — see Quick Start. On upstream builds, `slide-batch` runs serially.
 
 ---
 
@@ -240,8 +255,9 @@ Built-in style guides for NeurIPS, ICML, ACL, IEEE — each with venue-specific 
 ## Quick Start
 
 ```bash
-# 1. Install PaperBanana
-git clone https://github.com/llmsresearch/paperbanana.git
+# 1. Install PaperBanana — maintained fork, full feature set
+#    (slide / slide-batch, --concurrent wave-parallel batching, gpt-image-2)
+git clone https://github.com/PlutoLei/paperbanana.git
 cd paperbanana && pip install -e ".[google]"
 
 # 2. Add the marketplace & install skills
@@ -253,7 +269,7 @@ claude plugin install paperbanana-slide-deck@paperbanana-skills --scope project 
 # /paperbanana A 4-layer CNN with batch normalization for image classification
 ```
 
-> **Note:** This repository contains Claude Code **skill definitions** (SKILL.md files). The underlying Python package lives at [llmsresearch/paperbanana](https://github.com/llmsresearch/paperbanana).
+> **Note:** This repository contains agent **skill definitions** (SKILL.md files). The full-featured Python package lives at [PlutoLei/paperbanana](https://github.com/PlutoLei/paperbanana), a downstream fork of [llmsresearch/paperbanana](https://github.com/llmsresearch/paperbanana) — upstream works too, but only covers diagrams and plots (no slide generation, no `--concurrent`).
 
 ---
 
