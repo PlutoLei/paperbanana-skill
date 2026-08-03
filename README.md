@@ -145,7 +145,7 @@ Switching is a two-flag change:
 
 ```bash
 python -m paperbanana.cli generate \
-  --image-provider openai --image-model gpt-image-2 \
+  --image-provider openai_imagen --image-model gpt-image-2 \
   --aspect-ratio 16:9 \
   --input prompt.txt --caption "..."
 ```
@@ -199,7 +199,7 @@ These pairs come from the same prompt sent to both providers. The routing table 
 
 ### Verdict
 
-You don't need to know any of this — just ask for a figure and paperbanana picks. Or override with `--image-provider openai|gemini|both`. The Critic loop runs on whatever the pipeline picks, so quality stays gated regardless.
+You don't need to know any of this — just ask for a figure and paperbanana picks. Or override with `--image-provider openai_imagen|google_imagen` (note the `_imagen` suffix — bare `openai`/`gemini` are rejected; asking the skill for "both" runs the two providers side by side). The Critic loop runs on whatever the pipeline picks, so quality stays gated regardless.
 
 ---
 

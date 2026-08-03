@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
-  <img alt="Version" src="https://img.shields.io/badge/version-4.3.0-blue?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-4.4.0-blue?style=flat-square" />
   <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-%E6%A0%87%E5%87%86-2B6CB0?style=flat-square" />
   <img alt="Multi-Runtime" src="https://img.shields.io/badge/%E8%BF%90%E8%A1%8C%E6%97%B6-%E5%A4%9A%E7%AB%AF-success?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
@@ -88,13 +88,14 @@
 
 | 技能 | 作用域 | 描述 | 版本 |
 |------|--------|------|------|
-| **paperbanana** | 用户级 | 学术插图、统计图表、幻灯片生成与质量评估 | v4.0.0 |
-| **paperbanana-slide-deck** | 项目级 | 完整 PPT 编排器（RDIV 工作流）+ 150+ 风格预设 | v1.1.0 |
+| **paperbanana** | 用户级 | 学术插图、统计图表、幻灯片生成与质量评估 | v4.4.0 |
+| **paperbanana-slide-deck** | 项目级 | 完整 PPT 编排器（RDIV 工作流）+ 150+ 风格预设 | v1.2.0 |
 
 ## 功能矩阵
 
 | 功能 | 状态 | 说明 |
 |------|------|------|
+| **Wave 并行批量生成** | ✅ **v4.4 新** | `slide-batch --concurrent 3` 实测约 2.5 倍提速；每张独立 pipeline + Critic；交付取最高分轮 |
 | **GPT Image 2 原生支持** | ✅ **v4.3 新** | `gpt-image-2`（2026-04-21 发布），真 16:9 到 2048×1152，quality 档位（low/medium/high），走完整 RDIV + Critic |
 | **智能 Provider 路由** | ✅ **v4.3 新** | 按场景自动选 `openai` / `gemini`；用户说 `用 GPT`/`用 Gemini`/`两路并行` 永远优先 |
 | 方法论插图 | ✅ | 文本 → 论文级插图，30 秒 |
@@ -108,6 +109,21 @@
 | 8 大 VLM 提供商 | ✅ | Gemini、Claude、OpenAI、Bedrock、OpenRouter + **LiteLLM**（100+ 后端）、**Ollama**（本地模型）、**claude_code**（经 `claude` CLI） |
 | 自动精炼 | ✅ | `--auto` 循环直到 Critic 满意 |
 | 运行恢复 | ✅ | `--continue` + `--feedback` 迭代式精炼 |
+
+---
+
+## v4.4 新增功能 — Wave 并行批量生成
+
+`slide-batch` 现在**并行**生成幻灯片：每张 slide 拥有独立的 pipeline 实例（独立 run 目录、独立 Critic 循环），内置 5 秒启动错峰（同秒 burst 会让图像 API 在配额远未用满时就挂起或失败）、瞬态 503 的批内延迟重试、批末串行兜底重试。
+
+**实测**：6 张幻灯片 `--concurrent 3` 用时 **309 秒**，串行估计 768 秒——**0.40× 墙钟（约 2.5 倍提速）**，零丢片，每张质量门控不变。
+
+4.4 同时带来：
+
+- **更聪明的交付** — 每张 slide 交付 **Critic 评分最高**的那一轮（不再简单取最后一轮）；`critic_score_threshold=9.0` 提前跳过已达标轮次（69 个历史 run 标定，零误停）。
+- **自动路由决策表**与 `X_imagen` 命名警告正式进入 SKILL.md。
+
+> 运行时能力（`--concurrent`、最高分交付、阈值早停、slide 生成本身）在公开 fork **[PlutoLei/paperbanana](https://github.com/PlutoLei/paperbanana)** 中——见「快速开始」。上游构建的 `slide-batch` 仍为串行。
 
 ---
 
@@ -129,7 +145,7 @@ OpenAI 在 **2026-04-21** 发布了 `gpt-image-2`。PaperBanana v4.3 把它作�
 
 ```bash
 python -m paperbanana.cli generate \
-  --image-provider openai --image-model gpt-image-2 \
+  --image-provider openai_imagen --image-model gpt-image-2 \
   --aspect-ratio 16:9 \
   --input prompt.txt --caption "..."
 ```
@@ -183,7 +199,7 @@ skill 根据你的请求信号自动挑 provider：
 
 ### 日常使用
 
-你不用记这些——直接要图即可，paperbanana 会自己挑。想强制就用 `--image-provider openai|gemini|both`。Critic 循环对选中的 provider 都生效，质量门控不变。
+你不用记这些——直接要图即可，paperbanana 会自己挑。想强制就用 `--image-provider openai_imagen|google_imagen`（注意 `_imagen` 后缀——裸 `openai`/`gemini` 会被拒绝；想两家对比就直接跟 skill 说"两路并行"）。Critic 循环对选中的 provider 都生效，质量门控不变。
 
 ---
 
@@ -223,8 +239,9 @@ skill 根据你的请求信号自动挑 provider：
 ## 快速开始
 
 ```bash
-# 1. 安装 PaperBanana
-git clone https://github.com/llmsresearch/paperbanana.git
+# 1. 安装 PaperBanana——维护版 fork，全功能
+#    （slide / slide-batch --concurrent 并行批量、gpt-image-2）
+git clone https://github.com/PlutoLei/paperbanana.git
 cd paperbanana && pip install -e ".[google]"
 
 # 2. 安装技能（任意 runtime，自动检测 agent）
@@ -238,7 +255,7 @@ npx skills add PlutoLei/paperbanana-skill
 # /paperbanana 一个带有批量归一化的 4 层 CNN 图像分类架构
 ```
 
-> **提示：** 本仓库是遵循 [skills.sh 标准](https://skills.sh)的**技能定义文件**（SKILL.md），可在任意 skills-compatible runtime（Claude Code、Codex、Cursor、OpenCode 等）使用。Python 核心包在 [llmsresearch/paperbanana](https://github.com/llmsresearch/paperbanana)，两者都需安装。
+> **提示：** 本仓库是遵循 [skills.sh 标准](https://skills.sh)的**技能定义文件**（SKILL.md），可在任意 skills-compatible runtime（Claude Code、Codex、Cursor、OpenCode 等）使用。全功能 Python 核心包在 [PlutoLei/paperbanana](https://github.com/PlutoLei/paperbanana)（[llmsresearch/paperbanana](https://github.com/llmsresearch/paperbanana) 的下游 fork）；上游亦可用，但仅覆盖 diagram/plot——无 slide 生成、无 `--concurrent`。两者任装其一，与技能配套使用。
 
 ---
 
