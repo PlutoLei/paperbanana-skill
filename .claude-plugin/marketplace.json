@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Claude Code skills for PaperBanana academic illustration generation and slide deck creation",
-    "version": "4.4.0",
+    "version": "4.5.0",
     "homepage": "https://github.com/PlutoLei/paperbanana-skill"
   },
   "plugins": [
@@ -19,8 +19,8 @@
     },
     {
       "name": "paperbanana-slide-deck",
-      "version": "1.2.0",
-      "description": "End-to-end slide deck creation via RDIV workflow: content analysis, style selection, outline generation, batch image gen, PPTX/PDF merge",
+      "version": "1.3.0",
+      "description": "End-to-end slide deck creation via RDIV workflow: content analysis, style selection, outline generation, batch image gen, PPTX/PDF merge, plus a fail-closed editable mode rendering native PowerPoint text/table/chart objects from slide-spec.json",
       "author": { "name": "PlutoLei" },
       "source": "./plugins/paperbanana-slide-deck"
     }

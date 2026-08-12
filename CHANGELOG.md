@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.5.0] - 2026-08-12
+
+### Added
+- **Editable PPTX mode** (`paperbanana-slide-deck` v1.3.0) — new explicit mode router `scripts/build-deck.ts` (`--mode image|editable` is required; `editable` reads `<deck-dir>/slide-spec.json` and **never** falls back to image mode). The editable renderer (`scripts/editable/`) validates the portable v1 slide contract (Ajv 2020-12 schema + bounds, `[Sources]` notes, duplicate-ID, asset-existence, and SHA-256 pin checks) and emits native PowerPoint text/table/chart/shape/line objects with PptxGenJS 4.0.1 — nothing is rasterised. Includes a layout-only `group` container whose children are validated against the group box and emitted individually (PptxGenJS exposes no native group API).
+- **Preview-only Critic adapter** — `scripts/editable/review-editable.py` sends rendered PPTX previews (`slide-NN.png`) through PaperBanana's `CriticAgent` (`DiagramType.SLIDE`) and maps every suggestion back to `slide-id/element-id` (unmatched → `slide-id/unmapped`). It imports PaperBanana only inside `main()`, supports `--dry-run` (no import, no network), never modifies the PPTX or previews, and fail-closes with `status: "unreviewed"` + non-zero exit on provider failure.
+- **Authoring contract doc** — `references/editable-slide-spec.md`: 13.333×7.5 in coordinate system, element field tables, theme palette (`paperbanana-parchment` / `paperbanana-clean`), asset hash rule, `[Sources]` rule, build/preview/Critic commands, the editable-vs-SVG boundary, and the full passing fixture.
+- **Tests and CI** — Bun regressions for legacy image mode (single `<p:pic>`, notes part, no on-slide prompt text), editable OOXML structure (native chart + notes + object names), group bounds, and router fail-closed behavior; Python unittest for Critic suggestion mapping. CI now installs Bun, runs `bun test`, `unittest discover`, and `py_compile` on the adapter.
+
+### Changed
+- **Repository-owned legacy merger** — `scripts/merge-to-pptx.ts` moved into the plugin from the audited active skill copy (pre-extraction SHA-256 `4a589f90…`), refactored only at the `buildImageDeck()` seam; CLI usage, filename pattern, sort order, 16:9 cover behavior, prompt-note behavior, default output naming, and logs are unchanged.
+- **SKILL.md** — new Phase M (explicit deck-mode selection recorded in `deck-mode.txt`; ask when ambiguous, never infer from file presence) and an Editable Mode Workflow section (text-free assets → spec → validate → build → render previews → Critic → revise spec → rebuild). The image-mode workflow is unchanged.
+- **Versions** — plugin manifest `paperbanana-slide-deck` → `1.3.0`; marketplace metadata → `4.5.0`. Both READMEs document the two-mode workflow bilingually.
+
 ## [4.4.0] - 2026-08-03
 
 ### Added

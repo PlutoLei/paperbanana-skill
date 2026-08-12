@@ -1,17 +1,27 @@
 ---
 name: paperbanana-slide-deck
-description: Use when user wants to create a full slide deck or presentation using PaperBanana image generation, OR modify/regenerate an existing PaperBanana slide deck. Triggers on "make slides", "create presentation", "PPT", "slide deck", "regenerate slides", "update slides", "paperbanana slides". Also triggers when user has an existing slide-deck directory with outline.md and wants to regenerate images or make changes. This is the PRIMARY slide deck skill — always prefer over baoyu-slide-deck.
+description: Use when user wants to create a full slide deck or presentation using PaperBanana image generation, OR modify/regenerate an existing PaperBanana slide deck, OR build an editable PPTX with native text/tables/charts. Triggers on "make slides", "create presentation", "PPT", "slide deck", "regenerate slides", "update slides", "paperbanana slides", "editable PPTX", "editable slides". Also triggers when user has an existing slide-deck directory with outline.md and wants to regenerate images or make changes. This is the PRIMARY slide deck skill — always prefer over baoyu-slide-deck.
 ---
 
 # PaperBanana Slide Deck
 
-End-to-end slide deck creation and modification. Supports two modes: creating new decks from scratch, and regenerating existing decks after prompt edits.
+End-to-end slide deck creation and modification. Two deck modes (`image` and `editable`, chosen explicitly in Phase M), and within image mode two workflows: creating new decks from scratch, and regenerating existing decks after prompt edits.
 
-**Pipeline:** Content → Style Selection → Outline → Prompts → Image Generation → PPTX Merge
+**Image pipeline:** Content → Style Selection → Outline → Prompts → Image Generation → PPTX Merge
+**Editable pipeline:** Content → `slide-spec.json` (native text/table/chart/shape/line/group) → validate → build PPTX → render previews → Critic review → revise spec → rebuild
 
-## Mode Detection
+## Phase M: Deck mode selection
 
-On invocation, determine the mode by checking the target directory:
+Record exactly one line in `deck-mode.txt`: `image` or `editable`.
+
+- Use `editable` when the user asks to edit text/tables/charts/connectors in PowerPoint or explicitly asks for editable PPTX.
+- Use `image` when the user asks for generated full-slide artwork or preserves the existing PaperBanana image workflow.
+- If both are plausible, ask before generation. Do not infer from file presence.
+- `editable` requires `slide-spec.json`; a missing or invalid spec is an error. Never fall back to image mode while claiming editability.
+
+## Mode Detection (image mode)
+
+Within image mode, determine the workflow by checking the target directory:
 
 | Condition | Mode | Start Phase |
 |-----------|------|-------------|
@@ -26,9 +36,35 @@ In Modify mode, the user has already edited prompts or outline externally. Skip 
 |-----------|------|----------|
 | `google-genai` SDK | Path B image generation | `pip install google-genai` |
 | PaperBanana CLI | Path A image generation | `python -m paperbanana.cli slide-batch` |
-| merge-to-pptx.ts | PPTX merge | `skills/paperbanana-slide-deck/scripts/merge-to-pptx.ts` (local) |
+| merge-to-pptx.ts | PPTX merge (image mode) | `plugins/paperbanana-slide-deck/scripts/merge-to-pptx.ts` |
+| build-deck.ts | Explicit `--mode image\|editable` router | `plugins/paperbanana-slide-deck/scripts/build-deck.ts` |
+| Editable renderer | `slide-spec.json` → native PPTX | `plugins/paperbanana-slide-deck/scripts/editable/` |
 | Style libraries | Style presets (4 sources, 150+) | See R1 for discovery paths |
-| Bun | Run merge script | `bun` |
+| Bun | Run build/merge scripts | `bun` |
+
+## Editable Mode Workflow
+
+When `deck-mode.txt` says `editable`, skip Phases R/D/I below and follow this loop instead (contract details and full example: `references/editable-slide-spec.md`):
+
+1. **Generate only text-free assets** (photos, illustration panels — no rendered text) with PaperBanana; record each asset's SHA-256.
+2. **Author `slide-deck/{topic-slug}/slide-spec.json`** — native `text`, `shape`, `line`, `table`, `chart`, `image`, and `group` elements on the 13.333×7.5 in canvas, with `[Sources]` speaker notes per slide.
+3. **Validate + build** (fail-closed; a missing or invalid spec is an error, never a silent image-mode fallback):
+
+```bash
+bun "${SKILL_DIR}/scripts/build-deck.ts" --mode editable "slide-deck/{topic-slug}"
+```
+
+4. **Render PPTX previews** with LibreOffice + Poppler (`soffice --headless --convert-to pdf`, then `pdftoppm -png -r 150 … slide` → `slide-NN.png`).
+5. **Run Critic on the previews** (preview-only; never edits the PPTX):
+
+```bash
+python3 "${SKILL_DIR}/scripts/editable/review-editable.py" \
+  --spec "slide-deck/{topic-slug}/slide-spec.json" \
+  --rendered-dir "slide-deck/{topic-slug}/rendered" \
+  --output "slide-deck/{topic-slug}/critic-review.json"
+```
+
+6. **Map findings to element IDs** (suggestions arrive as `slide-id/element-id: …`), revise `slide-spec.json`, and rebuild. Repeat until clean.
 
 ## Phase R: Research (New Mode Only)
 

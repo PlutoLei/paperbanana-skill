@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
-  <img alt="Version" src="https://img.shields.io/badge/version-4.4.0-blue?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-4.5.0-blue?style=flat-square" />
   <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-%E6%A0%87%E5%87%86-2B6CB0?style=flat-square" />
   <img alt="Multi-Runtime" src="https://img.shields.io/badge/%E8%BF%90%E8%A1%8C%E6%97%B6-%E5%A4%9A%E7%AB%AF-success?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
@@ -89,12 +89,13 @@
 | 技能 | 作用域 | 描述 | 版本 |
 |------|--------|------|------|
 | **paperbanana** | 用户级 | 学术插图、统计图表、幻灯片生成与质量评估 | v4.4.0 |
-| **paperbanana-slide-deck** | 项目级 | 完整 PPT 编排器（RDIV 工作流）+ 150+ 风格预设 | v1.2.0 |
+| **paperbanana-slide-deck** | 项目级 | 完整 PPT 编排器（RDIV 工作流）+ 150+ 风格预设 + 可编辑 PPTX 模式 | v1.3.0 |
 
 ## 功能矩阵
 
 | 功能 | 状态 | 说明 |
 |------|------|------|
+| **可编辑 PPTX 模式（editable）** | ✅ **v4.5 新** | `build-deck.ts --mode editable` 从 `slide-spec.json` 渲染原生 PowerPoint 文本/表格/图表/形状/连接线对象——fail-closed，绝不静默回退为图片 |
 | **Wave 并行批量生成** | ✅ **v4.4 新** | `slide-batch --concurrent 3` 实测约 2.5 倍提速；每张独立 pipeline + Critic；交付取最高分轮 |
 | **GPT Image 2 原生支持** | ✅ **v4.3 新** | `gpt-image-2`（2026-04-21 发布），真 16:9 到 2048×1152，quality 档位（low/medium/high），走完整 RDIV + Critic |
 | **智能 Provider 路由** | ✅ **v4.3 新** | 按场景自动选 `openai` / `gemini`；用户说 `用 GPT`/`用 Gemini`/`两路并行` 永远优先 |
@@ -109,6 +110,30 @@
 | 8 大 VLM 提供商 | ✅ | Gemini、Claude、OpenAI、Bedrock、OpenRouter + **LiteLLM**（100+ 后端）、**Ollama**（本地模型）、**claude_code**（经 `claude` CLI） |
 | 自动精炼 | ✅ | `--auto` 循环直到 Critic 满意 |
 | 运行恢复 | ✅ | `--continue` + `--feedback` 迭代式精炼 |
+
+---
+
+## v4.5 新增功能 — 可编辑 PPTX 模式
+
+`paperbanana-slide-deck` v1.3.0 在原有 image 模式之外新增了显式、fail-closed 的 **editable** 模式。它不再合并整页 PNG，而是读取 `slide-spec.json` 契约并生成**原生 PowerPoint 对象**——每个文本框、表格、图表、形状、连接线在 PowerPoint 里都保持可编辑。
+
+```bash
+cd plugins/paperbanana-slide-deck
+
+# image 模式 —— 现有 PNG 合并工作流，行为不变
+bun scripts/build-deck.ts --mode image slide-deck/my-deck
+
+# editable 模式 —— 从 slide-deck/my-deck/slide-spec.json 生成原生对象
+bun scripts/build-deck.ts --mode editable slide-deck/my-deck
+```
+
+- **原生元素类型：** `text`、`shape`、`line`、`table`、`chart`、`image`、`group`（仅作布局容器；子元素保持各自独立可编辑）。以上任何一种都绝不会被转成图片。
+- **Fail-closed 契约：** 未知类型或主题、越界坐标、重复 ID、缺失 `[Sources]` 备注、资产缺失或 SHA-256 不匹配，都会在写出任何文件之前中止构建。`--mode` 为必填；editable **绝不**静默回退到 image 模式。
+- **对预览跑 Critic：** `scripts/editable/review-editable.py` 把最终 PPTX 渲染成逐页预览后交给 PaperBanana Critic 审查，并把每条建议映射回 `slide-id/element-id`；修订只通过编辑 `slide-spec.json` 后重新构建完成——绝不直接改 PPTX。
+- **兼容性：** 旧版图片合并器（`merge-to-pptx.ts`）公共边界逐字节保持不变——同样的 CLI、文件名模式、输出命名和 prompt 备注行为。
+- **editable 与 SVG 的边界：** 内嵌 SVG（或任何矢量渲染产物）仍然只是图片资产——它*不能*证明语义可编辑性。只有原生 `text`/`table`/`chart`/`shape`/`line` 对象才算可编辑。
+
+撰写契约、坐标系（13.333×7.5 英寸）、主题与完整可用示例见 [`plugins/paperbanana-slide-deck/references/editable-slide-spec.md`](plugins/paperbanana-slide-deck/references/editable-slide-spec.md)。
 
 ---
 

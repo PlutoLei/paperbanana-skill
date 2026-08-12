@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
-  <img alt="Version" src="https://img.shields.io/badge/version-4.4.0-blue?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-4.5.0-blue?style=flat-square" />
   <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-Standard-2B6CB0?style=flat-square" />
   <img alt="Multi-Runtime" src="https://img.shields.io/badge/Runtime-Multi-success?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
@@ -88,13 +88,14 @@ A real 10-slide lecture deck built with `paperbanana-slide-deck`. Below: 4 selec
 
 | Skill | Scope | Description | Version |
 |-------|-------|-------------|---------|
-| **paperbanana** | user | Academic diagrams, plots, slides, and quality evaluation | v4.0.0 |
-| **paperbanana-slide-deck** | project | Full slide deck orchestration (RDIV workflow) + 150+ style presets | v1.1.0 |
+| **paperbanana** | user | Academic diagrams, plots, slides, and quality evaluation | v4.4.0 |
+| **paperbanana-slide-deck** | project | Full slide deck orchestration (RDIV workflow) + 150+ style presets + editable PPTX mode | v1.3.0 |
 
 ## Feature Matrix
 
 | Capability | Status | Details |
 |------------|--------|---------|
+| **Editable PPTX mode** | ✅ **v4.5 New** | `build-deck.ts --mode editable` renders native PowerPoint text/table/chart/shape/line objects from `slide-spec.json` — fail-closed, never silently falls back to images |
 | **GPT Image 2 native support** | ✅ **v4.3 New** | `gpt-image-2` (2026-04-21) with true 16:9 up to 2048×1152, quality tier (low/medium/high), full RDIV pipeline + Critic |
 | **Smart provider routing** | ✅ **v4.3 New** | Auto-pick `openai` vs `gemini` by scenario; explicit `用 GPT`/`用 Gemini`/`两路并行` override always respected |
 | Methodology diagrams | ✅ | Text → publication-quality figure in 30s |
@@ -109,6 +110,30 @@ A real 10-slide lecture deck built with `paperbanana-slide-deck`. Below: 4 selec
 | Auto-refine | ✅ | `--auto` loops until Critic is satisfied |
 | Run continuation | ✅ | `--continue` with `--feedback` for iterative refinement |
 | Dynamic aspect ratio | ✅ | 8 Imagen ratios, Planner auto-recommends |
+
+---
+
+## What's New in v4.5 — Editable PPTX Mode
+
+`paperbanana-slide-deck` v1.3.0 adds an explicit, fail-closed **editable** deck mode alongside the existing image mode. Instead of merging full-slide PNGs, editable mode reads a `slide-spec.json` contract and emits **native PowerPoint objects** — every text box, table, chart, shape, and connector stays editable in PowerPoint.
+
+```bash
+cd plugins/paperbanana-slide-deck
+
+# Image mode — the existing PNG-merge workflow, unchanged
+bun scripts/build-deck.ts --mode image slide-deck/my-deck
+
+# Editable mode — native objects from slide-deck/my-deck/slide-spec.json
+bun scripts/build-deck.ts --mode editable slide-deck/my-deck
+```
+
+- **Native element types:** `text`, `shape`, `line`, `table`, `chart`, `image`, `group` (layout-only container; children stay individually editable). None of them is ever converted to an image.
+- **Fail-closed contract:** unknown types or themes, out-of-bounds boxes, duplicate IDs, missing `[Sources]` notes, missing assets, or asset SHA-256 mismatches abort the build before any file is written. `--mode` is required; editable **never** silently falls back to image mode.
+- **Critic on previews:** `scripts/editable/review-editable.py` renders-then-reviews the final PPTX pages with PaperBanana's Critic and maps every suggestion back to `slide-id/element-id`; fixes are applied by editing `slide-spec.json` and rebuilding — the PPTX itself is never patched.
+- **Compatibility:** the legacy image merger (`merge-to-pptx.ts`) keeps its public boundary byte-for-byte — same CLI, same filename pattern, same output naming, same prompt-notes behavior.
+- **Editable vs SVG:** embedding an SVG (or any vector render) is still just an image asset — it is *not* proof of semantic editability. Only native `text`/`table`/`chart`/`shape`/`line` objects count as editable.
+
+Authoring contract, coordinate system (13.333×7.5 in), themes, and a full working example: [`plugins/paperbanana-slide-deck/references/editable-slide-spec.md`](plugins/paperbanana-slide-deck/references/editable-slide-spec.md).
 
 ---
 

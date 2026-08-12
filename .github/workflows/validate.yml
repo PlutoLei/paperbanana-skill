@@ -12,6 +12,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Test editable and legacy slide-deck modes
+        working-directory: plugins/paperbanana-slide-deck
+        run: |
+          bun install --frozen-lockfile
+          bun test tests/*.test.ts
+          python3 -m unittest discover -s tests -p 'test_*.py'
+          python3 -m py_compile scripts/editable/review-editable.py
+
       - name: Check required SKILL.md files exist
         run: |
           echo "Checking skill definitions..."
