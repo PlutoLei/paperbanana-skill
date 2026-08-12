@@ -1,0 +1,27 @@
+{
+  "schema_version": "1",
+  "deck": { "layout": "LAYOUT_WIDE", "language": "en", "theme": "paperbanana-parchment" },
+  "slides": [{
+    "id": "slide-01",
+    "title": "Editable conclusion",
+    "sources": ["local:examples/slide_deck_workflow.png"],
+    "speaker_notes": "[Sources]\n- local:examples/slide_deck_workflow.png",
+    "elements": [
+      { "id": "title-text", "type": "text", "x": 0.7, "y": 0.6, "w": 5.0, "h": 0.6,
+        "text": "Editable conclusion", "font_size": 24 },
+      { "id": "status-shape", "type": "shape", "x": 0.7, "y": 1.55, "w": 2.2, "h": 0.7,
+        "shape": "roundRect", "fill": "D8EFEA", "stroke": "2A9D8F" },
+      { "id": "status-line", "type": "line", "x": 2.9, "y": 1.9, "w": 0.7, "h": 0.01,
+        "stroke": "6D6A64", "end_arrow": "triangle" },
+      { "id": "native-table", "type": "table", "x": 0.7, "y": 2.65, "w": 4.4, "h": 1.25,
+        "rows": [["Native table", "Value"], ["TSTR", "0.6506"]] },
+      { "id": "native-chart", "type": "chart", "x": 5.45, "y": 1.55, "w": 3.25, "h": 3.0,
+        "chart_type": "bar", "series": [{ "name": "TSTR", "labels": ["A", "B", "C"],
+        "values": [0.1749, 0.1514, 0.6506] }] },
+      { "id": "asset-image", "type": "image", "x": 9.05, "y": 1.55, "w": 3.55, "h": 3.0,
+        "path": "../../../../../examples/slide_deck_workflow.png",
+        "sha256": "826d374136ae75b3b28f127c86fbde833ed78b5f9b4e90983458c1e956fc6eb6",
+        "alt_text": "PaperBanana slide deck workflow" }
+    ]
+  }]
+}
