@@ -505,3 +505,7 @@ Contributions welcome! See the [Contributing Guide](CONTRIBUTING.md).
 ## License
 
 MIT
+
+---
+
+*by [Lei Yuxuan](https://plutolei.github.io) ([@PlutoLei](https://github.com/PlutoLei))*
