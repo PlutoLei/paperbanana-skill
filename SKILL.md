@@ -1,22 +1,31 @@
 ---
 name: paperbanana
 description: Use when user needs academic diagrams, methodology figures, statistical plots, or presentation slides from text descriptions or data files. Also use for evaluating generated figures against references.
-argument-hint: [generate|plot|slide|slide-batch|evaluate|data|setup] [description or file path]
-allowed-tools: Read, Write, Bash, Glob, Grep, AskUserQuestion
+argument-hint: [image|generate|plot|slide|slide-batch|evaluate|data|setup] [description or file path]
 ---
 
 # PaperBanana - Academic Illustration Generator
 
-Multi-agent pipeline (Retriever → Planner → Stylist → Visualizer → Critic) for publication-quality academic diagrams, statistical plots, and presentation slides.
+Generate academic images through the host's available image tool, or use the optional Python
+pipeline (Retriever → Planner → Stylist → Visualizer → Critic) when the task needs it.
 
-**API key:** Set provider keys in PaperBanana project's `.env` file.
-**Timeout:** 300000 (5 min) for all generation commands.
+## Route before setup
 
----
+Read [image-routing.md](references/image-routing.md) before generation or editing.
+Preserve an existing or explicitly chosen Gemini route. In Codex, new requests without a bound
+provider can use the native image tool for ordinary generation and reference edits. Native generation
+and editable PPTX builds do not require the Python core or API-key setup. Exact model/control
+requests and full Critic pipelines use the optional core. No native schema field selects Image
+2.5; do not infer a Sunburst/Flare identity from a successful native call.
+
+For a small explicit API request, use the new core `image` command described in that reference.
+For a full pipeline, select a command below and verify the installed command's `--help`.
+The Python API credentials are needed only for an authorized API operation. Do not read or print
+credential files for routing, documentation, offline tests or `image --dry-run`.
 
 ## Commands
 
-All commands run from project root: `cd <paperbanana_dir> && python -m paperbanana.cli <cmd>`
+The following optional-core commands run from the core project root: `cd <paperbanana_dir> && python -m paperbanana.cli <cmd>`
 
 ### Command Selection Decision Tree
 
@@ -53,7 +62,7 @@ When user provides inline text (no file): write to temp file, use as `--input`.
 | `--output` / `-o` | auto | Output image path |
 | `--vlm-provider` | `gemini` | VLM provider: `gemini`, `anthropic`, `openai`, `bedrock`, `openrouter`, `ollama`, `claude_code`, `litellm` |
 | `--vlm-model` | auto | VLM model name |
-| `--image-provider` | auto | Image gen provider: `google_imagen`, `openai`, `bedrock`, `openrouter` |
+| `--image-provider` | auto | Image gen provider: `google_imagen`, `openai_imagen`, `bedrock_imagen`, `openrouter_imagen` |
 | `--image-model` | auto | Image gen model name |
 | `--iterations` / `-n` | `3` | Max critic rounds |
 | `--auto` | off | Loop until critic is satisfied (safety cap via `--max-iterations`) |
@@ -141,7 +150,11 @@ With a concurrency-enabled paperbanana build, batch generation runs slides in pa
 python -m paperbanana.cli slide-batch --prompts-dir '<dir>' --output-dir '<out>' --resolution 4k --concurrent 3
 ```
 
-Measured (2026-08-03): 6 slides at `--concurrent 3` in 309s vs 768s serial estimate (0.40x, ~2.5x speedup). Built-in resilience: 5s start-up stagger (same-second bursts to the image API fail or hang server-side long before per-minute quotas are near), in-batch delayed retry for transient 503s (recovery overlaps with other slides), and an end-of-batch serial retry pass for stragglers. Delivery quality is protected twice over: the final image per slide is the **highest-critic-score** iteration (not simply the last), and `critic_score_threshold=9.0` skips provably-done rounds early — calibrated on 69 historical runs with zero false early-stops.
+Historical measurements from 2026-08-03 do not establish Image 2.5 performance. The updated
+OpenAI path uses one provider retry owner and `image-batch.json` receipts. Re-run with the same prompts
+and settings to reuse verified outputs; unresolved attempts require explicit `--retry-unknown`.
+Do not add outer whole-pipeline retries to OpenAI requests. Gemini retains its existing retry
+path. Keep concurrency within the provider's actual quota.
 
 If the installed paperbanana lacks `--concurrent`, fall back to serial `slide-batch` — do NOT spawn more than 3 parallel `slide` processes yourself, as there is no cross-process rate-limit coordination.
 
@@ -230,9 +243,16 @@ Use `--vlm-provider` and `--image-provider` flags to select providers per comman
 
 > **⚠️ Provider naming asymmetry (common trap)**: VLM providers use short names (`gemini` / `openai` / `anthropic` / `bedrock` / `openrouter`), but **image providers require the `_imagen` suffix**: `google_imagen` (not `gemini`), `openai_imagen` (not `openai`), `bedrock_imagen`, `openrouter_imagen`. The error `ValueError: Unknown image provider: openai. Available: google_imagen, openrouter_imagen, openai_imagen, bedrock_imagen` means you hit this. Every `--image-provider` example in this document uses the `X_imagen` form.
 
-### Auto-routing decision table
+### Provider selection
 
-When the user doesn't specify an image model, pick `--image-provider` by the first matching rule (top priority wins). Calibrated from a controlled 16-prompt two-provider comparison (2026-04) plus slide-deck production use:
+The route in [image-routing.md](references/image-routing.md) takes precedence over command
+selection. Honor an explicit provider/model. Historical GPT Image 2 versus Gemini comparisons
+are not evidence for routing Image 2.5. Preserve existing backend defaults unless the user selects
+an opt-in profile; use the fixed evaluation suite before proposing a default change.
+
+### Existing backend routing (preserved)
+
+For an existing backend workflow, keep its established routing. When the user doesn't specify an image model, pick `--image-provider` by the first matching rule (top priority wins). Calibrated from a controlled 16-prompt two-provider comparison (2026-04) plus slide-deck production use:
 
 | # | Condition | Flag to pass | Why |
 |---|-----------|--------------|-----|
@@ -257,74 +277,28 @@ When the user doesn't specify an image model, pick `--image-provider` by the fir
 | `slide <prompt.md>` | Generate presentation slide |
 | `slide-batch <dir>` | Batch generate slides |
 | `evaluate <gen.png> <ref.png>` | Comparative evaluation |
-| Just a description (no subcommand) | Default to `generate` |
+| Just a description (no subcommand) | Apply native/API routing first; full pipeline uses `generate` |
 
 ## Error Handling
 
-Two types of API failure can occur during generation. Handle them differently:
-
-### Type 1: Image Generation API Failure (Visualizer)
-
-The image provider (Gemini Imagen, DALL-E, Nova Canvas) fails to return an image.
-
-| Error | Cause | Action |
-|-------|-------|--------|
-| `429` / `ResourceExhausted` | Rate limit | Wait 30s, retry up to 3 times |
-| `500` / `503` / `ServerError` | Provider outage | Switch to fallback provider (see chain below) |
-| `400` / `InvalidArgument` | Bad prompt (too long, policy violation) | Shorten/rephrase prompt, retry once |
-| `401` / `403` | Invalid API key | Stop and ask user to run `setup` |
-| Timeout (>60s no response) | Network or provider hang | Retry once, then switch provider |
-
-**Fallback chain:** `google_imagen` → `openai` → `bedrock` → `openrouter`. Use the next provider in chain that has a valid API key in `.env`. If all fail, stop and report the error.
-
-### Type 2: VLM Critic API Failure
-
-The VLM provider (Gemini Flash, Claude, GPT-4o) fails during quality evaluation.
-
-| Error | Cause | Action |
-|-------|-------|--------|
-| `429` / Rate limit | Too many requests | Wait 15s, retry up to 3 times |
-| JSON parse failure | VLM returned malformed response | **Do NOT treat as "approved"**. Retry once with stricter prompt. If still fails, mark output as `UNREVIEWED` |
-| `500` / `503` | Provider outage | Switch VLM provider (see chain below) |
-| Timeout (>30s) | Network hang | Retry once, then skip Critic and mark as `UNREVIEWED` |
-
-**VLM fallback chain:** `gemini` → `anthropic` → `openai` → `openrouter`.
-
-**Critical rule:** A Critic failure must NEVER silently approve an image. If Critic cannot evaluate, the output status must be `UNREVIEWED`, not `APPROVED`. Report this clearly to the user.
-
-### Recovery with `--continue`
-
-Use `--continue` to resume after any failure:
-
-| Scenario | Command |
-|----------|---------|
-| Pipeline crashed mid-generation | `--continue` (resumes latest run) |
-| Want to iterate on a specific run | `--continue-run <run_id>` |
-| Want to provide feedback for next iteration | `--continue --feedback "make the arrows thicker"` |
-
-The run directory preserves all intermediate state (plans, images, critic feedback). `--continue` picks up from the last successful step.
-
-### Batch Mode (`slide-batch`) Resilience
-
-When generating multiple slides, a single slide failure should NOT kill the batch:
-1. Log the failure for the specific slide
-2. Continue generating remaining slides
-3. At the end, report which slides succeeded and which failed
-4. User can re-run with `--continue` to retry only failed slides
-
----
+Follow the bounded retry and result-unknown rules in [image-routing.md](references/image-routing.md).
+Never silently switch provider, change an explicitly selected model, or label Critic failures as
+approved. For a supported pipeline continuation, inspect the run and its command's `--help`
+before choosing `--continue-run`; an ambiguous paid attempt must not be blindly resubmitted.
+The OpenAI `slide-batch` path uses its batch receipt and the same command invocation, not a nonexistent
+`slide-batch --continue` flag. Return partial successes and nonzero failure status clearly.
 
 ## 🔴 User Confirmation Checkpoints
 
-Paperbanana is CLI-first, but three user-facing actions are expensive or irreversible. **🛑 STOP and ask for explicit confirmation** before running any row below — do not proceed on assumed consent.
+For the optional API pipeline, the following actions require appropriate authorization. Reuse explicit authorization already given for the same action. **🛑 STOP and ask for explicit confirmation** before running any row below — do not proceed on assumed consent.
 
 | 🔴 Trigger | 🛑 STOP — Confirm before proceeding |
 |------------|--------------------------------------|
-| `--auto` with `--max-iterations > 5` | **🛑 STOP.** Show: cap, est. API cost (≈ iterations × $0.04), est. wall time (≈ iterations × 30s). Ask: "Proceed with up to N iterations?" Do not kick off until user says yes. |
+| `--auto` with `--max-iterations > 5` | **🛑 STOP.** Show the iteration cap and an estimate based on current pricing and measured latency, or state that these are unknown. Ask: "Proceed with up to N iterations?" Do not kick off until user says yes. |
 | `--auto-download-data` on first run | **🛑 STOP.** Announce: "reference dataset will be downloaded to cache (~257MB full_bench, or lightweight curated set in upstream ≥ #112)". Ask: "Continue?" Do not download until confirmed. |
-| `setup` wizard | **🛑 STOP.** Before writing to `.env`, show the exact keys and preview of values (redact secrets after 4 chars). Ask: "Save to .env?" Do not write until confirmed. |
+| `setup` wizard | **🛑 STOP.** Before writing to `.env`, show the target path and variable names with secret values fully redacted. Ask: "Save to .env?" Do not write until confirmed. |
 
-**✅ No checkpoint needed:** normal `generate` / `plot` / `slide` (no `--auto`, within iteration cap 3) — these are short, cheap, and the Critic loop is self-bounded. Run them directly.
+**✅ No checkpoint needed:** normal `generate` / `plot` / `slide` (no `--auto`, within iteration cap 3) — these are short, cheap, and the Critic loop is self-bounded. Run within the user-authorized provider and spending scope.
 
 ---
 
@@ -337,7 +311,7 @@ Hard "do NOT" rules. Each maps to a failure mode already encoded above — this 
 | Treating a Critic API failure as "approved" | Ships an unreviewed image as if it passed QA | Mark `UNREVIEWED`, never `APPROVED`; report to user |
 | Proceeding past a 🔴 checkpoint without confirmation | Burns API budget / overwrites `.env` on assumed consent | 🛑 STOP at every checkpoint row; wait for explicit yes |
 | Writing matplotlib/seaborn scripts | That's `scientific-visualization`'s job, not paperbanana | Route code-gen away; paperbanana = AI image gen + critique loop |
-| Killing the whole `slide-batch` on one slide failure | Loses N−1 good slides over 1 bad one | Log the failure, continue, report survivors, retry via `--continue` |
+| Killing the whole `slide-batch` on one slide failure | Loses N−1 good slides over 1 bad one | Log the failure, continue, report survivors, retry using the batch receipt |
 | Full regeneration after a mid-run crash | Throws away plans/images/critic state, wastes API spend | Resume with `--continue` / `--continue-run <id>` |
 | Routing every "make a figure" to `generate` | `plot` (data files) and `slide` (presentation) have dedicated paths | Run the Command Selection Decision Tree first |
 | Inventing CLI flags not in the parameter tables | Upstream CLI surface drifts (see #115/#118/#123 note) | Verify with `<cmd> --help`; don't fabricate flags |
@@ -346,9 +320,8 @@ Hard "do NOT" rules. Each maps to a failure mode already encoded above — this 
 
 ## After Generation
 
-1. Parse output to find image path
-2. Use Read tool to display the generated image
-3. Report Run ID, iteration count, and Critic feedback
-4. If any outputs are marked `UNREVIEWED`, warn the user explicitly
-5. **If user expresses dissatisfaction OR status is UNREVIEWED**, proactively suggest:
-   `python -m paperbanana.cli <cmd> --continue --feedback "<specific fix>"` — preserves run state, avoids full regeneration
+Return the native image or a preview and file path. Report the actual route, model provenance,
+measured timing and review status as specified in the routing reference. For changes, identify
+which image and region need revision and preserve the original as an edit reference. For a
+batch, rebuild changed items and recheck cross-slide consistency before proposing a full rerun.
+Unreviewed output is a candidate; offer targeted review without claiming it already passed.

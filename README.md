@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
-  <img alt="Version" src="https://img.shields.io/badge/version-4.5.0-blue?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-4.6.0-blue?style=flat-square" />
   <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-Standard-2B6CB0?style=flat-square" />
   <img alt="Multi-Runtime" src="https://img.shields.io/badge/Runtime-Multi-success?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
@@ -22,6 +22,20 @@
 </p>
 
 ---
+
+## v4.6 — Codex routing and an optional Python backend
+
+For a new Codex request with no existing provider choice, ordinary generation and editing can
+use the native image tool. **Existing and explicitly selected Gemini routes are preserved.**
+Native generation and editable PPTX builds do not require the Python core or API-key setup.
+Use [paperbanana](https://github.com/PlutoLei/paperbanana/tree/codex/image25-adapter) when you need
+an exact OpenAI model/control or the full retrieval/Critic pipeline. The skill does not duplicate
+its API client. Native output does not establish that Sunburst or Flare was used.
+
+The [routing guide](references/image-routing.md) covers Image 2.5 controls, local/conversation
+references, masks, bounded OpenAI retries, ambiguous results and honest review status. It also
+links the optional backend's planned 24-case evaluation. No real Image 2.5 quality, latency or
+cost result is claimed by this release; historical benchmarks below retain their original scope.
 
 ## Gallery
 
@@ -279,6 +293,9 @@ Built-in style guides for NeurIPS, ICML, ACL, IEEE — each with venue-specific 
 
 ## Quick Start
 
+For native Codex generation, install the skills directly and skip core setup. The core setup
+below is for an existing Gemini workflow or another explicitly chosen API/pipeline route.
+
 ```bash
 # 1. Install PaperBanana — maintained fork, full feature set
 #    (slide / slide-batch, --concurrent wave-parallel batching, gpt-image-2)
@@ -404,34 +421,17 @@ claude plugin install paperbanana@paperbanana-skills
 claude plugin install paperbanana-slide-deck@paperbanana-skills --scope project  # optional
 ```
 
-### Layer 3: Manual install (copy SKILL.md into your runtime's skills directory)
+### Layer 3: Manual loading
 
-Each runtime resolves skills from its own directory — drop `SKILL.md` into the right one:
+Clone this repository and load `plugins/paperbanana/skills/paperbanana/SKILL.md` or
+`plugins/paperbanana-slide-deck/skills/paperbanana-slide-deck/SKILL.md` from the checkout.
+Keep the full plugin directory: the skill needs its references/scripts, and the slide-deck
+plugin keeps shared assets two levels above its SKILL.md. Copying only SKILL.md is insufficient.
+Use the current host's supported plugin/skill installer for discovery; no cross-host config
+changes are needed. For a manual Codex skill copy, copy the complete PaperBanana skill folder
+(including `references` and `scripts`) into a Codex-owned skill directory.
 
-| Runtime | Skills directory |
-|---------|------------------|
-| Claude Code | `~/.claude/skills/<name>/` (user) or `.claude/skills/<name>/` (project) |
-| Codex | `~/.codex/skills/<name>/` |
-| Cursor | `~/.cursor/skills/<name>/` |
-| OpenCode / others | that runtime's skills directory |
-
-```bash
-# Example — paperbanana skill, adjust the target dir per the table above
-DEST="$HOME/.claude/skills/paperbanana"   # ← change for your runtime
-mkdir -p "$DEST"
-curl -o "$DEST/SKILL.md" \
-  https://raw.githubusercontent.com/PlutoLei/paperbanana-skill/master/plugins/paperbanana/skills/paperbanana/SKILL.md
-
-# paperbanana-slide-deck skill (optional)
-DECK_DEST="$HOME/.claude/skills/paperbanana-slide-deck"   # ← change for your runtime
-mkdir -p "$DECK_DEST"
-curl -o "$DECK_DEST/SKILL.md" \
-  https://raw.githubusercontent.com/PlutoLei/paperbanana-skill/master/plugins/paperbanana-slide-deck/skills/paperbanana-slide-deck/SKILL.md
-```
-
-**Fallback (no skills loader):** any agent can use these without an installer — just `cat` the `SKILL.md` into context as reference material before your request.
-
-### PaperBanana package setup
+### Optional PaperBanana package setup
 
 ```bash
 git clone https://github.com/llmsresearch/paperbanana.git

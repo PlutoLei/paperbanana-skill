@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.6.0] - 2026-09-09
+
+- Added native Codex routing for new unbound requests and an offline routing contract helper.
+  Existing/explicit Gemini selection, backend defaults and Gemini pipeline routing are preserved.
+- Made the Python core optional for native generation and editable PPTX builds. Exact Image 2.5
+  controls and full Critic pipelines use the core; the native schema does not select a model.
+- Documented reference/mask rules, OpenAI-only bounded recovery, truthful generation/review
+  provenance, and the backend's planned 24-case evaluation (no real API scores reported).
+- Retained Gemini's existing API paths; removed Codex's dependency on Claude-private path discovery.
+- Packaging: PaperBanana plugin 4.5.0, slide-deck plugin 1.4.0, marketplace 4.6.0.
+
 ## [4.5.0] - 2026-08-12
 
 ### Added

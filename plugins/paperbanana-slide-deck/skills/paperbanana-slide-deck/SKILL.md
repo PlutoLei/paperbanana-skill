@@ -10,6 +10,21 @@ End-to-end slide deck creation and modification. Two deck modes (`image` and `ed
 **Image pipeline:** Content → Style Selection → Outline → Prompts → Image Generation → PPTX Merge
 **Editable pipeline:** Content → `slide-spec.json` (native text/table/chart/shape/line/group) → validate → build PPTX → render previews → Critic review → revise spec → rebuild
 
+## Host route and plugin paths
+
+Read [image-routing.md](../../references/image-routing.md). Existing or explicitly selected Gemini
+workflows keep their provider, model, authentication and routing. New Codex requests without a
+bound backend use the native image tool when its controls suffice. Exact OpenAI model/quality,
+pixel dimensions or mask requests use the optional core's `image` command. Full pipelines remain
+available when requested; neither native image generation nor the editable PPTX builder requires
+the Python core. Do not claim the native tool is Sunburst/Flare.
+
+Set `SKILL_DIR` to the directory containing this loaded SKILL.md. For the packaged plugin,
+`PLUGIN_DIR` is two directories above it; scripts are in `PLUGIN_DIR/scripts`. Resolve these
+from the loaded skill rather than searching another host's private configuration. The core's
+source path and the slide-deck plugin path are different. Other `references/` paths below
+are relative to `PLUGIN_DIR`, where the shared references are shipped.
+
 ## Phase M: Deck mode selection
 
 Record exactly one line in `deck-mode.txt`: `image` or `editable`.
@@ -34,8 +49,8 @@ In Modify mode, the user has already edited prompts or outline externally. Skip 
 
 | Component | Role | Location |
 |-----------|------|----------|
-| `google-genai` SDK | Path B image generation | `pip install google-genai` |
-| PaperBanana CLI | Path A image generation | `python -m paperbanana.cli slide-batch` |
+| `google-genai` SDK | Existing Gemini Path B only | `pip install google-genai` |
+| PaperBanana CLI (optional) | Explicit API image / full pipeline / Critic | `python -m paperbanana.cli slide-batch` |
 | merge-to-pptx.ts | PPTX merge (image mode) | `plugins/paperbanana-slide-deck/scripts/merge-to-pptx.ts` |
 | build-deck.ts | Explicit `--mode image\|editable` router | `plugins/paperbanana-slide-deck/scripts/build-deck.ts` |
 | Editable renderer | `slide-spec.json` → native PPTX | `plugins/paperbanana-slide-deck/scripts/editable/` |
@@ -46,23 +61,26 @@ In Modify mode, the user has already edited prompts or outline externally. Skip 
 
 When `deck-mode.txt` says `editable`, skip Phases R/D/I below and follow this loop instead (contract details and full example: `references/editable-slide-spec.md`):
 
-1. **Generate only text-free assets** (photos, illustration panels — no rendered text) with PaperBanana; record each asset's SHA-256.
+1. **Generate only text-free assets** (photos, illustration panels — no rendered text) through the selected image route; record each asset's SHA-256.
 2. **Author `slide-deck/{topic-slug}/slide-spec.json`** — native `text`, `shape`, `line`, `table`, `chart`, `image`, and `group` elements on the 13.333×7.5 in canvas, with `[Sources]` speaker notes per slide.
 3. **Validate + build** (fail-closed; a missing or invalid spec is an error, never a silent image-mode fallback):
 
 ```bash
-bun "${SKILL_DIR}/scripts/build-deck.ts" --mode editable "slide-deck/{topic-slug}"
+bun "${PLUGIN_DIR}/scripts/build-deck.ts" --mode editable "slide-deck/{topic-slug}"
 ```
 
 4. **Render PPTX previews** with LibreOffice + Poppler (`soffice --headless --convert-to pdf`, then `pdftoppm -png -r 150 … slide` → `slide-NN.png`).
-5. **Run Critic on the previews** (preview-only; never edits the PPTX):
+5. **Optional Critic integration** (requires the core and authorized VLM access; preview-only):
 
 ```bash
-python3 "${SKILL_DIR}/scripts/editable/review-editable.py" \
+python3 "${PLUGIN_DIR}/scripts/editable/review-editable.py" \
   --spec "slide-deck/{topic-slug}/slide-spec.json" \
   --rendered-dir "slide-deck/{topic-slug}/rendered" \
   --output "slide-deck/{topic-slug}/critic-review.json"
 ```
+
+Without a configured Critic, inspect previews directly and label automated review `UNREVIEWED`.
+A successful build or `review-editable.py --dry-run` does not establish review acceptance.
 
 6. **Map findings to element IDs** (suggestions arrive as `slide-id/element-id: …`), revise `slide-spec.json`, and rebuild. Repeat until clean.
 
@@ -72,19 +90,11 @@ Skip this phase entirely in Modify mode.
 
 **R1: Discover style libraries** — Scan all four sources and merge into a unified list.
 
-```bash
-# Source 0 (PRIMARY): Local extended library (123 styles from Fooocus/ComfyUI, structured)
-LOCAL_STYLES="$(find ~/.claude/skills .claude/skills -maxdepth 1 -name 'paperbanana-slide-deck' -type d 2>/dev/null | head -1)/references/styles"
-
-# Source 1: baoyu-slide-deck styles (16 slide-optimized)
-BAOYU_SLIDE=$(ls -td ~/.claude/plugins/cache/baoyu-skills/content-skills/*/skills/baoyu-slide-deck/references/styles 2>/dev/null | head -1)
-
-# Source 2: baoyu-infographic styles (20 visual-rich)
-BAOYU_INFOG=$(ls -td ~/.claude/plugins/cache/baoyu-skills/content-skills/*/skills/baoyu-infographic/references/styles 2>/dev/null | head -1)
-
-# Source 3: theme-factory themes (10 color/typography presets)
-THEME_FACTORY=$(ls -td ~/.claude/plugins/cache/anthropic-agent-skills/document-skills/*/skills/theme-factory/themes 2>/dev/null | head -1)
-```
+Use the shipped `references/styles/` as the primary local library. Discover optional
+`baoyu-slide-deck`, `baoyu-infographic` and `theme-factory` libraries through the current host's
+skill catalog and resolve their `references/styles` or `themes` directories. In Codex, use only
+available Codex-owned or approved snapshot paths; do not inspect `~/.claude` or project `.claude`.
+Missing optional libraries do not require an installation.
 
 Merge: Glob all four directories for `*.md`, deduplicate by filename (priority: baoyu-slide-deck > local > baoyu-infographic > theme-factory). Present the full unified list to user during R3.
 
@@ -92,9 +102,9 @@ If none found: Use PaperBanana's 23 built-in presets.
 
 **R2: Analyze content** — Topic, audience, tone, recommended slide count.
 
-**R3: Style recommendation** — Recommend 2-3 styles based on content signals. See `references/style-guide.md` for the full style-to-content mapping table.
+**R3: Style recommendation** — Recommend 2-3 styles based on content signals. Use the descriptions in the shipped style files to explain the recommendation.
 
-**R4: Interactive selection** — Use AskUserQuestion for style, audience, and slide count.
+**R4: Selection** — Reuse the user’s chosen style, audience and slide count; use the host’s question tool only for material missing choices.
 
 **R5: Save analysis** — Create `slide-deck/{topic-slug}/analysis.md`.
 
@@ -104,7 +114,7 @@ In Modify mode, the user handles prompt edits directly.
 
 **D1: Load style spec** — Read from baoyu styles or PaperBanana built-ins.
 
-**D2: Generate outline** — Create `outline.md` with slide structure. See `references/outline-format.md`.
+**D2: Generate outline** — Create `outline.md` with slide structure. Include slide number, title, key message, visual composition and source notes.
 
 **D3: Optional outline review** — Ask user if they want to review before proceeding.
 
@@ -112,15 +122,28 @@ In Modify mode, the user handles prompt edits directly.
 
 ## Phase I: Implement (Both Modes)
 
-### Step I1: Image Generation (Dual Path)
+### Step I1: Image Generation
 
-**Path A — PaperBanana CLI (preferred, has critic quality review):**
+**New Codex route:** For an unbound new request, generate each full-slide image through the
+native tool, following the reference-image contract in `references/image-routing.md`. Preserve
+prompt-to-output mapping and inspect all returned images. For precise OpenAI controls use the
+core's `image` command; for an OpenAI pipeline use `slide-batch --image-provider openai_imagen`
+and an explicit model. Verify the installed flags before execution. The OpenAI batch receipt
+allows verified reuse and protects ambiguous attempts; do not send OpenAI failures into the
+Gemini fallback below. Record native or direct API output as `UNREVIEWED` until actually reviewed.
+
+**Existing Gemini workflow:** The following Path A/Path B behavior remains for Gemini-bound
+work. It is not a fallback from a user-selected OpenAI or native route.
+
+
+**Path A — Existing Gemini PaperBanana pipeline (with Critic):**
 
 ```bash
 cd <project_root>
 python -m paperbanana.cli slide-batch \
   --prompts-dir "slide-deck/{topic-slug}/prompts" \
   --output-dir "slide-deck/{topic-slug}" \
+  --image-provider google_imagen \
   --resolution 4k \
   --iterations 2
 ```
@@ -223,16 +246,15 @@ Sequencing: `I1 (generate + resume) → I2 (cleanup orphans) → I3 (merge)`.
 ### Step I3: Merge to PPTX
 
 ```bash
-# Locate skill directory dynamically (works on any platform)
-SKILL_DIR="$(find ~/.claude/skills .claude/skills -maxdepth 1 -name 'paperbanana-slide-deck' -type d 2>/dev/null | head -1)"
-bun "${SKILL_DIR}/scripts/merge-to-pptx.ts" "slide-deck/{topic-slug}"
+# PLUGIN_DIR was resolved from the loaded skill above.
+bun "${PLUGIN_DIR}/scripts/merge-to-pptx.ts" "slide-deck/{topic-slug}"
 ```
 
 If merge script unavailable: inform user that PNG images are ready but PPTX merge requires bun and the local merge-to-pptx.ts script.
 
 ## Phase V: Verify (Both Modes)
 
-**V1: Display results** — Read and display each generated slide image. Report total slides, output directory, PPTX file path.
+**V1: Display results** — Inspect and display each generated slide. Report total slides, paths, actual provider/model provenance and review status. Preserve missing or failed items in the response; do not describe a partial deck as complete.
 
 **V2: User feedback** — Ask:
 - "Looks great, done!"
@@ -240,7 +262,7 @@ If merge script unavailable: inform user that PNG images are ready but PPTX merg
 
 **V3: Regeneration** — If user wants changes:
 1. User edits the specific prompt files
-2. Regenerate ALL slides (not just changed ones — ensures visual consistency)
+2. For native/OpenAI work, regenerate changed slides and inspect cross-slide consistency; rerun the full deck only if needed and authorized. Existing Gemini workflows retain their full-deck regeneration convention.
 3. Smart cleanup + re-merge PPTX
 4. Return to V1
 
@@ -251,8 +273,8 @@ If merge script unavailable: inform user that PNG images are ready but PPTX merg
 | All style libraries missing | Use PaperBanana built-in presets |
 | Local merge script missing | Output PNG only, skip PPTX |
 | Bun/npx missing | Skip PPTX merge, inform user |
-| **Critic 429 / RetryError** | **Auto-degrade to Path B (no critic)** |
-| **Image-gen 429 in Path B** | **Exponential backoff up to 5 min, then surface** |
+| **Gemini Critic 429 / RetryError** | **Existing Gemini workflow: auto-degrade to Path B (no critic)** |
+| **Gemini image-gen 429 in Path B** | **Exponential backoff up to 5 min, then surface** |
 | **Partial batch already generated** | **Resume from next missing slide, preserve existing PNGs** |
 
 ## Output Structure

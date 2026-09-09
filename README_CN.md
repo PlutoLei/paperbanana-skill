@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/PlutoLei/paperbanana-skill/stargazers"><img alt="GitHub Stars" src="https://img.shields.io/github/stars/PlutoLei/paperbanana-skill?style=flat-square&color=yellow" /></a>
-  <img alt="Version" src="https://img.shields.io/badge/version-4.5.0-blue?style=flat-square" />
+  <img alt="Version" src="https://img.shields.io/badge/version-4.6.0-blue?style=flat-square" />
   <img alt="Agent Skills" src="https://img.shields.io/badge/Agent%20Skills-%E6%A0%87%E5%87%86-2B6CB0?style=flat-square" />
   <img alt="Multi-Runtime" src="https://img.shields.io/badge/%E8%BF%90%E8%A1%8C%E6%97%B6-%E5%A4%9A%E7%AB%AF-success?style=flat-square" />
   <img alt="Python" src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" />
@@ -22,6 +22,18 @@
 </p>
 
 ---
+
+## v4.6 — Codex 路由与可选 Python 后端
+
+新的 Codex 请求尚未绑定 provider 时，普通生图和编辑可使用原生图像工具。
+**已有或明确选择的 Gemini 路由保持不变。** 原生生图与可编辑 PPTX 构建不需要
+安装 Python 核心或配置 API key。精确指定 OpenAI 模型、参数或需要完整检索/Critic
+流程时，再调用 [paperbanana 后端](https://github.com/PlutoLei/paperbanana/tree/codex/image25-adapter)。
+技能层不重复维护 API 客户端，也不把原生工具成功返回当作调用了 Sunburst/Flare 的证据。
+
+[接入说明](references/image-routing.md) 包含 Image 2.5 参数、参考图/遮罩、OpenAI 有界重试、
+结果未知时的恢复和评审状态。后端附有 24 案例评估计划；当前尚无真实 Image 2.5 画质、
+延迟或成本结论。下文历史测试仍只代表当时测试的模型与条件。
 
 ## 效果展示
 
@@ -263,6 +275,9 @@ skill 根据你的请求信号自动挑 provider：
 
 ## 快速开始
 
+Codex 原生生图只需安装技能，可跳过 Python 核心安装。以下核心配置适用于已有 Gemini
+工作流或明确选择的 API/完整 pipeline；原生生图和可编辑 PPTX 不要求这一步。
+
 ```bash
 # 1. 安装 PaperBanana——维护版 fork，全功能
 #    （slide / slide-batch --concurrent 并行批量、gpt-image-2）
@@ -280,7 +295,7 @@ npx skills add PlutoLei/paperbanana-skill
 # /paperbanana 一个带有批量归一化的 4 层 CNN 图像分类架构
 ```
 
-> **提示：** 本仓库是遵循 [skills.sh 标准](https://skills.sh)的**技能定义文件**（SKILL.md），可在任意 skills-compatible runtime（Claude Code、Codex、Cursor、OpenCode 等）使用。全功能 Python 核心包在 [PlutoLei/paperbanana](https://github.com/PlutoLei/paperbanana)（[llmsresearch/paperbanana](https://github.com/llmsresearch/paperbanana) 的下游 fork）；上游亦可用，但仅覆盖 diagram/plot——无 slide 生成、无 `--concurrent`。两者任装其一，与技能配套使用。
+> **提示：** 本仓库是遵循 [skills.sh 标准](https://skills.sh)的**技能定义文件**（SKILL.md），可在任意 skills-compatible runtime（Claude Code、Codex、Cursor、OpenCode 等）使用。全功能 Python 核心包在 [PlutoLei/paperbanana](https://github.com/PlutoLei/paperbanana)（[llmsresearch/paperbanana](https://github.com/llmsresearch/paperbanana) 的下游 fork）；上游亦可用，但仅覆盖 diagram/plot——无 slide 生成、无 `--concurrent`。需要 Python 后端时再选用对应版本；新 Image 2.5 接口须使用包含本次改动的 fork 分支。
 
 ---
 
