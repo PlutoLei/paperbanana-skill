@@ -2,6 +2,7 @@
 
 Scope: skill/router changes, optional-backend integration, packaging and existing PPTX modes.
 No native image generation or paid API evaluation was executed for this engineering check.
+The subsequent [live smoke test](image25-live-smoke.md) records real calls separately.
 
 | Check | Observed result |
 | --- | --- |

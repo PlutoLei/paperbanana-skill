@@ -127,6 +127,20 @@ latencies and reviews missing. Freeze editing references/masks and their hashes 
 Tune on the tuning split, then freeze the selected profile before opening holdout results.
 Do not infer measured quality, latency, cost or release acceptance from unit tests.
 
+The [2026-09-09 live smoke test](https://github.com/PlutoLei/paperbanana-skill/blob/codex/image25-adapter/docs/image25-live-smoke.md)
+adds practical checks; it is not the full evaluation:
+
+- Check availability with an authorized request when appropriate. Absence from the account's
+  model-list response alone did not predict Image 2.5 request failure in this run.
+- For masked edits, state the required background, font, colors and unchanged content explicitly.
+  Inspect outside the mask too; a successful request does not guarantee pixel-identical preservation.
+- For multiple references, assign each image a role: layout, style, text or font. Copy critical
+  strings into the prompt and preserve the requested script (for example, simplified Chinese).
+  Inspect the output and use OCR as an additional check, including punctuation.
+- Inspect transparent images after alpha-aware composition over a background. RGB values in
+  transparent pixels can look like a halo in previews that ignore alpha. Inspect alpha values
+  separately if the task requires fully opaque or binary-alpha regions.
+
 Sources: [Sunburst](https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst),
 [Flare](https://developers.openai.com/api/docs/models/gpt-image-2.5-flare),
 [Image API guide](https://developers.openai.com/api/docs/guides/image-generation),
