@@ -1,7 +1,7 @@
 ---
 name: paperbanana
 description: Use when user needs academic diagrams, methodology figures, statistical plots, or presentation slides from text descriptions or data files. Also use for evaluating generated figures against references.
-argument-hint: [generate|plot|slide|slide-batch|evaluate|data|setup] [description or file path]
+argument-hint: "[generate|plot|slide|slide-batch|evaluate|data|setup] [description or file path]"
 allowed-tools: Read, Write, Bash, Glob, Grep, AskUserQuestion
 ---
 
