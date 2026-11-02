@@ -15,6 +15,14 @@ For figure review, check completeness, layout, annotation, color restraint, legi
 
 A failed review leaves an image unreviewed. Recovery differs by installed backend and route; do not treat a failed or malformed Critic response as acceptance.
 
+## Local validation layers
+
+Repository validation parses skill frontmatter and manifests, checks local resource references, and builds an isolated copy of the complete deck bundle from an unrelated working directory. The deck suite covers native-object output, image mode, input validation, preview integrity and review error handling. These checks do not call a model service.
+
+The optional `test_critic_core_integration.py` suite exercises the actual backend settings, Critic agent, templates and parser with an offline provider boundary. To run it, supply a public backend checkout through `PAPERBANANA_CORE_PATH` and install that backend's dependencies in the test environment. The integration fixture blocks socket access. Record the backend commit with the result. CI without this variable reports those tests as skipped; a skipped test is not a passing integration result.
+
+When comparing skill instructions, freeze both versions and the task cases, then compare outputs under equivalent conditions. Decision-only exercises can assess provider choice, recovery, scope and reporting; they cannot establish generated-image quality. Preserve ties and regressions, and review factual failures before aggregating preferences. Separate actual service calls and inspected artifacts from these decision exercises.
+
 ## Image 2.5 smoke tests
 
 The [2026-09-09 report](https://github.com/PlutoLei/paperbanana-skill/blob/codex/image25-adapter/docs/image25-live-smoke.md) belongs to the **preview branch**, not the current v4.5 release. It records eight successful OpenAI image requests, native Codex generation/editing, the existing Gemini/Vertex route and one Critic call.

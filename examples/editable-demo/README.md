@@ -2,6 +2,8 @@
 
 [Home](../../README.md) · [中文说明](#中文说明) · [Download PPTX](editable-demo.pptx) · [Source spec](slide-spec.json)
 
+For a complete presentation structure, try the [three-slide research brief](research-brief/README.md) with synthetic data. This page keeps the original one-slide object demo.
+
 [![Rendered example of native text, workflow shapes, connectors, table and chart](../previews/editable-demo.webp)](editable-demo.pptx)
 
 This one-slide example is built by the repository's existing renderer. It contains native text, shapes, connectors, a table and a chart; the chart values **2, 4, 3 are arbitrary demonstration data**. It makes no research or model-quality claim. No image API was called to build it.
@@ -26,6 +28,8 @@ Open the PPTX in PowerPoint. Select and change the title, change a workflow box'
 To change the generated example, edit the spec and rebuild. [Authoring contract](../../plugins/paperbanana-slide-deck/references/editable-slide-spec.md).
 
 ## 中文说明
+
+需要更完整的演示结构时，可查看[三页研究汇报示例](research-brief/README.md#中文说明)，其中所有数值均为合成演示数据。本页保留原有的单页对象示例。
 
 这个单页示例由仓库自带的渲染器生成，包含原生文本、形状、连接线、表格和图表。**2、4、3 只是演示数值，不是实验结果**，生成过程不调用图片 API。
 

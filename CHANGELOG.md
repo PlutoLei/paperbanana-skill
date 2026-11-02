@@ -2,12 +2,19 @@
 
 ## [Unreleased]
 
+### Reliability and distribution
+- Added a self-contained deck skill entrypoint, the missing style/outline references, and installation checks that build from outside the repository. Figure and deck instructions preserve saved providers, partial results and explicit edit scope.
+- Updated the editable Critic adapter for the asynchronous public backend interface, explicit provider configuration and separate `reviewed`, `needs-revision` and `unreviewed` outcomes. Added offline integration coverage against a pinned backend checkout.
+- Added local preview rendering and a manifest that connects review inputs to their source and generated files. Failed or stale review inputs must be rebuilt before model review.
+- Added YAML/frontmatter, manifest, local-reference and distribution validation to CI. No plugin version has been bumped for these unreleased changes.
+
 ### Documentation
 - Reorganized both homepages around quick start, selected outputs and task-based documentation; reduced the top-level badges to Release, CI and License.
 - Added lightweight WebP previews while retaining full-resolution originals and recording their hashes. Moved the complete gallery and historical model comparisons into dedicated guides with provenance limits.
 - Added a reproducible native PowerPoint example, its source spec and a downloadable PPTX with illustrative data.
 - Clarified agent-runtime, image-provider and review-provider roles; documented the existing Gemini/Vertex path and labeled Image 2.5/native routing as a separate preview branch.
-- Separated the 123 bundled style references, backend presets and optional external style libraries. Runtime code, routing and plugin versions are unchanged.
+- Separated the 123 bundled style references, backend presets and optional external style libraries.
+- Added a three-slide editable research brief with native chart/table objects, clearly labeled synthetic values and downloadable source/PPTX files. Both homepages now expose the editable example near the top.
 
 ## [4.5.0] - 2026-08-12
 

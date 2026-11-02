@@ -2,15 +2,35 @@
 
 [Home](../README.md) · [中文说明](#中文说明) · [Providers](providers.md) · [Local PPTX demo](../examples/editable-demo/README.md)
 
+## Choose your output
+
+| Output | Skill | Runtime dependencies |
+| --- | --- | --- |
+| Scientific figure | `paperbanana` | Python backend and configured image/review providers |
+| Image slide deck | `paperbanana-slide-deck` | Python backend for generation; Bun for PPTX assembly |
+| Editable PPTX | `paperbanana-slide-deck` | Bun for native objects; no image API call for the included examples |
+
+Use the [three-slide research brief](../examples/editable-demo/research-brief/README.md) to try editable output immediately, or the [one-slide object demo](../examples/editable-demo/README.md) for a minimal example. Both provide source specs and downloadable PPTX files.
+
 ## Install for your runtime
 
-For Codex, install from the repository with the skills installer:
+### Codex
+
+Install each skill from its complete, self-contained directory. Choose the figure skill, the deck skill, or both.
 
 ```bash
-npx skills add PlutoLei/paperbanana-skill -a codex
+# Scientific figures
+npx skills add https://github.com/PlutoLei/paperbanana-skill/tree/master/plugins/paperbanana/skills/paperbanana -a codex
+
+# Image decks and editable PPTX
+npx skills add https://github.com/PlutoLei/paperbanana-skill/tree/master/plugins/paperbanana-slide-deck -a codex
 ```
 
-For Claude Code, add the marketplace and choose the plugins you need:
+Use these specific paths to select the intended bundle. A repository-root discovery command can stop at the root skill and omit the deck skill. The deck bundle must retain its `scripts`, `references`, `package.json` and lockfile.
+
+### Claude Code
+
+Add the marketplace and choose the plugins you need:
 
 ```bash
 claude plugin marketplace add PlutoLei/paperbanana-skill
@@ -18,7 +38,7 @@ claude plugin install paperbanana@paperbanana-skills
 claude plugin install paperbanana-slide-deck@paperbanana-skills --scope project
 ```
 
-The deck plugin is optional. Reload skills in your runtime after installation. Installing a skill does not configure API access or install its Python backend. Check which skills the installer selected; runtime discovery and plugin installation are different mechanisms.
+Reload skills in your runtime after installation. Installing a skill does not configure API access, install Bun or install its Python backend. Check which skills the installer selected; runtime discovery and plugin installation are different mechanisms.
 
 ## Python backend
 
@@ -58,15 +78,13 @@ SKILLS_DEST="$HOME/.codex/skills"
 mkdir -p "$SKILLS_DEST"
 cp -R plugins/paperbanana/skills/paperbanana "$SKILLS_DEST/paperbanana"
 cp -R plugins/paperbanana-slide-deck "$SKILLS_DEST/paperbanana-slide-deck"
-cp plugins/paperbanana-slide-deck/skills/paperbanana-slide-deck/SKILL.md \
-  "$SKILLS_DEST/paperbanana-slide-deck/SKILL.md"
 ```
 
 Other runtimes use their own skill directory. This example does not install a Claude plugin or migrate another runtime's settings.
 
 ## 中文说明
 
-先选择运行环境，再配置任务真正需要的后端。Codex 可使用上面的 `npx skills add ... -a codex`；Claude Code 则使用插件市场命令。只做插图时安装 `paperbanana` 即可，需要整套演示编排再加装 `paperbanana-slide-deck`。
+先选择产出，再按运行环境安装。科研图使用 `paperbanana`；图片式幻灯片和原生可编辑 PPTX 使用 `paperbanana-slide-deck`。Codex 按上方 [Codex 安装段落](#codex)分别安装完整目录，避免仓库根目录发现只装到插图技能；Claude Code 使用[插件市场命令](#claude-code)。
 
 安装完成后刷新技能列表，并核对实际安装了哪些技能。技能安装器、Claude 插件市场与 Python 包是三个独立环节。
 
@@ -76,7 +94,7 @@ Other runtimes use their own skill directory. This example does not install a Cl
 
 使用 Gemini 时保留现有 Google 认证方式；使用 Vertex 时，继续使用已支持 Vertex 的后端版本和配置。技能安装本身不会给旧后端补上 Vertex 接口。OpenAI 生图需要对应依赖和访问配置，流水线的规划、评审还需要可用的 VLM。
 
-只构建原生可编辑 PPTX 时，可以直接运行仓库内的 [Bun 示例](../examples/editable-demo/README.md#中文说明)，无需 Python 生图后端或图片 API 密钥。
+只构建原生可编辑 PPTX 时，可以直接运行仓库内的[三页研究汇报示例](../examples/editable-demo/research-brief/README.md#中文说明)或[单页对象示例](../examples/editable-demo/README.md#中文说明)。渲染需要 Bun，无需 Python 生图后端或图片 API 密钥。
 
 ### 第一个任务
 
