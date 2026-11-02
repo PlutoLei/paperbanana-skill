@@ -1,7 +1,9 @@
 # Codex image routing and optional backend
 
-Verified against the public OpenAI documentation and the native tool schema on 2026-09-09.
-This is a capability contract; it is not a measurement of either model's quality.
+This guide belongs to the `codex/image25-adapter` preview branch, not the v4.5 release.
+The native tool schema was rechecked in the active host on 2026-11-02; the API documentation
+notes below retain their 2026-09-09 verification date. This update validates offline routing,
+not image quality, live provider availability or production acceptance.
 
 ## Choose the route
 
@@ -9,7 +11,8 @@ This is a capability contract; it is not a measurement of either model's quality
 | --- | --- | --- |
 | New Codex request with no existing/chosen backend: ordinary generation, composition or editing | Available native image tool | No |
 | Native text, tables, charts and shapes in an editable PPTX | Slide-deck renderer | No |
-| Exact Sunburst/Flare model, quality, pixel size, output format, transparent-background control or mask file | Explicit Image API via `paperbanana image` | Yes |
+| Transparent or opaque background, with no other strict controls or existing provider choice | Available native image tool with `transparent_background` | No |
+| Exact Sunburst/Flare model, quality, pixel size, output format, other background modes or mask file | Explicit Image API via `paperbanana image` | Yes |
 | Retrieval, planning, styling and Critic loop | Existing PaperBanana pipeline | Yes |
 | Preview review using the Python Critic | Optional `review-editable.py` integration | Yes, for a real Critic call |
 
@@ -32,11 +35,16 @@ have Codex's native tool.
 ## Native call contract
 
 Inspect the tool schema exposed in the current session. The verified `image_gen.imagegen` schema
-accepts `prompt`, `referenced_image_paths` and `num_last_images_to_include`. It has no `model`,
-`quality`, `size`, `mask` or `background` field. A prompt can express a preference, but cannot prove
-an exact model or pixel-level control. Do not claim that native output used Image 2.5.
+accepts `prompt`, `referenced_image_paths`, `num_last_images_to_include` and the boolean
+`transparent_background`. It has no exact `model`, `quality`, `size`, `mask` or API-style
+`background` field. A prompt can express a preference, but cannot prove an exact model or
+pixel-level control. Do not claim that native output used Image 2.5.
 
 - Brand-new image: pass `prompt`; omit both reference fields.
+- Transparent output: set `transparent_background: true`; opaque output: set it to `false`.
+  For edits, inspect the references and preserve their transparency unless the user asks to
+  change it. A successful routing decision is not evidence that generated pixels have the
+  requested alpha channel; inspect the actual output.
 - Edit using local images: inspect them with `view_image`, then supply all absolute paths in
   `referenced_image_paths`.
 - If at least one target has no local path, use the smallest `num_last_images_to_include` (1–5)
@@ -57,9 +65,26 @@ PaperBanana skill. In the source repository it is at
 ```
 
 Run `node <path-to-route-image.mjs> request.json`. `native_available` must reflect the current
-session. Structured strict controls mean an API route; do not convert a loose visual preference
-into a strict control unnecessarily. The helper does not submit requests or inspect file content.
+session. Exact model, dimensions, quality, format or masks require the API route; the native
+boolean background control is supported. Do not convert a loose visual preference into a strict
+control unnecessarily. The helper does not submit requests or inspect file content.
 The slide-deck plugin can follow this same decision table without installing the helper.
+
+The helper accepts `transparent_background: true|false` and the aliases
+`background: "transparent"|"opaque"`. It normalizes those aliases to the native boolean.
+If both forms appear, they must agree; conflicting values and non-boolean transparency are
+rejected before routing. Other background modes, such as `"auto"`, remain API controls and
+cannot be combined with an explicit transparency boolean.
+
+When an existing/explicit provider, pipeline requirement, strict control or unavailable native
+tool selects the backend, the helper converts the boolean to `background: "transparent"` or
+`"opaque"` and removes `transparent_background` from the backend request. The selected
+provider still needs a capability check; transparency never overrides an explicit Gemini or
+other provider choice. A native-only request still fails if that tool is unavailable.
+
+```json
+{"prompt":"An isolated specimen on a transparent background","mode":"generate","native_available":true,"transparent_background":true}
+```
 
 ## Explicit Image API route
 
