@@ -1,0 +1,557 @@
+{
+  "schema_version": "1",
+  "deck": {
+    "layout": "LAYOUT_WIDE",
+    "language": "en",
+    "theme": "paperbanana-clean"
+  },
+  "slides": [
+    {
+      "id": "study-design",
+      "title": "Synthetic ablation study",
+      "sources": [
+        "local:slide-spec.json \u2014 author-created synthetic example, not research results"
+      ],
+      "speaker_notes": "[Sources]\n- local:slide-spec.json \u2014 author-created synthetic example, not research results\nAll model names, scores and relative costs are arbitrary demonstration values. No model was trained or evaluated. The deck was built with the repository renderer; it contains native PowerPoint objects.",
+      "elements": [
+        {
+          "id": "eyebrow",
+          "type": "text",
+          "x": 0.65,
+          "y": 0.4,
+          "w": 11.8,
+          "h": 0.3,
+          "text": "RESEARCH BRIEF  /  01 \u00b7 STUDY DESIGN",
+          "font_size": 16,
+          "color": "0F766E",
+          "bold": true
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "x": 0.65,
+          "y": 0.95,
+          "w": 12,
+          "h": 0.7,
+          "text": "Synthetic ablation study",
+          "font_size": 36,
+          "bold": true
+        },
+        {
+          "id": "header-rule",
+          "type": "line",
+          "x": 0.65,
+          "y": 1.82,
+          "w": 12,
+          "h": 0,
+          "stroke": "CBD5E1"
+        },
+        {
+          "id": "footer",
+          "type": "text",
+          "x": 0.65,
+          "y": 6.93,
+          "w": 11.4,
+          "h": 0.3,
+          "text": "SYNTHETIC EXAMPLE  /  Layout demonstration only; not research evidence.",
+          "font_size": 16,
+          "color": "64748B"
+        },
+        {
+          "id": "page",
+          "type": "text",
+          "x": 12.05,
+          "y": 6.93,
+          "w": 0.6,
+          "h": 0.3,
+          "text": "01",
+          "font_size": 16,
+          "color": "64748B",
+          "align": "right"
+        },
+        {
+          "id": "question-label",
+          "type": "text",
+          "x": 0.65,
+          "y": 2.15,
+          "w": 3.8,
+          "h": 0.35,
+          "text": "Question",
+          "font_size": 18,
+          "color": "0F766E",
+          "bold": true
+        },
+        {
+          "id": "question",
+          "type": "text",
+          "x": 0.65,
+          "y": 2.7,
+          "w": 5.0,
+          "h": 1.45,
+          "text": "How would we compare\nthree model variants?",
+          "font_size": 30,
+          "bold": true
+        },
+        {
+          "id": "scope",
+          "type": "text",
+          "x": 0.65,
+          "y": 4.5,
+          "w": 4.75,
+          "h": 1.5,
+          "text": "A worked presentation format for a controlled comparison. All data in this deck are synthetic.",
+          "font_size": 22,
+          "color": "64748B"
+        },
+        {
+          "id": "vertical-rule",
+          "type": "line",
+          "x": 5.85,
+          "y": 2.2,
+          "w": 0,
+          "h": 4.0,
+          "stroke": "CBD5E1"
+        },
+        {
+          "id": "node-0",
+          "type": "shape",
+          "x": 6.35,
+          "y": 2.2,
+          "w": 6.25,
+          "h": 0.56,
+          "fill": "E6F3F0",
+          "stroke": "E6F3F0"
+        },
+        {
+          "id": "label-0",
+          "type": "text",
+          "x": 6.55,
+          "y": 2.3200000000000003,
+          "w": 5.85,
+          "h": 0.32,
+          "text": "01  Define the split",
+          "font_size": 20,
+          "bold": true,
+          "color": "0F766E"
+        },
+        {
+          "id": "detail-0",
+          "type": "text",
+          "x": 6.55,
+          "y": 2.9000000000000004,
+          "w": 5.85,
+          "h": 0.35,
+          "text": "Use the same evaluation data",
+          "font_size": 19
+        },
+        {
+          "id": "node-1",
+          "type": "shape",
+          "x": 6.35,
+          "y": 3.5200000000000005,
+          "w": 6.25,
+          "h": 0.56,
+          "fill": "E6F3F0",
+          "stroke": "E6F3F0"
+        },
+        {
+          "id": "label-1",
+          "type": "text",
+          "x": 6.55,
+          "y": 3.6400000000000006,
+          "w": 5.85,
+          "h": 0.32,
+          "text": "02  Freeze each variant",
+          "font_size": 20,
+          "bold": true,
+          "color": "0F766E"
+        },
+        {
+          "id": "detail-1",
+          "type": "text",
+          "x": 6.55,
+          "y": 4.220000000000001,
+          "w": 5.85,
+          "h": 0.35,
+          "text": "Change one design choice",
+          "font_size": 19
+        },
+        {
+          "id": "node-2",
+          "type": "shape",
+          "x": 6.35,
+          "y": 4.84,
+          "w": 6.25,
+          "h": 0.56,
+          "fill": "E6F3F0",
+          "stroke": "E6F3F0"
+        },
+        {
+          "id": "label-2",
+          "type": "text",
+          "x": 6.55,
+          "y": 4.96,
+          "w": 5.85,
+          "h": 0.32,
+          "text": "03  Compare outputs",
+          "font_size": 20,
+          "bold": true,
+          "color": "0F766E"
+        },
+        {
+          "id": "detail-2",
+          "type": "text",
+          "x": 6.55,
+          "y": 5.54,
+          "w": 5.85,
+          "h": 0.35,
+          "text": "Inspect metrics and failures",
+          "font_size": 19
+        }
+      ]
+    },
+    {
+      "id": "synthetic-results",
+      "title": "Illustrative comparison",
+      "sources": [
+        "local:slide-spec.json \u2014 author-created synthetic example, not research results"
+      ],
+      "speaker_notes": "[Sources]\n- local:slide-spec.json \u2014 author-created synthetic example, not research results\nAll model names, scores and relative costs are arbitrary demonstration values. No model was trained or evaluated. The deck was built with the repository renderer; it contains native PowerPoint objects.",
+      "elements": [
+        {
+          "id": "eyebrow",
+          "type": "text",
+          "x": 0.65,
+          "y": 0.4,
+          "w": 11.8,
+          "h": 0.3,
+          "text": "RESEARCH BRIEF  /  02 \u00b7 SYNTHETIC RESULTS",
+          "font_size": 16,
+          "color": "0F766E",
+          "bold": true
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "x": 0.65,
+          "y": 0.95,
+          "w": 12,
+          "h": 0.7,
+          "text": "Illustrative comparison",
+          "font_size": 36,
+          "bold": true
+        },
+        {
+          "id": "header-rule",
+          "type": "line",
+          "x": 0.65,
+          "y": 1.82,
+          "w": 12,
+          "h": 0,
+          "stroke": "CBD5E1"
+        },
+        {
+          "id": "footer",
+          "type": "text",
+          "x": 0.65,
+          "y": 6.93,
+          "w": 11.4,
+          "h": 0.3,
+          "text": "SYNTHETIC EXAMPLE  /  Layout demonstration only; not research evidence.",
+          "font_size": 16,
+          "color": "64748B"
+        },
+        {
+          "id": "page",
+          "type": "text",
+          "x": 12.05,
+          "y": 6.93,
+          "w": 0.6,
+          "h": 0.3,
+          "text": "02",
+          "font_size": 16,
+          "color": "64748B",
+          "align": "right"
+        },
+        {
+          "id": "chart-title",
+          "type": "text",
+          "x": 0.65,
+          "y": 2.13,
+          "w": 6.25,
+          "h": 0.4,
+          "text": "Toy utility \u00b7 arbitrary units",
+          "font_size": 22,
+          "bold": true
+        },
+        {
+          "id": "score-chart",
+          "type": "chart",
+          "x": 0.65,
+          "y": 2.75,
+          "w": 6.3,
+          "h": 3.6,
+          "chart_type": "bar",
+          "series": [
+            {
+              "name": "Synthetic utility",
+              "labels": [
+                "Baseline",
+                "Variant A",
+                "Variant B"
+              ],
+              "values": [
+                2,
+                4,
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "id": "table-title",
+          "type": "text",
+          "x": 7.6,
+          "y": 2.13,
+          "w": 5,
+          "h": 0.4,
+          "text": "Read the trade-off",
+          "font_size": 22,
+          "bold": true
+        },
+        {
+          "id": "comparison-table",
+          "type": "table",
+          "x": 7.6,
+          "y": 2.85,
+          "w": 5.0,
+          "h": 1.85,
+          "rows": [
+            [
+              "Variant",
+              "Utility",
+              "Cost index"
+            ],
+            [
+              "Baseline",
+              "2",
+              "1.0\u00d7"
+            ],
+            [
+              "A",
+              "4",
+              "1.2\u00d7"
+            ],
+            [
+              "B",
+              "3",
+              "1.8\u00d7"
+            ]
+          ]
+        },
+        {
+          "id": "interpretation",
+          "type": "text",
+          "x": 7.6,
+          "y": 5.03,
+          "w": 4.95,
+          "h": 1.16,
+          "text": "These values demonstrate a chart and table. They do not establish model performance.",
+          "font_size": 21,
+          "color": "64748B"
+        }
+      ]
+    },
+    {
+      "id": "validation-plan",
+      "title": "Next validation steps",
+      "sources": [
+        "local:slide-spec.json \u2014 author-created synthetic example, not research results"
+      ],
+      "speaker_notes": "[Sources]\n- local:slide-spec.json \u2014 author-created synthetic example, not research results\nAll model names, scores and relative costs are arbitrary demonstration values. No model was trained or evaluated. The deck was built with the repository renderer; it contains native PowerPoint objects.",
+      "elements": [
+        {
+          "id": "eyebrow",
+          "type": "text",
+          "x": 0.65,
+          "y": 0.4,
+          "w": 11.8,
+          "h": 0.3,
+          "text": "RESEARCH BRIEF  /  03 \u00b7 EVIDENCE TO COLLECT",
+          "font_size": 16,
+          "color": "0F766E",
+          "bold": true
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "x": 0.65,
+          "y": 0.95,
+          "w": 12,
+          "h": 0.7,
+          "text": "Next validation steps",
+          "font_size": 36,
+          "bold": true
+        },
+        {
+          "id": "header-rule",
+          "type": "line",
+          "x": 0.65,
+          "y": 1.82,
+          "w": 12,
+          "h": 0,
+          "stroke": "CBD5E1"
+        },
+        {
+          "id": "footer",
+          "type": "text",
+          "x": 0.65,
+          "y": 6.93,
+          "w": 11.4,
+          "h": 0.3,
+          "text": "SYNTHETIC EXAMPLE  /  Layout demonstration only; not research evidence.",
+          "font_size": 16,
+          "color": "64748B"
+        },
+        {
+          "id": "page",
+          "type": "text",
+          "x": 12.05,
+          "y": 6.93,
+          "w": 0.6,
+          "h": 0.3,
+          "text": "03",
+          "font_size": 16,
+          "color": "64748B",
+          "align": "right"
+        },
+        {
+          "id": "number-0",
+          "type": "text",
+          "x": 0.65,
+          "y": 2.24,
+          "w": 3.6,
+          "h": 0.6,
+          "text": "01",
+          "font_size": 32,
+          "color": "0F766E"
+        },
+        {
+          "id": "heading-0",
+          "type": "text",
+          "x": 0.65,
+          "y": 3.1,
+          "w": 3.6,
+          "h": 0.5,
+          "text": "Repeat",
+          "font_size": 28,
+          "bold": true
+        },
+        {
+          "id": "body-0",
+          "type": "text",
+          "x": 0.65,
+          "y": 3.94,
+          "w": 3.6,
+          "h": 1.65,
+          "text": "Run multiple seeds. Report variability with the same evaluation protocol.",
+          "font_size": 23
+        },
+        {
+          "id": "number-1",
+          "type": "text",
+          "x": 4.86,
+          "y": 2.24,
+          "w": 3.6,
+          "h": 0.6,
+          "text": "02",
+          "font_size": 32,
+          "color": "0F766E"
+        },
+        {
+          "id": "heading-1",
+          "type": "text",
+          "x": 4.86,
+          "y": 3.1,
+          "w": 3.6,
+          "h": 0.5,
+          "text": "Stress-test",
+          "font_size": 28,
+          "bold": true
+        },
+        {
+          "id": "body-1",
+          "type": "text",
+          "x": 4.86,
+          "y": 3.94,
+          "w": 3.6,
+          "h": 1.65,
+          "text": "Use a held-out dataset. Check whether the ordering survives a shift in inputs.",
+          "font_size": 23
+        },
+        {
+          "id": "number-2",
+          "type": "text",
+          "x": 9.06,
+          "y": 2.24,
+          "w": 3.54,
+          "h": 0.6,
+          "text": "03",
+          "font_size": 32,
+          "color": "0F766E"
+        },
+        {
+          "id": "heading-2",
+          "type": "text",
+          "x": 9.06,
+          "y": 3.1,
+          "w": 3.54,
+          "h": 0.5,
+          "text": "Inspect",
+          "font_size": 28,
+          "bold": true
+        },
+        {
+          "id": "body-2",
+          "type": "text",
+          "x": 9.06,
+          "y": 3.94,
+          "w": 3.54,
+          "h": 1.65,
+          "text": "Review failure cases. Connect aggregate metrics to concrete output errors.",
+          "font_size": 23
+        },
+        {
+          "id": "col-rule-1",
+          "type": "line",
+          "x": 4.43,
+          "y": 2.3,
+          "w": 0,
+          "h": 3.5,
+          "stroke": "CBD5E1"
+        },
+        {
+          "id": "col-rule-2",
+          "type": "line",
+          "x": 8.64,
+          "y": 2.3,
+          "w": 0,
+          "h": 3.5,
+          "stroke": "CBD5E1"
+        },
+        {
+          "id": "conclusion",
+          "type": "text",
+          "x": 0.65,
+          "y": 6.15,
+          "w": 11.95,
+          "h": 0.42,
+          "text": "A real conclusion needs measured results and their uncertainty.",
+          "font_size": 22,
+          "bold": true,
+          "color": "0F766E"
+        }
+      ]
+    }
+  ]
+}

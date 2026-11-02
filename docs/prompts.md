@@ -26,6 +26,10 @@ These recipes were written for this documentation refresh. They are **not the or
 
 ## Editable deck
 
-For a deterministic example with no image API calls, [build the included slide spec](../examples/editable-demo/README.md). Its arbitrary chart values are labeled as demonstration data.
+> Use paperbanana-slide-deck in editable mode to build a three-slide research brief: study design, a comparison table and native chart, and next validation steps. Use only the data I provide. If using the repository's sample values, label them as synthetic demonstration data. Keep text, tables, charts and connectors editable in PowerPoint. Return the source spec, PPTX and review status.
 
-要直接验证原生可编辑对象，可[构建随仓库提供的示例](../examples/editable-demo/README.md#中文说明)。该示例不调用生图 API，图表中的数值仅用于演示。
+> 用 paperbanana-slide-deck 的可编辑模式制作三页研究汇报：研究设计、比较表格和原生图表、下一步验证。只使用我提供的数据；若使用仓库示例数值，明确标注为合成演示数据。文字、表格、图表和连接线应能在 PowerPoint 中继续编辑。交付源 spec、PPTX 和评审状态。
+
+For a deterministic example with no image API calls, [build the three-slide research brief](../examples/editable-demo/research-brief/README.md) or the [minimal object demo](../examples/editable-demo/README.md). Their arbitrary values are labeled as demonstration data.
+
+要验证原生可编辑对象，可构建[三页研究汇报](../examples/editable-demo/research-brief/README.md#中文说明)或[最小单页示例](../examples/editable-demo/README.md#中文说明)。两者均不调用生图 API，数值只用于演示。

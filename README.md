@@ -8,65 +8,68 @@
 
 **English** · [中文](README_CN.md)
 
-[Quick start](#quick-start) · [Examples](#selected-examples) · [Documentation](#documentation)
+[Get started](#quick-start) · [Download editable PPTX](examples/editable-demo/research-brief/research-brief.pptx) · [Examples](#selected-examples) · [Documentation](#documentation)
 
-Turn a methods description into a figure, plan a consistent slide deck, or build PowerPoint objects you can edit. Use the skills in Claude Code or Codex; choose an image backend when your task needs one.
+Turn a methods description into a scientific figure, build a consistent image deck, or create PowerPoint objects you can edit. Use the skills in **Codex or Claude Code**.
 
-[![TextMamba3D academic architecture diagram with image and text branches, fusion stages and a segmentation decoder](examples/previews/textmamba3d_architecture.webp)](examples/textmamba3d_architecture.png)
+<p align="center">
+<a href="docs/gallery.md#academic-figures--学术插图"><img src="examples/previews/game_theory_influence_diagram.webp" width="31%" alt="Scientific figure: decision nodes and dependencies"/></a>
+<a href="docs/gallery.md#slide-deck"><img src="examples/previews/slide_flywheel_04_model.webp" width="31%" alt="Image slide deck: a consistent hand-drawn learning model"/></a>
+<a href="examples/editable-demo/research-brief/README.md"><img src="examples/previews/research-brief-02.webp" width="31%" alt="Editable PowerPoint: native chart and table with synthetic data"/></a>
+</p>
 
-*Archived figure; the previous README records GPT Image 2. Click for the full-resolution image. [More outputs and provenance](docs/gallery.md).*
+<p align="center"><strong>Scientific figures · Image slide decks · Editable PowerPoint</strong></p>
+
+*The first two previews are archived outputs; the third is a local rendering with synthetic data. [Sources and full-resolution examples →](docs/gallery.md)*
 
 ## Quick start
 
-### 1. Install the skills
+### 1. Choose your output
 
-**Codex** — use the skills installer:
+| Output | What you need |
+| --- | --- |
+| **Scientific figure** | `paperbanana` + the [Python backend](docs/getting-started.md#python-backend), with image and review providers configured |
+| **Image slide deck** | `paperbanana-slide-deck` + the same backend; full-slide artwork is delivered as images |
+| **Editable PowerPoint** | `paperbanana-slide-deck` + Bun; [build the included example](examples/editable-demo/research-brief/README.md) locally, with no image API call |
+
+### 2. Install for your agent
+
+**Codex** — install the figure skill from its complete bundle:
 
 ```bash
-npx skills add PlutoLei/paperbanana-skill -a codex
+npx skills add https://github.com/PlutoLei/paperbanana-skill/tree/master/plugins/paperbanana/skills/paperbanana -a codex
 ```
 
-**Claude Code** — use the plugin marketplace:
+For either deck mode, use the separate [deck skill installation](docs/getting-started.md#codex). Installing a skill does not install Bun, configure image access or install the Python backend.
+
+**Claude Code** — add the marketplace, then choose the [figure or deck plugin](docs/getting-started.md#claude-code):
 
 ```bash
 claude plugin marketplace add PlutoLei/paperbanana-skill
-claude plugin install paperbanana@paperbanana-skills
 ```
-
-For full deck orchestration, also install `paperbanana-slide-deck@paperbanana-skills` with `--scope project`. [Installation details and manual setup →](docs/getting-started.md)
-
-### 2. Choose your output
-
-| I want to… | Start here |
-| --- | --- |
-| Generate a figure or an image-based slide deck | Set up the [Python backend](docs/getting-started.md#python-backend) with your chosen image/VLM providers |
-| Build editable PowerPoint slides | Run the [local PPTX example](examples/editable-demo/README.md); rendering needs Bun, with no image API call |
-| Keep using Gemini / Vertex | Keep the existing backend and authentication setup; see [provider roles](docs/providers.md) |
 
 ### 3. Describe the task
 
-Ask your agent:
-
 > Use paperbanana with Gemini to draw a four-layer CNN with batch normalization. Label the input, convolution blocks and classifier; return the image and its review status.
 
-In Claude Code you can also invoke `/paperbanana`. Name your preferred provider when you have one. [Starter prompts →](docs/prompts.md)
+For an editable deck, specify **native editable PPTX objects**. For image slides, specify **image mode**. Keep your preferred provider explicit. [Starter prompts →](docs/prompts.md)
 
-**Preview feature:** Codex native image routing and explicit Image 2.5 controls are on [`codex/image25-adapter`](https://github.com/PlutoLei/paperbanana-skill/tree/codex/image25-adapter), ahead of the current v4.5 release. [Setup and live smoke results](docs/providers.md#image-25-preview) describe that branch separately.
+Existing Gemini / Vertex users can keep their configuration. **Preview only:** Codex native image routing and Image 2.5 controls remain on [`codex/image25-adapter`](https://github.com/PlutoLei/paperbanana-skill/tree/codex/image25-adapter), outside the current v4.5 release. [Provider roles and preview setup →](docs/providers.md)
 
 ## Selected examples
 
 <table>
 <tr>
-<td width="50%" valign="top"><strong>Scientific figure</strong><br/><a href="examples/game_theory_influence_diagram.png"><img src="examples/previews/game_theory_influence_diagram.webp" width="400" alt="Game-theory influence diagram with decision nodes, dependencies and soft academic colors"/></a><br/>Gemini · <a href="docs/prompts.md#scientific-figure">Starter prompt</a></td>
-<td width="50%" valign="top"><strong>Research presentation</strong><br/><a href="examples/slide_scrna_workflow.png"><img src="examples/previews/slide_scrna_workflow.webp" width="400" alt="Scientific presentation slide showing a single-cell RNA sequencing analysis workflow"/></a><br/>Image slide · <a href="docs/prompts.md#research-slide">Starter prompt</a></td>
+<td width="50%" valign="top"><strong>Scientific figure</strong><br/><a href="examples/game_theory_influence_diagram.png"><img src="examples/previews/game_theory_influence_diagram.webp" width="400" alt="Game-theory influence diagram with decision nodes and dependencies"/></a><br/>Archived Gemini output · <a href="docs/prompts.md#scientific-figure">Starter prompt</a></td>
+<td width="50%" valign="top"><strong>Image slide deck</strong><br/><a href="docs/gallery.md#slide-deck"><img src="examples/previews/slide_flywheel_04_model.webp" width="400" alt="Flywheel learning model from a ten-slide image deck"/></a><br/><a href="docs/gallery.md#slide-deck">View the set</a> · <a href="docs/prompts.md#consistent-deck">Starter prompt</a></td>
 </tr>
 <tr>
-<td width="50%" valign="top"><strong>Consistent slide deck</strong><br/><a href="examples/slide_flywheel_04_model.png"><img src="examples/previews/slide_flywheel_04_model.webp" width="400" alt="Flywheel learning model in the warm paper and sketch-note style shared across a ten-slide deck"/></a><br/><a href="docs/gallery.md#slide-deck">View the set</a> · <a href="docs/prompts.md#consistent-deck">Starter prompt</a></td>
-<td width="50%" valign="top"><strong>Editable PowerPoint</strong><br/><a href="examples/editable-demo/editable-demo.pptx"><img src="examples/previews/editable-demo.webp" width="400" alt="Rendered native PowerPoint slide containing editable text, shapes, connectors, a table and a sample chart"/></a><br/><a href="examples/editable-demo/editable-demo.pptx">Download PPTX</a> · <a href="examples/editable-demo/slide-spec.json">Source spec</a></td>
+<td width="50%" valign="top"><strong>Editable research brief</strong><br/><a href="examples/editable-demo/research-brief/README.md"><img src="examples/previews/research-brief-02.webp" width="400" alt="Native PowerPoint chart and table with clearly labeled synthetic values"/></a><br/>3 slides · Synthetic data · <a href="examples/editable-demo/research-brief/research-brief.pptx">Download PPTX</a> · <a href="examples/editable-demo/research-brief/slide-spec.json">Source spec</a></td>
+<td width="50%" valign="top"><strong>Minimal editable example</strong><br/><a href="examples/editable-demo/README.md"><img src="examples/previews/editable-demo.webp" width="400" alt="Single-slide PowerPoint demonstration containing editable text, shapes, table and chart"/></a><br/>1 slide · <a href="examples/editable-demo/editable-demo.pptx">Download PPTX</a> · <a href="examples/editable-demo/slide-spec.json">Source spec</a></td>
 </tr>
 </table>
 
-The first three are archived outputs; the PPTX is a reproducible local rendering example with illustrative data. Starter prompts are new recipes, not recovered historical inputs. [Full gallery and provenance →](docs/gallery.md)
+Archived images are preserved with their provenance limits. Both PPTX examples can be rebuilt locally; their values demonstrate editability and are not research results. Starter prompts are new recipes, not recovered historical inputs. [Full gallery →](docs/gallery.md)
 
 ## How it works
 
@@ -78,7 +81,7 @@ The host, image provider and review provider have separate roles. A VLM integrat
 
 ## Validation and limits
 
-CI checks the skills, manifests and PPTX renderer. The [editable example](examples/editable-demo/README.md) includes a source spec and real native objects. Review generated labels, arrows, numbers and scientific claims before publication; a Critic score is an automated opinion, not scientific acceptance.
+CI checks the skills, manifests and PPTX renderer. The [editable research brief](examples/editable-demo/research-brief/README.md) includes a source spec and native objects. Its previews were inspected after local rendering; they do not establish identical rendering in every PowerPoint version. Review generated labels, arrows, numbers and scientific claims before publication; a Critic score is an automated opinion, not scientific acceptance.
 
 Image outputs can contain text or diagram errors. If review fails, describe the result as **unreviewed**. Historical comparisons and recent smoke tests do not establish a universal model ranking, fixed generation time or cost. [Evidence and review guide →](docs/evaluation.md)
 
@@ -90,7 +93,7 @@ Image outputs can contain text or diagram errors. If review fails, describe the 
 | [Gallery](docs/gallery.md) · [Starter prompts](docs/prompts.md) | Outputs, full-resolution files and task recipes |
 | [Providers](docs/providers.md) | Claude Code / Codex, Gemini / Vertex, OpenAI and preview features |
 | [Styles](docs/styles.md) | Bundled styles, optional libraries and backend presets |
-| [Editable PPTX](examples/editable-demo/README.md) · [Spec reference](plugins/paperbanana-slide-deck/references/editable-slide-spec.md) | Build and edit native PowerPoint objects |
+| [Editable PPTX examples](examples/editable-demo/research-brief/README.md) · [Spec reference](plugins/paperbanana-slide-deck/references/editable-slide-spec.md) | Build and edit native PowerPoint objects |
 | [Commands and troubleshooting](docs/usage.md) | Common commands, recovery and review status |
 | [Evaluation](docs/evaluation.md) | Evidence, quality checks and limitations |
 | [Changelog](CHANGELOG.md) · [Releases](https://github.com/PlutoLei/paperbanana-skill/releases) | Version history |

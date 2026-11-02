@@ -26,6 +26,16 @@ bun scripts/build-deck.ts --mode editable ../../examples/editable-demo \
 
 For image mode, use `--mode image` with a directory containing the expected numbered slide images. For editable mode, a validated `slide-spec.json` is required. Image slides remain pictures; native text/table/chart/shape/line elements remain individually editable. [Full object contract](../plugins/paperbanana-slide-deck/references/editable-slide-spec.md).
 
+To build a deck together with reviewable previews, install LibreOffice (`soffice`) and Poppler (`pdftoppm`), then run from the same bundle directory:
+
+```bash
+python scripts/editable/render-previews.py \
+  --spec ../../examples/editable-demo/research-brief/slide-spec.json \
+  --output-dir /path/to/your-work/research-brief-rendered
+```
+
+Use a dedicated output directory. The helper writes `deck.pptx`, `deck.pdf`, numbered PNGs and a render manifest. Keep optional Critic reports outside that directory. The reviewer verifies the current inputs and previews before calling a configured VLM; old, missing or mismatched inputs produce `unreviewed` with a nonzero exit. Local building and rendering do not require model access. See the [review commands and states](../plugins/paperbanana-slide-deck/references/editable-slide-spec.md).
+
 ## When something fails
 
 | Symptom | Next step |

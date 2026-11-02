@@ -116,12 +116,22 @@ Gemini, recorded in the previous README.
 
 ## Editable PowerPoint / 可编辑演示
 
+### Research brief / 三页研究汇报
+
+[![Synthetic research comparison with a native PowerPoint chart and table](../examples/previews/research-brief-02.webp)](../examples/editable-demo/research-brief/research-brief.pptx)
+
+A three-slide local rendering example: study design, synthetic comparison and next validation steps. All values are arbitrary demonstration data; no training or model evaluation was performed. [Build instructions and all three previews](../examples/editable-demo/research-brief/README.md) · [PPTX](../examples/editable-demo/research-brief/research-brief.pptx) · [Source spec](../examples/editable-demo/research-brief/slide-spec.json).
+
+三页本地渲染示例依次展示研究设计、合成比较和下一步验证。所有数值均为演示数据，没有进行训练或模型评测。[构建步骤与三页预览](../examples/editable-demo/research-brief/README.md#中文说明)。
+
+### Minimal object demo / 最小对象示例
+
 [![Native PowerPoint demonstration with editable objects](../examples/previews/editable-demo.webp)](../examples/editable-demo/editable-demo.pptx)
 
-New local renderer example, with arbitrary demonstration data and no image API request. [Build instructions, source and PPTX](../examples/editable-demo/README.md).
+The original one-slide local example, with arbitrary demonstration data and no image API request. [Build instructions, source and PPTX](../examples/editable-demo/README.md).
 
-本次新建的本地渲染示例，数值仅供演示，不调用生图 API。[构建步骤、源文件和 PPTX](../examples/editable-demo/README.md#中文说明)。
+保留原有单页对象示例，数值仅供演示，不调用生图 API。[构建步骤、源文件和 PPTX](../examples/editable-demo/README.md#中文说明)。
 
 ## Preview files / 预览资源
 
-[Preview manifest](../examples/previews/manifest.json) records the original file hashes and compressed sizes. Historical model comparisons are retained with their limitations in [evaluation notes](evaluation.md#historical-comparisons).
+The [archived-image manifest](../examples/previews/manifest.json) records original file hashes and compressed sizes. The [research-brief manifest](../examples/editable-demo/research-brief/preview-manifest.json) separately records its spec, PPTX and rendered previews. Historical model comparisons are retained with their limitations in [evaluation notes](evaluation.md#historical-comparisons).

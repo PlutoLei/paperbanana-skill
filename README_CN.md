@@ -8,65 +8,68 @@
 
 [English](README.md) · **中文**
 
-[快速开始](#快速开始) · [精选案例](#精选案例) · [文档导航](#文档导航)
+[快速开始](#快速开始) · [下载可编辑 PPTX](examples/editable-demo/research-brief/research-brief.pptx) · [精选案例](#精选案例) · [文档导航](#文档导航)
 
-把方法描述变成插图，让整套演示保持一致风格，或生成能继续修改的 PowerPoint 对象。在 Claude Code 或 Codex 中使用技能，按任务选择所需的生图后端。
+把方法描述变成科研图，编排风格一致的图片式幻灯片，或生成可继续修改的 PowerPoint 对象。在 **Codex 或 Claude Code** 中使用。
 
-[![TextMamba3D 学术架构图：影像与文本双分支、特征融合及分割解码器](examples/previews/textmamba3d_architecture.webp)](examples/textmamba3d_architecture.png)
+<p align="center">
+<a href="docs/gallery.md#academic-figures--学术插图"><img src="examples/previews/game_theory_influence_diagram.webp" width="31%" alt="科研图：决策节点与依赖关系"/></a>
+<a href="docs/gallery.md#slide-deck"><img src="examples/previews/slide_flywheel_04_model.webp" width="31%" alt="图片式幻灯片：风格一致的手绘学习模型"/></a>
+<a href="examples/editable-demo/research-brief/README.md"><img src="examples/previews/research-brief-02.webp" width="31%" alt="可编辑 PowerPoint：含合成数据的原生图表和表格"/></a>
+</p>
 
-*历史案例，原 README 记录使用 GPT Image 2。点击查看原图。[更多案例与来源说明](docs/gallery.md)。*
+<p align="center"><strong>科研图 · 图片式幻灯片 · 可编辑 PowerPoint</strong></p>
+
+*前两张为历史产出，第三张由本地渲染器生成，使用合成演示数据。[来源与完整案例 →](docs/gallery.md)*
 
 ## 快速开始
 
-### 1. 安装技能
+### 1. 选择产出
 
-**Codex**：通过技能安装器安装。
+| 产出 | 所需环境 |
+| --- | --- |
+| **科研图** | `paperbanana` + [Python 后端](docs/getting-started.md#python-后端)，配置生图和评审提供商 |
+| **图片式幻灯片** | `paperbanana-slide-deck` + 同一后端；每页作为完整图片交付 |
+| **可编辑 PowerPoint** | `paperbanana-slide-deck` + Bun；可直接[构建随附示例](examples/editable-demo/research-brief/README.md#中文说明)，不调用生图 API |
+
+### 2. 按运行环境安装
+
+**Codex**：从完整目录安装插图技能。
 
 ```bash
-npx skills add PlutoLei/paperbanana-skill -a codex
+npx skills add https://github.com/PlutoLei/paperbanana-skill/tree/master/plugins/paperbanana/skills/paperbanana -a codex
 ```
 
-**Claude Code**：通过插件市场安装。
+制作任一种幻灯片时，另外安装[演示技能](docs/getting-started.md#codex)。安装技能不会自动安装 Bun、配置生图访问或安装 Python 后端。
+
+**Claude Code**：添加市场后，选择所需的[插图或演示插件](docs/getting-started.md#claude-code)。
 
 ```bash
 claude plugin marketplace add PlutoLei/paperbanana-skill
-claude plugin install paperbanana@paperbanana-skills
 ```
 
-需要整套演示编排时，再安装 `paperbanana-slide-deck@paperbanana-skills`，并指定 `--scope project`。[完整安装步骤与手动安装 →](docs/getting-started.md#中文说明)
-
-### 2. 选择你要的产出
-
-| 你的任务 | 从这里开始 |
-| --- | --- |
-| 生成插图或图片式幻灯片 | 配置 [Python 后端](docs/getting-started.md#python-后端)，选择生图与评审所用的提供商 |
-| 生成可编辑的 PowerPoint | 运行[本地 PPTX 示例](examples/editable-demo/README.md#中文说明)；渲染需要 Bun，不调用生图 API |
-| 继续使用 Gemini / Vertex | 沿用已有后端和认证配置，参见[提供商说明](docs/providers.md#中文说明) |
-
-### 3. 直接描述任务
-
-向智能体发送：
+### 3. 描述任务
 
 > 用 paperbanana 和 Gemini 画一个带批量归一化的四层 CNN，标清输入、卷积模块和分类器，返回图片及其评审状态。
 
-在 Claude Code 中也可以用 `/paperbanana` 调用。已有提供商偏好时，请在请求中直接说明。[更多起步提示词 →](docs/prompts.md)
+需要修改 PowerPoint 中的文字、表格和图表时，明确要求**原生可编辑 PPTX**；需要整页生成图时，明确选择**图片模式**。已有提供商偏好时，请直接写明。[更多起步提示词 →](docs/prompts.md)
 
-**预览功能：** Codex 原生生图路由与 Image 2.5 精确控制位于 [`codex/image25-adapter`](https://github.com/PlutoLei/paperbanana-skill/tree/codex/image25-adapter)，尚未进入当前 v4.5 正式版。[预览分支与真实调用记录](docs/providers.md#image-25-preview)单独说明了它们的使用条件。
+已有 Gemini / Vertex 配置可以继续使用。**预览功能：** Codex 原生生图路由与 Image 2.5 控制仍位于 [`codex/image25-adapter`](https://github.com/PlutoLei/paperbanana-skill/tree/codex/image25-adapter)，尚未进入当前 v4.5 正式版。[提供商分工与预览说明 →](docs/providers.md#中文说明)
 
 ## 精选案例
 
 <table>
 <tr>
-<td width="50%" valign="top"><strong>学术插图</strong><br/><a href="examples/game_theory_influence_diagram.png"><img src="examples/previews/game_theory_influence_diagram.webp" width="400" alt="博弈论影响图，以柔和配色区分决策节点与依赖关系"/></a><br/>Gemini · <a href="docs/prompts.md#scientific-figure">起步提示词</a></td>
-<td width="50%" valign="top"><strong>科研演示</strong><br/><a href="examples/slide_scrna_workflow.png"><img src="examples/previews/slide_scrna_workflow.webp" width="400" alt="展示单细胞 RNA 测序分析流程的科研幻灯片"/></a><br/>图片式幻灯片 · <a href="docs/prompts.md#research-slide">起步提示词</a></td>
+<td width="50%" valign="top"><strong>科研图</strong><br/><a href="examples/game_theory_influence_diagram.png"><img src="examples/previews/game_theory_influence_diagram.webp" width="400" alt="博弈论影响图，以节点和箭头展示决策依赖"/></a><br/>历史 Gemini 产出 · <a href="docs/prompts.md#scientific-figure">起步提示词</a></td>
+<td width="50%" valign="top"><strong>图片式幻灯片</strong><br/><a href="docs/gallery.md#slide-deck"><img src="examples/previews/slide_flywheel_04_model.webp" width="400" alt="十页图片式演示中的飞轮学习模型"/></a><br/><a href="docs/gallery.md#slide-deck">查看整组</a> · <a href="docs/prompts.md#consistent-deck">起步提示词</a></td>
 </tr>
 <tr>
-<td width="50%" valign="top"><strong>成套幻灯片</strong><br/><a href="examples/slide_flywheel_04_model.png"><img src="examples/previews/slide_flywheel_04_model.webp" width="400" alt="飞轮学习法的核心模型，沿用整套演示的暖纸色与手绘笔记风格"/></a><br/><a href="docs/gallery.md#slide-deck">查看整组</a> · <a href="docs/prompts.md#consistent-deck">起步提示词</a></td>
-<td width="50%" valign="top"><strong>可编辑 PowerPoint</strong><br/><a href="examples/editable-demo/editable-demo.pptx"><img src="examples/previews/editable-demo.webp" width="400" alt="由原生 PowerPoint 文本、形状、连接线、表格与演示图表构成的幻灯片"/></a><br/><a href="examples/editable-demo/editable-demo.pptx">下载 PPTX</a> · <a href="examples/editable-demo/slide-spec.json">查看源文件</a></td>
+<td width="50%" valign="top"><strong>可编辑研究汇报</strong><br/><a href="examples/editable-demo/research-brief/README.md"><img src="examples/previews/research-brief-02.webp" width="400" alt="含明确标注的合成数据的原生 PowerPoint 图表和表格"/></a><br/>3 页 · 合成数据 · <a href="examples/editable-demo/research-brief/research-brief.pptx">下载 PPTX</a> · <a href="examples/editable-demo/research-brief/slide-spec.json">源文件</a></td>
+<td width="50%" valign="top"><strong>最小可编辑示例</strong><br/><a href="examples/editable-demo/README.md"><img src="examples/previews/editable-demo.webp" width="400" alt="包含原生文本、形状、表格和图表的单页 PowerPoint 示例"/></a><br/>1 页 · <a href="examples/editable-demo/editable-demo.pptx">下载 PPTX</a> · <a href="examples/editable-demo/slide-spec.json">源文件</a></td>
 </tr>
 </table>
 
-前三项是保留的历史产出；PPTX 是可在本地重建的演示示例，数值仅用于展示编辑能力。起步提示词是新编写的任务模板，并非历史生成时的原始输入。[完整图库与来源说明 →](docs/gallery.md)
+历史图片保留来源限制；两份 PPTX 都可在本地重建，数值只用于演示编辑能力，不是研究结果。起步提示词是新编写的任务模板，并非历史生成时的原始输入。[完整图库 →](docs/gallery.md)
 
 ## 工作方式
 
@@ -78,7 +81,7 @@ claude plugin install paperbanana@paperbanana-skills
 
 ## 验证与限制
 
-CI 检查技能文件、插件清单和 PPTX 渲染器。[可编辑示例](examples/editable-demo/README.md#中文说明)同时提供源文件和实际生成的原生对象。用于论文前，仍须核对标签、箭头、数值和科学表述；Critic 的自动评分不能替代科学审查。
+CI 检查技能文件、插件清单和 PPTX 渲染器。[可编辑研究汇报](examples/editable-demo/research-brief/README.md#中文说明)同时提供源文件和原生对象。预览已在本地渲染后检查，但不代表所有 PowerPoint 版本显示完全一致。用于论文前，仍须核对标签、箭头、数值和科学表述；Critic 的自动评分不能替代科学审查。
 
 生成结果可能出现文字或结构错误，评审失败时应明确标记为**未评审**。历史对比和最近的冒烟测试不代表通用模型排名，也不能承诺固定耗时或费用。[证据与质量检查 →](docs/evaluation.md#中文说明)
 
@@ -90,7 +93,7 @@ CI 检查技能文件、插件清单和 PPTX 渲染器。[可编辑示例](examp
 | [完整图库](docs/gallery.md) · [起步提示词](docs/prompts.md) | 查看原图、了解来源、改写自己的任务 |
 | [提供商说明](docs/providers.md#中文说明) | Claude Code / Codex、Gemini / Vertex、OpenAI 与预览功能 |
 | [风格库](docs/styles.md#中文说明) | 随仓库提供的风格、可选来源与后端预设 |
-| [可编辑 PPTX](examples/editable-demo/README.md#中文说明) · [对象规范](plugins/paperbanana-slide-deck/references/editable-slide-spec.md) | 构建和修改原生 PowerPoint 对象 |
+| [可编辑 PPTX 示例](examples/editable-demo/research-brief/README.md#中文说明) · [对象规范](plugins/paperbanana-slide-deck/references/editable-slide-spec.md) | 构建和修改原生 PowerPoint 对象 |
 | [命令与排障](docs/usage.md#中文说明) | 常用命令、故障恢复与评审状态 |
 | [评测说明](docs/evaluation.md#中文说明) | 证据、质量检查及局限 |
 | [更新日志](CHANGELOG.md) · [正式版本](https://github.com/PlutoLei/paperbanana-skill/releases) | 查询版本变化 |
