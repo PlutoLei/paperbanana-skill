@@ -4,7 +4,7 @@ on:
   push:
     branches: [master, codex/image25-adapter]
   pull_request:
-    branches: [master]
+    branches: [master, codex/image25-adapter]
 
 jobs:
   validate:

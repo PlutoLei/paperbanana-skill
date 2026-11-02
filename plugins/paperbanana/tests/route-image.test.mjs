@@ -62,3 +62,68 @@ test('Gemini-bound tasks stay on their existing backend even when native is avai
   assert.equal(result.request.provider, 'google_imagen');
   assert.equal(result.request.model, 'gemini-3-pro-image');
 });
+
+for (const transparent of [true, false]) {
+  const background = transparent ? 'transparent' : 'opaque';
+  test(`native accepts transparent_background=${transparent}`, () => {
+    const result = routeImage({ ...request, transparent_background: transparent });
+    assert.equal(result.backend, 'codex-native');
+    assert.deepEqual(result.tool_arguments, { prompt: request.prompt, transparent_background: transparent });
+  });
+
+  test(`${background} background alias becomes the native boolean control`, () => {
+    const result = routeImage({ ...request, provider: 'codex-native', background });
+    assert.equal(result.backend, 'codex-native');
+    assert.equal(result.tool_arguments.transparent_background, transparent);
+    assert.equal('background' in result.tool_arguments, false);
+  });
+
+  test(`matching ${background} controls are accepted without dropping the explicit value`, () => {
+    const result = routeImage({ ...request, background, transparent_background: transparent });
+    assert.equal(result.tool_arguments.transparent_background, transparent);
+  });
+
+  test(`API fallback translates transparent_background=${transparent} to background`, () => {
+    for (const extra of [{ native_available: false }, { model: 'gpt-image-2.5-flare' },
+      { quality: 'high' }, { size: '1536x864' }, { output_format: 'png' },
+      { require_pipeline: true }, { provider: 'google_imagen' }, { provider: 'bedrock_imagen' }]) {
+      const input = { ...request, ...extra, transparent_background: transparent };
+      const result = routeImage(input);
+      assert.equal(result.backend, 'paperbanana');
+      assert.equal(result.request.background, background);
+      assert.equal('transparent_background' in result.request, false);
+      assert.equal(input.transparent_background, transparent);
+      if (extra.provider) assert.equal(result.request.provider, extra.provider);
+    }
+  });
+}
+
+test('transparency is preserved in native local and conversation-image edits', () => {
+  for (const refs of [{ reference_paths: ['/tmp/source.png'] }, { num_last_images_to_include: 1 }]) {
+    const result = routeImage({ ...request, mode: 'edit', ...refs, transparent_background: true });
+    assert.equal(result.backend, 'codex-native');
+    assert.equal(result.tool_arguments.transparent_background, true);
+  }
+});
+
+test('unsupported background modes retain the explicit API route', () => {
+  const result = routeImage({ ...request, background: 'auto' });
+  assert.equal(result.backend, 'paperbanana');
+  assert.equal(result.request.background, 'auto');
+  assert.throws(() => routeImage({ ...request, provider: 'codex-native', background: 'auto' }), /NATIVE_CANNOT/);
+});
+
+test('conflicting background controls fail before selecting a provider', () => {
+  for (const extra of [{ background: 'transparent', transparent_background: false },
+    { background: 'opaque', transparent_background: true },
+    { background: 'auto', transparent_background: true }]) {
+    assert.throws(() => routeImage({ ...request, ...extra }), /CONFLICTING_BACKGROUND_CONTROLS/);
+    assert.throws(() => routeImage({ ...request, provider: 'google_imagen', ...extra }), /CONFLICTING_BACKGROUND_CONTROLS/);
+  }
+});
+
+test('transparent_background must be a boolean', () => {
+  for (const value of ['true', 'false', 1, 0, null, [], {}]) {
+    assert.throws(() => routeImage({ ...request, transparent_background: value }), /INVALID_TRANSPARENT_BACKGROUND/);
+  }
+});

@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const allowed = new Set(['prompt', 'mode', 'native_available', 'provider', 'model',
   'reference_paths', 'num_last_images_to_include', 'mask_path', 'size', 'quality',
-  'output_format', 'background', 'require_pipeline']);
+  'output_format', 'background', 'transparent_background', 'require_pipeline']);
 const text = (x) => typeof x === 'string' && x.trim().length > 0;
 
 export function routeImage(input) {
@@ -20,6 +20,15 @@ export function routeImage(input) {
   for (const key of ['provider', 'model', 'size', 'quality', 'output_format', 'background']) {
     if (input[key] !== undefined && !text(input[key])) throw new Error(`INVALID_${key.toUpperCase()}`);
   }
+  if (input.transparent_background !== undefined && typeof input.transparent_background !== 'boolean') {
+    throw new Error('INVALID_TRANSPARENT_BACKGROUND');
+  }
+  if (input.transparent_background !== undefined && input.background !== undefined
+      && input.background !== (input.transparent_background ? 'transparent' : 'opaque')) {
+    throw new Error('CONFLICTING_BACKGROUND_CONTROLS');
+  }
+  const transparentBackground = input.transparent_background
+    ?? (input.background === 'transparent' ? true : input.background === 'opaque' ? false : undefined);
   const paths = input.reference_paths ?? [];
   if (!Array.isArray(paths) || paths.some((p) => !text(p) || !isAbsolute(p))) throw new Error('INVALID_REFERENCE_PATHS');
   const count = input.num_last_images_to_include;
@@ -31,12 +40,14 @@ export function routeImage(input) {
 
   const explicitApi = input.model !== undefined
     || (input.provider !== undefined && input.provider !== 'codex-native')
-    || ['size', 'quality', 'output_format', 'background', 'mask_path'].some((key) => input[key] !== undefined);
+    || ['size', 'quality', 'output_format', 'mask_path'].some((key) => input[key] !== undefined)
+    || (input.background !== undefined && transparentBackground === undefined);
   if (input.provider === 'codex-native' && (explicitApi || input.require_pipeline)) {
     throw new Error('NATIVE_CANNOT_GUARANTEE_REQUESTED_CONTROLS');
   }
   if (input.native_available && !explicitApi && !input.require_pipeline) {
     const args = { prompt: input.prompt };
+    if (transparentBackground !== undefined) args.transparent_background = transparentBackground;
     if (paths.length) args.referenced_image_paths = paths;
     if (count !== undefined) args.num_last_images_to_include = count;
     return { backend: 'codex-native', tool_arguments: args, model: null,
@@ -44,9 +55,11 @@ export function routeImage(input) {
   }
   if (input.provider === 'codex-native') throw new Error('NATIVE_TOOL_UNAVAILABLE');
   if (count !== undefined) throw new Error('API_REQUIRES_LOCAL_REFERENCES');
+  const { transparent_background: _nativeBackground, ...apiRequest } = input;
+  if (transparentBackground !== undefined) apiRequest.background = transparentBackground ? 'transparent' : 'opaque';
   return { backend: 'paperbanana', reason: explicitApi ? 'explicit-provider-or-controls'
     : input.require_pipeline ? 'pipeline-requested' : 'native-tool-unavailable',
-    request: { ...input, reference_paths: paths }, requires_provider_access: true,
+    request: { ...apiRequest, reference_paths: paths }, requires_provider_access: true,
     verify_installed_capabilities: true, review_status: 'UNREVIEWED' };
 }
 
