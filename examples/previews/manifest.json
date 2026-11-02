@@ -1,0 +1,173 @@
+{
+  "method": "sips max edge 1200px; cwebp quality 86 via baoyu-compress-image; originals retained",
+  "images": [
+    {
+      "source": "examples/ablation_brats_figure.png",
+      "preview": "examples/previews/ablation_brats_figure.webp",
+      "source_bytes": 580053,
+      "preview_bytes": 51884,
+      "source_sha256": "76c377db287aabfdf2310e549828ebc4eba48ceeae7d02faec90ac3b14044419"
+    },
+    {
+      "source": "examples/bio_signaling_pathway.png",
+      "preview": "examples/previews/bio_signaling_pathway.webp",
+      "source_bytes": 15962165,
+      "preview_bytes": 41256,
+      "source_sha256": "afbe5c30192437e8a6988091eb00a00068e06bef23c52172f02184c4ef406ded"
+    },
+    {
+      "source": "examples/chinese_calligraphy.png",
+      "preview": "examples/previews/chinese_calligraphy.webp",
+      "source_bytes": 2517034,
+      "preview_bytes": 67610,
+      "source_sha256": "34611f851d9ae183b8c139f03e37d7e636208f5506a7292ab4e0e57c908098cd"
+    },
+    {
+      "source": "examples/data_lakehouse.png",
+      "preview": "examples/previews/data_lakehouse.webp",
+      "source_bytes": 16118525,
+      "preview_bytes": 43510,
+      "source_sha256": "94e123dae31077be7a0fe72d244af9ecc003b5cddcf7d332f8b2a96f0c77aa0a"
+    },
+    {
+      "source": "examples/game_theory_influence_diagram.png",
+      "preview": "examples/previews/game_theory_influence_diagram.webp",
+      "source_bytes": 937344,
+      "preview_bytes": 56610,
+      "source_sha256": "b4618ce28f5803e98807601be6ab97e004e6b71815af57d58cd7c6badf065f0e"
+    },
+    {
+      "source": "examples/mamba_architecture.png",
+      "preview": "examples/previews/mamba_architecture.webp",
+      "source_bytes": 664262,
+      "preview_bytes": 69064,
+      "source_sha256": "76fdf631562be9f67b39b9894762171f8403aa69dc077024c653ce8567846c4d"
+    },
+    {
+      "source": "examples/nlp_rag_pipeline.png",
+      "preview": "examples/previews/nlp_rag_pipeline.webp",
+      "source_bytes": 15572200,
+      "preview_bytes": 56008,
+      "source_sha256": "a37f747602c4cf05ff8a8199116000bedc84246900c8e302e4b1a0fd4f6638e0"
+    },
+    {
+      "source": "examples/pipeline_architecture.png",
+      "preview": "examples/previews/pipeline_architecture.webp",
+      "source_bytes": 917543,
+      "preview_bytes": 38538,
+      "source_sha256": "a8d1fc0f5ad5daf5e994bd6b2ebce1ae85577015b8c6dc1bf803f2e2f4ebddd7"
+    },
+    {
+      "source": "examples/rag_pipeline.png",
+      "preview": "examples/previews/rag_pipeline.webp",
+      "source_bytes": 702652,
+      "preview_bytes": 53784,
+      "source_sha256": "7f1a3f0cc52de08c6fff1eccf5e086ab8f55d960af9f2af819a5c7461e2a6eb3"
+    },
+    {
+      "source": "examples/routing-comparison/A2_gemini.png",
+      "preview": "examples/previews/routing-comparison--A2_gemini.webp",
+      "source_bytes": 1477016,
+      "preview_bytes": 90412,
+      "source_sha256": "b34c14da22de6168964138f674920362610d801b6169d93b36c3f4a650db8f4f"
+    },
+    {
+      "source": "examples/routing-comparison/A2_openai.png",
+      "preview": "examples/previews/routing-comparison--A2_openai.webp",
+      "source_bytes": 833448,
+      "preview_bytes": 105778,
+      "source_sha256": "94fde6190e824c22ba7fcf4f8c6d7e519bc80db154d02365081dab65c590b24b"
+    },
+    {
+      "source": "examples/routing-comparison/D2_gemini.png",
+      "preview": "examples/previews/routing-comparison--D2_gemini.webp",
+      "source_bytes": 1258004,
+      "preview_bytes": 80938,
+      "source_sha256": "a54368fdb08b7459593f3081c33367e0900d118355d195284f4142d710ff4b8e"
+    },
+    {
+      "source": "examples/routing-comparison/D2_openai.png",
+      "preview": "examples/previews/routing-comparison--D2_openai.webp",
+      "source_bytes": 1316851,
+      "preview_bytes": 67968,
+      "source_sha256": "601cb01c48b4fe011cec4b4cfc537004020cdc84b73d8ebc55722415b3f6868f"
+    },
+    {
+      "source": "examples/routing-comparison/G2_gemini.png",
+      "preview": "examples/previews/routing-comparison--G2_gemini.webp",
+      "source_bytes": 2517034,
+      "preview_bytes": 67610,
+      "source_sha256": "34611f851d9ae183b8c139f03e37d7e636208f5506a7292ab4e0e57c908098cd"
+    },
+    {
+      "source": "examples/routing-comparison/G2_openai.png",
+      "preview": "examples/previews/routing-comparison--G2_openai.webp",
+      "source_bytes": 1721407,
+      "preview_bytes": 173672,
+      "source_sha256": "2837a551ec12aa7eaa5c5528ba2ff4d6dc8f8a32078757ccc61cd744476b2c27"
+    },
+    {
+      "source": "examples/slide_deck_workflow.png",
+      "preview": "examples/previews/slide_deck_workflow.webp",
+      "source_bytes": 514132,
+      "preview_bytes": 60436,
+      "source_sha256": "826d374136ae75b3b28f127c86fbde833ed78b5f9b4e90983458c1e956fc6eb6"
+    },
+    {
+      "source": "examples/slide_flywheel_01_cover.png",
+      "preview": "examples/previews/slide_flywheel_01_cover.webp",
+      "source_bytes": 954582,
+      "preview_bytes": 65828,
+      "source_sha256": "6760e4c66c20fdf436fc3b7b52af102005f748e02c93f0f4d9fbc0df3abccb32"
+    },
+    {
+      "source": "examples/slide_flywheel_04_model.png",
+      "preview": "examples/previews/slide_flywheel_04_model.webp",
+      "source_bytes": 1159952,
+      "preview_bytes": 72868,
+      "source_sha256": "e4eb68d2ec9e7f7a06d4ed98e164ba41050724bdcbecb29407daa4287f42aa64"
+    },
+    {
+      "source": "examples/slide_flywheel_07_ai_tools.png",
+      "preview": "examples/previews/slide_flywheel_07_ai_tools.webp",
+      "source_bytes": 1143038,
+      "preview_bytes": 84868,
+      "source_sha256": "802c6eca496817db3a44528c86e55494cb9ed5bf36be8c5f1d2d70c750c0b8bb"
+    },
+    {
+      "source": "examples/slide_flywheel_10_summary.png",
+      "preview": "examples/previews/slide_flywheel_10_summary.webp",
+      "source_bytes": 1208114,
+      "preview_bytes": 62990,
+      "source_sha256": "8d49ef28c61cdd773ca20349e0d6d3024fcb5d0673c14df559acb9759e7773fe"
+    },
+    {
+      "source": "examples/slide_scrna_workflow.png",
+      "preview": "examples/previews/slide_scrna_workflow.webp",
+      "source_bytes": 1288888,
+      "preview_bytes": 49946,
+      "source_sha256": "fa2f3c2ac854a81c81a3315010c2a5ae81be560f41ec19103c562acf31d94e46"
+    },
+    {
+      "source": "examples/textmamba3d_architecture.png",
+      "preview": "examples/previews/textmamba3d_architecture.webp",
+      "source_bytes": 503066,
+      "preview_bytes": 82512,
+      "source_sha256": "30e9b90b9198db16ac9ca0838e2cd670711da5cd92b4431f0bdf276bf10e09bb"
+    },
+    {
+      "source": "examples/transformer_architecture.png",
+      "preview": "examples/previews/transformer_architecture.webp",
+      "source_bytes": 808400,
+      "preview_bytes": 54262,
+      "source_sha256": "a4ca29180de69049a71376896efce86a769e1b0918d7c09b30495b448a385620"
+    },
+    {
+      "source": "examples/unet_mamba_segmentation.png",
+      "preview": "examples/previews/unet_mamba_segmentation.webp",
+      "source_bytes": 12225801,
+      "preview_bytes": 55618,
+      "source_sha256": "7014ba0b5956e69065dc2e4891e036eb09349eab48bfc4d248fd759b6d281e0f"
+    }
+  ]
+}

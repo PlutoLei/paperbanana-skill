@@ -1,0 +1,27 @@
+{
+  "source": "examples/editable-demo/research-brief/research-brief.pptx",
+  "source_sha256": "05e62b812a63f32a26f55312dc92a08f35c93a5293ef157aba16c763a52de0d5",
+  "spec": "examples/editable-demo/research-brief/slide-spec.json",
+  "spec_sha256": "a2ccf4aef7d8803b2a70b647b85f96c321a30f3be6b7e05845edd9d0b5fa15e6",
+  "method": "Repository editable renderer; LibreOffice PDF; pdftoppm 120 dpi; Pillow max edge 1200px WebP quality 88",
+  "previews": [
+    {
+      "slide": 1,
+      "preview": "examples/previews/research-brief-01.webp",
+      "preview_bytes": 50416,
+      "preview_sha256": "5317152c2a627d0da85103bfb048ecfc8bde198a54c3ab07226253216e41d324"
+    },
+    {
+      "slide": 2,
+      "preview": "examples/previews/research-brief-02.webp",
+      "preview_bytes": 40262,
+      "preview_sha256": "f2ebce148bda85c2636b713bb08584d19166808594e4d9bc59fe4c01a63da591"
+    },
+    {
+      "slide": 3,
+      "preview": "examples/previews/research-brief-03.webp",
+      "preview_bytes": 56444,
+      "preview_sha256": "bfd7c7d199eae1709b9611da9f06627bd68e9c6d8c8691b3e58c4baf210872da"
+    }
+  ]
+}

@@ -23,6 +23,16 @@ jobs:
       - name: Test image routing and packaging
         run: node --test plugins/paperbanana/tests/*.test.mjs
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate skill metadata and packaged references
+        run: |
+          python3 -m pip install -r .github/requirements-validation.txt
+          python3 scripts/validate-repository.py
+          python3 -m unittest discover -s tests -p 'test_*.py'
+
       - name: Test editable and legacy slide-deck modes
         working-directory: plugins/paperbanana-slide-deck
         run: |

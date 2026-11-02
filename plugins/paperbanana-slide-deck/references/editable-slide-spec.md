@@ -67,18 +67,45 @@ bun scripts/editable/validate-slide-spec.ts <deck-dir>/slide-spec.json
 # Build the native PPTX (fail-closed; never falls back to image mode)
 bun scripts/build-deck.ts --mode editable <deck-dir> --output <deck-dir>/deck.pptx
 
-# Render per-page previews (LibreOffice + Poppler)
-soffice --headless --convert-to pdf --outdir /tmp/deck-preview <deck-dir>/deck.pptx
-pdftoppm -png -r 150 /tmp/deck-preview/deck.pdf <rendered-dir>/slide
-# → <rendered-dir>/slide-01.png, slide-02.png, …
+# Rebuild and render matching previews (Bun + LibreOffice + Poppler)
+python3 scripts/editable/render-previews.py \
+  --spec <deck-dir>/slide-spec.json --output-dir <deck-dir>/rendered
+# → rebuilt PPTX, per-page PNGs and render-manifest.json in rendered/
 
 # Review previews with PaperBanana Critic (preview-only; never edits the PPTX)
 python3 scripts/editable/review-editable.py \
   --spec <deck-dir>/slide-spec.json \
-  --rendered-dir <rendered-dir> \
+  --rendered-dir <deck-dir>/rendered \
   --output <deck-dir>/critic-review.json
 # Add --dry-run to emit per-slide Critic context without importing PaperBanana
 ```
+
+Render manifest **v2** binds the spec, PPTX, every preview page and every source
+image, including images nested inside layout groups. Source-image paths resolve
+relative to the spec and must match their declared `sha256`. Rendering checks
+those images before and after the build; review checks them before provider
+calls and again before recording completion. Changed or missing inputs produce
+an `unreviewed` report. Regenerate old v1 manifests with `render-previews.py`;
+they cannot establish source-image correspondence.
+
+Rendering stages a complete generation and publishes it as a directory. A
+publication failure restores the previous directory. If filesystem errors also
+prevent restoration, the script reports a retained backup path for recovery.
+The manifest records a local build association, not scientific correctness or
+tamper-resistant attestation. Keep `critic-review.json` outside `rendered/` so
+review cannot overwrite its inputs. The render directory must not contain the
+spec or any source image. Report paths must not alias any input, including
+source-image symbolic links or hard links; this protection also applies to
+dry runs and error reports, even when the declared image hash is invalid.
+
+The Python environment must provide the maintained PaperBanana backend and a
+configured VLM provider. `--vlm-provider` and `--vlm-model` override that backend's
+settings. Provider selection is separate from the image provider. The report
+uses `reviewed`, `needs-revision` and `unreviewed`; a dry run is context preparation,
+not a completed review. The adapter validates the original response before the
+backend can normalize it: `critic_suggestions` is required; a score, when
+present, must be a finite JSON number from 0 to 10. Strings, booleans, out-of-range
+scores and empty unscored feedback are `unreviewed`, not approval.
 
 Critic suggestions come back prefixed `slide-id/element-id: …` (unmatched ones as `slide-id/unmapped: …`). Apply findings by editing `slide-spec.json` and rebuilding — never by touching the PPTX or the preview PNGs.
 

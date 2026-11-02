@@ -1,0 +1,211 @@
+{
+  "schema_version": "1",
+  "deck": {
+    "layout": "LAYOUT_WIDE",
+    "language": "en",
+    "theme": "paperbanana-clean"
+  },
+  "slides": [
+    {
+      "id": "editable-demo",
+      "title": "Your slide. Still editable.",
+      "sources": [
+        "local:slide-spec.json (author-created illustrative content; not research results)"
+      ],
+      "speaker_notes": "[Sources]\n- local:slide-spec.json (author-created illustrative content; not research results)\nThis example demonstrates native PowerPoint objects. The values 2, 4, and 3 are arbitrary demonstration data.",
+      "elements": [
+        {
+          "id": "title",
+          "type": "text",
+          "x": 0.7,
+          "y": 0.55,
+          "w": 11.9,
+          "h": 0.55,
+          "text": "Your slide. Still editable.",
+          "font_size": 30,
+          "bold": true
+        },
+        {
+          "id": "subtitle",
+          "type": "text",
+          "x": 0.7,
+          "y": 1.22,
+          "w": 11.9,
+          "h": 0.45,
+          "text": "Native text, shapes, connectors, tables and charts.",
+          "font_size": 18,
+          "color": "64748B"
+        },
+        {
+          "id": "connector-a",
+          "type": "line",
+          "x": 3.5,
+          "y": 2.35,
+          "w": 0.7,
+          "h": 0,
+          "stroke": "64748B",
+          "end_arrow": "triangle"
+        },
+        {
+          "id": "connector-b",
+          "type": "line",
+          "x": 7.15,
+          "y": 2.35,
+          "w": 0.7,
+          "h": 0,
+          "stroke": "64748B",
+          "end_arrow": "triangle"
+        },
+        {
+          "id": "node-1",
+          "type": "shape",
+          "x": 0.7,
+          "y": 1.95,
+          "w": 2.8,
+          "h": 0.8,
+          "fill": "E2E8F0",
+          "stroke": "E2E8F0"
+        },
+        {
+          "id": "label-1",
+          "type": "text",
+          "x": 0.85,
+          "y": 2.17,
+          "w": 2.5,
+          "h": 0.36,
+          "text": "Describe",
+          "font_size": 20,
+          "bold": true,
+          "align": "center"
+        },
+        {
+          "id": "node-2",
+          "type": "shape",
+          "x": 4.35,
+          "y": 1.95,
+          "w": 2.8,
+          "h": 0.8,
+          "fill": "CCFBF1",
+          "stroke": "CCFBF1"
+        },
+        {
+          "id": "label-2",
+          "type": "text",
+          "x": 4.5,
+          "y": 2.17,
+          "w": 2.5,
+          "h": 0.36,
+          "text": "Build",
+          "font_size": 20,
+          "bold": true,
+          "align": "center"
+        },
+        {
+          "id": "node-3",
+          "type": "shape",
+          "x": 8.0,
+          "y": 1.95,
+          "w": 4.6,
+          "h": 0.8,
+          "fill": "E0E7FF",
+          "stroke": "E0E7FF"
+        },
+        {
+          "id": "label-3",
+          "type": "text",
+          "x": 8.15,
+          "y": 2.17,
+          "w": 4.3,
+          "h": 0.36,
+          "text": "Edit in PowerPoint",
+          "font_size": 20,
+          "bold": true,
+          "align": "center"
+        },
+        {
+          "id": "table-title",
+          "type": "text",
+          "x": 0.7,
+          "y": 3.3,
+          "w": 5.3,
+          "h": 0.4,
+          "text": "Try selecting an object",
+          "font_size": 22,
+          "bold": true
+        },
+        {
+          "id": "native-table",
+          "type": "table",
+          "x": 0.7,
+          "y": 3.95,
+          "w": 5.2,
+          "h": 1.7,
+          "rows": [
+            [
+              "Object",
+              "Try it"
+            ],
+            [
+              "Text",
+              "Change this title"
+            ],
+            [
+              "Shape",
+              "Change its fill"
+            ],
+            [
+              "Chart",
+              "Edit the sample values"
+            ]
+          ]
+        },
+        {
+          "id": "chart-title",
+          "type": "text",
+          "x": 6.55,
+          "y": 3.3,
+          "w": 6.1,
+          "h": 0.4,
+          "text": "Sample chart \u2014 demo values only",
+          "font_size": 22,
+          "bold": true
+        },
+        {
+          "id": "native-chart",
+          "type": "chart",
+          "x": 6.55,
+          "y": 3.9,
+          "w": 6.05,
+          "h": 2.2,
+          "chart_type": "bar",
+          "series": [
+            {
+              "name": "Demo values",
+              "labels": [
+                "A",
+                "B",
+                "C"
+              ],
+              "values": [
+                2,
+                4,
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "id": "footer",
+          "type": "text",
+          "x": 0.7,
+          "y": 6.65,
+          "w": 11.9,
+          "h": 0.4,
+          "text": "Built locally from slide-spec.json \u00b7 No image API call \u00b7 Illustrative data",
+          "font_size": 16,
+          "color": "64748B"
+        }
+      ]
+    }
+  ]
+}
